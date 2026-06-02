@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx jest *)",
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const ts = require\\('typescript'\\); const cfg = ts.readConfigFile\\('test/tsconfig.json', ts.sys.readFile\\); const parsed = ts.parseJsonConfigFileContent\\(cfg.config, ts.sys, 'test/'\\); console.log\\('Files:', parsed.fileNames.filter\\(f => f.includes\\('jest'\\) || f.includes\\('logs'\\) || f.includes\\('e2e'\\)\\)\\);\")"
+    ]
+  }
+}
