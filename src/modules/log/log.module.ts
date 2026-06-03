@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { LogController } from '../../infra/controllers/LogController.js';
 import { PrismaLogRepository } from '../../infra/database/prisma/PrismaLogRepository.js';
+import { prisma } from '../../infra/database/prisma/prismaClient.js';
 import { CreateLogUseCase } from '../../domain/useCases/createLog/CreateLogUseCase.js';
 import { FindLogByIdUseCase } from '../../domain/useCases/findLogById/FindLogByIdUseCase.js';
 import { ListLogsUseCase } from '../../domain/useCases/listLogs/ListLogsUseCase.js';
@@ -14,11 +14,7 @@ import { ILogRepository } from '../../domain/repositories/ILogRepository.js';
   providers: [
     {
       provide: 'PRISMA_CLIENT',
-      useFactory: () => {
-        const prisma = new PrismaClient();
-
-        return prisma;
-      },
+      useValue: prisma,
     },
     {
       provide: 'ILogRepository',

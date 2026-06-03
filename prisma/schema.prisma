@@ -3,8 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+}
+
+enum SolicitationStatus {
+  not_resolved
+  in_progress
+  resolved
+  unconsidered
 }
 
 model Log {
@@ -19,6 +25,8 @@ model Log {
 model User {
   id              String           @id @default(uuid())
   name            String
+  email           String           @unique
+  passwordHash    String
   isCouncilman    Boolean          @default(false)
   isAdmin         Boolean          @default(false)
   address         String
@@ -33,15 +41,15 @@ model User {
 
 model SolicitationType {
   id            String         @id @default(uuid())
-  description   String
+  description   String         @unique
   points        Int
   solicitations Solicitation[]
   coolActions   CoolAction[]
 }
 
 model Solicitation {
-  id                 String           @id @default(uuid())
-  protocolNumber     String?          @unique
+  id                 String             @id @default(uuid())
+  protocolNumber     String?            @unique
   title              String
   description        String
   neighborhood       String
@@ -50,16 +58,16 @@ model Solicitation {
   street             String
   requestingUserId   String
   solicitationTypeId String
-  status             String           @default("not_resolved")
-  unsolvedImageUrls  String           @default("[]")
-  solvedImageUrls    String?
+  status             SolicitationStatus @default(not_resolved)
+  unsolvedImageUrls  Json               @default("[]")
+  solvedImageUrls    Json?
   solvedDate         DateTime?
   solvedCommentary   String?
   solvedUserId       String?
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime?        @updatedAt
-  requestingUser     User             @relation(fields: [requestingUserId], references: [id])
-  solicitationType   SolicitationType @relation(fields: [solicitationTypeId], references: [id])
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime?          @updatedAt
+  requestingUser     User               @relation(fields: [requestingUserId], references: [id])
+  solicitationType   SolicitationType   @relation(fields: [solicitationTypeId], references: [id])
   coolAction         CoolAction?
   doneCoolAction     DoneCoolAction?
 }
@@ -87,12 +95,12 @@ model DoneCoolAction {
 
 model PublicPhone {
   id    String @id @default(uuid())
-  phone String
+  phone String @unique
 }
 
 model UF {
   id     String @id @default(uuid())
-  name   String
+  name   String @unique
   cities City[]
 }
 
@@ -102,6 +110,8 @@ model City {
   ufId          String
   uf            UF             @relation(fields: [ufId], references: [id])
   neighborhoods Neighborhood[]
+
+  @@unique([name, ufId])
 }
 
 model Neighborhood {
@@ -109,4 +119,6 @@ model Neighborhood {
   name   String
   cityId String
   city   City   @relation(fields: [cityId], references: [id])
+
+  @@unique([name, cityId])
 }
