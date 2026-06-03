@@ -15,3 +15,98 @@ model Log {
   activityDescription String
   createdAt           DateTime @default(now())
 }
+
+model User {
+  id              String           @id @default(uuid())
+  name            String
+  isCouncilman    Boolean          @default(false)
+  isAdmin         Boolean          @default(false)
+  address         String
+  neighborhood    String
+  city            String
+  uf              String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime?        @updatedAt
+  solicitations   Solicitation[]
+  doneCoolActions DoneCoolAction[]
+}
+
+model SolicitationType {
+  id            String         @id @default(uuid())
+  description   String
+  points        Int
+  solicitations Solicitation[]
+  coolActions   CoolAction[]
+}
+
+model Solicitation {
+  id                 String           @id @default(uuid())
+  protocolNumber     String?          @unique
+  title              String
+  description        String
+  neighborhood       String
+  city               String
+  uf                 String
+  street             String
+  requestingUserId   String
+  solicitationTypeId String
+  status             String           @default("not_resolved")
+  unsolvedImageUrls  String           @default("[]")
+  solvedImageUrls    String?
+  solvedDate         DateTime?
+  solvedCommentary   String?
+  solvedUserId       String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime?        @updatedAt
+  requestingUser     User             @relation(fields: [requestingUserId], references: [id])
+  solicitationType   SolicitationType @relation(fields: [solicitationTypeId], references: [id])
+  coolAction         CoolAction?
+  doneCoolAction     DoneCoolAction?
+}
+
+model CoolAction {
+  id                 String           @id @default(uuid())
+  solicitationTypeId String
+  solicitationId     String           @unique
+  createdAt          DateTime         @default(now())
+  solicitationType   SolicitationType @relation(fields: [solicitationTypeId], references: [id])
+  solicitation       Solicitation     @relation(fields: [solicitationId], references: [id])
+  doneCoolActions    DoneCoolAction[]
+}
+
+model DoneCoolAction {
+  id             String       @id @default(uuid())
+  userId         String
+  coolActionId   String
+  solicitationId String       @unique
+  createdAt      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id])
+  coolAction     CoolAction   @relation(fields: [coolActionId], references: [id])
+  solicitation   Solicitation @relation(fields: [solicitationId], references: [id])
+}
+
+model PublicPhone {
+  id    String @id @default(uuid())
+  phone String
+}
+
+model UF {
+  id     String @id @default(uuid())
+  name   String
+  cities City[]
+}
+
+model City {
+  id            String         @id @default(uuid())
+  name          String
+  ufId          String
+  uf            UF             @relation(fields: [ufId], references: [id])
+  neighborhoods Neighborhood[]
+}
+
+model Neighborhood {
+  id     String @id @default(uuid())
+  name   String
+  cityId String
+  city   City   @relation(fields: [cityId], references: [id])
+}

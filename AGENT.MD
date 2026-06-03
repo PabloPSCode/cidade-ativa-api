@@ -946,62 +946,156 @@ Rules:
 
 # API Response Pattern
 
-Prefer consistent API responses.
+Every response from the API — success or failure — MUST use the following envelope structure.
 
-Success example:
+## Response Envelope
+
+```ts
+interface ApiResponse<T = unknown> {
+  RES: T | null;
+  MSG: { message: string; error?: string } | null;
+  SUCCESS: boolean;
+  TIMESTAMP: string; // ISO 8601
+  PATH: string;      // request path, e.g. "/users/auth"
+  STATUS: number;    // HTTP status code
+}
+```
+
+- `RES` — the response payload on success, `null` on failure.
+- `MSG` — human-readable feedback on failure, `null` on success.
+  - `message`: general description of what went wrong.
+  - `error`: specific technical reason (optional but recommended for 4xx).
+- `SUCCESS` — `true` when the operation succeeded, `false` otherwise.
+- `TIMESTAMP` — UTC ISO 8601 datetime of when the response was generated.
+- `PATH` — the route path that was called.
+- `STATUS` — mirrors the HTTP status code in the body for clients that cannot read headers.
+
+## Success example
 
 ```json
 {
-  "data": {
-    "id": "user-id",
+  "RES": {
+    "id": "69b6eb13-c12c-4036-84d0-ebb58696a59a",
     "name": "Pablo Silva",
     "email": "pablo@email.com"
-  }
+  },
+  "MSG": null,
+  "SUCCESS": true,
+  "TIMESTAMP": "2025-10-28T09:49:54.950Z",
+  "PATH": "/users",
+  "STATUS": 201
 }
 ```
 
-Error example:
+## Failure example
 
 ```json
 {
-  "message": "User already exists"
+  "RES": null,
+  "MSG": {
+    "message": "An error occurred. Check all request body fields for possible mismatching.",
+    "error": "User not found or credentials do not match"
+  },
+  "SUCCESS": false,
+  "TIMESTAMP": "2025-10-28T09:49:54.950Z",
+  "PATH": "/users/auth",
+  "STATUS": 409
 }
 ```
 
-Validation error example:
+## Validation error example
 
 ```json
 {
-  "message": "Validation error",
-  "errors": {
-    "fieldErrors": {
-      "email": ["Invalid email"]
+  "RES": null,
+  "MSG": {
+    "message": "Validation error",
+    "error": "email: Invalid email address; password: Must be at least 8 characters"
+  },
+  "SUCCESS": false,
+  "TIMESTAMP": "2025-10-28T09:49:54.950Z",
+  "PATH": "/users",
+  "STATUS": 400
+}
+```
+
+## Paginated success example
+
+```json
+{
+  "RES": {
+    "data": [],
+    "meta": {
+      "page": 1,
+      "perPage": 10,
+      "total": 100,
+      "totalPages": 10
     }
-  }
+  },
+  "MSG": null,
+  "SUCCESS": true,
+  "TIMESTAMP": "2025-10-28T09:49:54.950Z",
+  "PATH": "/solicitations",
+  "STATUS": 200
 }
 ```
 
-Paginated response example:
+## Implementation
 
-```json
-{
-  "data": [],
-  "meta": {
-    "page": 1,
-    "perPage": 10,
-    "total": 100,
-    "totalPages": 10
-  }
+Build a reusable response builder in `src/infra/helpers/apiResponse.ts`:
+
+```ts
+import { Request } from 'express';
+
+export function buildResponse<T>(params: {
+  res: T | null;
+  success: boolean;
+  status: number;
+  path: string;
+  message?: string;
+  error?: string;
+}) {
+  return {
+    RES: params.res,
+    MSG: params.success
+      ? null
+      : { message: params.message ?? 'An error occurred.', error: params.error },
+    SUCCESS: params.success,
+    TIMESTAMP: new Date().toISOString(),
+    PATH: params.path,
+    STATUS: params.status,
+  };
 }
+```
+
+Use it inside every controller method:
+
+```ts
+// success
+return response.status(201).json(
+  buildResponse({ res: result, success: true, status: 201, path: request.path }),
+);
+
+// failure (handled by error middleware)
+return response.status(error.statusCode).json(
+  buildResponse({
+    res: null,
+    success: false,
+    status: error.statusCode,
+    path: request.path,
+    message: 'An error occurred.',
+    error: error.message,
+  }),
+);
 ```
 
 Rules:
 
-- Keep response format consistent.
-- Never return sensitive data.
-- Never return password hashes.
-- Do not expose internal IDs if the business requires public IDs.
-- Use pagination metadata when returning lists.
+- MUST use this envelope for every response — no bare `{ data }` or `{ message }` shapes.
+- NEVER return sensitive fields (`password`, token hashes) inside `RES`.
+- ALWAYS set `MSG: null` on success and `RES: null` on failure.
+- ALWAYS use ISO 8601 UTC string for `TIMESTAMP`.
+- Use pagination metadata nested inside `RES.meta` for list endpoints.
 
 ---
 
@@ -1275,6 +1369,10 @@ logger.info({
   action: 'CREATE_TRAINING',
 }, 'Training created successfully');
 ```
+
+**All action done in the system must be registered on the logs table**. See the logs DTO. 
+- Example A: If user edits its name, so create a new log on logs table ```{userId: aedfed82738acd8e7eebac99, userName: John Doe, email: johndoes@gmail.com, activityDescription: user_edited }```. 
+- Example B: If user authenticates in the system, so create a new log on logs table ```{userId: aedfed82738acd8e7eebac99, userName: John Doe, email: johndoes@gmail.com, activityDescription: user_authenticated }```
 
 ---
 
