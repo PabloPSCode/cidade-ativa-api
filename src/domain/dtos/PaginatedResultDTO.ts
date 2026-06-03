@@ -7,3 +7,5 @@ export interface PaginatedResult<T> {
     totalPages: number;
   };
 }
+
+export type PaginatedResultDTO<T> = PaginatedResult<T>;
