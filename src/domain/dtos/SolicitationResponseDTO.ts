@@ -1,0 +1,22 @@
+export type SolicitationStatus = 'not_resolved' | 'in_progress' | 'resolved' | 'unconsidered';
+
+export interface SolicitationResponseDTO {
+  id: string;
+  protocolNumber: string | null;
+  title: string;
+  description: string;
+  neighborhood: string;
+  city: string;
+  uf: string;
+  street: string;
+  requestingUserId: string;
+  solicitationTypeId: string;
+  status: SolicitationStatus;
+  unsolvedImageUrls: string[];
+  solvedImageUrls: string[] | null;
+  solvedDate: Date | null;
+  solvedCommentary: string | null;
+  solvedUserId: string | null;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
