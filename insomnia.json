@@ -1,0 +1,794 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-06-03T00:00:00.000Z",
+  "__export_source": "cidade-ativa-api",
+  "resources": [
+    {
+      "_id": "wrk_cidadeativa",
+      "_type": "workspace",
+      "name": "Cidade Ativa API",
+      "description": "Back-end REST API for civic urban solicitations platform"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_cidadeativa",
+      "name": "Base",
+      "data": {
+        "base_url": "http://localhost:3337",
+        "token": ""
+      }
+    },
+
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Auth"
+    },
+    {
+      "_id": "req_auth_register",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Register user",
+      "method": "POST",
+      "url": "{{ _.base_url }}/users",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Pablo Silva\",\n  \"email\": \"pablo@example.com\",\n  \"password\": \"password123\",\n  \"address\": \"Rua das Flores, 100\",\n  \"neighborhood\": \"Centro\",\n  \"city\": \"Belo Horizonte\",\n  \"uf\": \"MG\",\n  \"isCouncilman\": false,\n  \"isAdmin\": false\n}"
+      }
+    },
+    {
+      "_id": "req_auth_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Authenticate",
+      "method": "POST",
+      "url": "{{ _.base_url }}/authenticate",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"pablo@example.com\",\n  \"password\": \"password123\"\n}"
+      }
+    },
+
+    {
+      "_id": "fld_users",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Users"
+    },
+    {
+      "_id": "req_users_list",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "List users",
+      "method": "GET",
+      "url": "{{ _.base_url }}/users?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_users_get_by_id",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Get user by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/users/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_users_get_by_email",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Get user by email",
+      "method": "GET",
+      "url": "{{ _.base_url }}/users/email/:email",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "email", "value": "" }]
+    },
+    {
+      "_id": "req_users_update",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Update user",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/users/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Pablo Silva\",\n  \"address\": \"Rua Nova, 200\",\n  \"neighborhood\": \"Savassi\",\n  \"city\": \"Belo Horizonte\",\n  \"uf\": \"MG\"\n}"
+      }
+    },
+    {
+      "_id": "req_users_delete",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Delete user",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/users/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_solicitation_types",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Solicitation Types"
+    },
+    {
+      "_id": "req_stypes_create",
+      "_type": "request",
+      "parentId": "fld_solicitation_types",
+      "name": "Create solicitation type",
+      "method": "POST",
+      "url": "{{ _.base_url }}/solicitation-types",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Buraco na via\",\n  \"points\": 50\n}"
+      }
+    },
+    {
+      "_id": "req_stypes_list",
+      "_type": "request",
+      "parentId": "fld_solicitation_types",
+      "name": "List solicitation types",
+      "method": "GET",
+      "url": "{{ _.base_url }}/solicitation-types?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_stypes_get",
+      "_type": "request",
+      "parentId": "fld_solicitation_types",
+      "name": "Get solicitation type by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/solicitation-types/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_stypes_update",
+      "_type": "request",
+      "parentId": "fld_solicitation_types",
+      "name": "Update solicitation type",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/solicitation-types/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Buraco na via pública\",\n  \"points\": 60\n}"
+      }
+    },
+    {
+      "_id": "req_stypes_delete",
+      "_type": "request",
+      "parentId": "fld_solicitation_types",
+      "name": "Delete solicitation type",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/solicitation-types/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_public_phones",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Public Phones"
+    },
+    {
+      "_id": "req_phones_create",
+      "_type": "request",
+      "parentId": "fld_public_phones",
+      "name": "Create public phone",
+      "method": "POST",
+      "url": "{{ _.base_url }}/public-phones",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"phone\": \"+5531900000000\"\n}"
+      }
+    },
+    {
+      "_id": "req_phones_list",
+      "_type": "request",
+      "parentId": "fld_public_phones",
+      "name": "List public phones",
+      "method": "GET",
+      "url": "{{ _.base_url }}/public-phones?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_phones_get",
+      "_type": "request",
+      "parentId": "fld_public_phones",
+      "name": "Get public phone by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/public-phones/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_phones_update",
+      "_type": "request",
+      "parentId": "fld_public_phones",
+      "name": "Update public phone",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/public-phones/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"phone\": \"+5531911111111\"\n}"
+      }
+    },
+    {
+      "_id": "req_phones_delete",
+      "_type": "request",
+      "parentId": "fld_public_phones",
+      "name": "Delete public phone",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/public-phones/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_ufs",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "UFs"
+    },
+    {
+      "_id": "req_ufs_create",
+      "_type": "request",
+      "parentId": "fld_ufs",
+      "name": "Create UF",
+      "method": "POST",
+      "url": "{{ _.base_url }}/ufs",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"MG\"\n}"
+      }
+    },
+    {
+      "_id": "req_ufs_list",
+      "_type": "request",
+      "parentId": "fld_ufs",
+      "name": "List UFs",
+      "method": "GET",
+      "url": "{{ _.base_url }}/ufs?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_ufs_get",
+      "_type": "request",
+      "parentId": "fld_ufs",
+      "name": "Get UF by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/ufs/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_ufs_update",
+      "_type": "request",
+      "parentId": "fld_ufs",
+      "name": "Update UF",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/ufs/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"SP\"\n}"
+      }
+    },
+    {
+      "_id": "req_ufs_delete",
+      "_type": "request",
+      "parentId": "fld_ufs",
+      "name": "Delete UF",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/ufs/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_cities",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Cities"
+    },
+    {
+      "_id": "req_cities_create",
+      "_type": "request",
+      "parentId": "fld_cities",
+      "name": "Create city",
+      "method": "POST",
+      "url": "{{ _.base_url }}/cities",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Belo Horizonte\",\n  \"ufId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_cities_list",
+      "_type": "request",
+      "parentId": "fld_cities",
+      "name": "List cities",
+      "method": "GET",
+      "url": "{{ _.base_url }}/cities?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_cities_list_by_uf",
+      "_type": "request",
+      "parentId": "fld_cities",
+      "name": "List cities by UF",
+      "method": "GET",
+      "url": "{{ _.base_url }}/cities?ufId=&page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_cities_get",
+      "_type": "request",
+      "parentId": "fld_cities",
+      "name": "Get city by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/cities/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_cities_update",
+      "_type": "request",
+      "parentId": "fld_cities",
+      "name": "Update city",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/cities/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Contagem\"\n}"
+      }
+    },
+    {
+      "_id": "req_cities_delete",
+      "_type": "request",
+      "parentId": "fld_cities",
+      "name": "Delete city",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/cities/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_neighborhoods",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Neighborhoods"
+    },
+    {
+      "_id": "req_nbhd_create",
+      "_type": "request",
+      "parentId": "fld_neighborhoods",
+      "name": "Create neighborhood",
+      "method": "POST",
+      "url": "{{ _.base_url }}/neighborhoods",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Savassi\",\n  \"cityId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_nbhd_list",
+      "_type": "request",
+      "parentId": "fld_neighborhoods",
+      "name": "List neighborhoods",
+      "method": "GET",
+      "url": "{{ _.base_url }}/neighborhoods?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_nbhd_list_by_city",
+      "_type": "request",
+      "parentId": "fld_neighborhoods",
+      "name": "List neighborhoods by city",
+      "method": "GET",
+      "url": "{{ _.base_url }}/neighborhoods?cityId=&page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_nbhd_get",
+      "_type": "request",
+      "parentId": "fld_neighborhoods",
+      "name": "Get neighborhood by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/neighborhoods/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_nbhd_update",
+      "_type": "request",
+      "parentId": "fld_neighborhoods",
+      "name": "Update neighborhood",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/neighborhoods/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Lourdes\"\n}"
+      }
+    },
+    {
+      "_id": "req_nbhd_delete",
+      "_type": "request",
+      "parentId": "fld_neighborhoods",
+      "name": "Delete neighborhood",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/neighborhoods/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_solicitations",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Solicitations"
+    },
+    {
+      "_id": "req_sol_create",
+      "_type": "request",
+      "parentId": "fld_solicitations",
+      "name": "Create solicitation",
+      "method": "POST",
+      "url": "{{ _.base_url }}/solicitations",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Buraco na calçada\",\n  \"description\": \"Buraco profundo na calçada da rua principal causando risco de queda.\",\n  \"neighborhood\": \"Centro\",\n  \"city\": \"Belo Horizonte\",\n  \"uf\": \"MG\",\n  \"street\": \"Rua das Flores, 204\",\n  \"requestingUserId\": \"\",\n  \"solicitationTypeId\": \"\",\n  \"unsolvedImageUrls\": []\n}"
+      }
+    },
+    {
+      "_id": "req_sol_list",
+      "_type": "request",
+      "parentId": "fld_solicitations",
+      "name": "List solicitations",
+      "method": "GET",
+      "url": "{{ _.base_url }}/solicitations?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_sol_list_by_user",
+      "_type": "request",
+      "parentId": "fld_solicitations",
+      "name": "List solicitations by user",
+      "method": "GET",
+      "url": "{{ _.base_url }}/solicitations?userId=&page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_sol_list_by_status",
+      "_type": "request",
+      "parentId": "fld_solicitations",
+      "name": "List solicitations by status",
+      "method": "GET",
+      "url": "{{ _.base_url }}/solicitations?status=not_resolved&page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_sol_get",
+      "_type": "request",
+      "parentId": "fld_solicitations",
+      "name": "Get solicitation by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/solicitations/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_sol_update",
+      "_type": "request",
+      "parentId": "fld_solicitations",
+      "name": "Update solicitation",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/solicitations/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"in_progress\",\n  \"solvedCommentary\": \"Equipe técnica agendada para vistoria.\",\n  \"solvedUserId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_sol_resolve",
+      "_type": "request",
+      "parentId": "fld_solicitations",
+      "name": "Resolve solicitation",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/solicitations/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"resolved\",\n  \"solvedCommentary\": \"Buraco reparado pela equipe de manutenção.\",\n  \"solvedDate\": \"2026-06-03T12:00:00.000Z\",\n  \"solvedImageUrls\": [],\n  \"solvedUserId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_sol_delete",
+      "_type": "request",
+      "parentId": "fld_solicitations",
+      "name": "Delete solicitation",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/solicitations/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_cool_actions",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Cool Actions"
+    },
+    {
+      "_id": "req_ca_create",
+      "_type": "request",
+      "parentId": "fld_cool_actions",
+      "name": "Create cool action",
+      "method": "POST",
+      "url": "{{ _.base_url }}/cool-actions",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"solicitationTypeId\": \"\",\n  \"solicitationId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_ca_list",
+      "_type": "request",
+      "parentId": "fld_cool_actions",
+      "name": "List cool actions",
+      "method": "GET",
+      "url": "{{ _.base_url }}/cool-actions?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_ca_get",
+      "_type": "request",
+      "parentId": "fld_cool_actions",
+      "name": "Get cool action by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/cool-actions/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_ca_update",
+      "_type": "request",
+      "parentId": "fld_cool_actions",
+      "name": "Update cool action",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/cool-actions/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"solicitationTypeId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_ca_delete",
+      "_type": "request",
+      "parentId": "fld_cool_actions",
+      "name": "Delete cool action",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/cool-actions/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_done_cool_actions",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Done Cool Actions"
+    },
+    {
+      "_id": "req_dca_create",
+      "_type": "request",
+      "parentId": "fld_done_cool_actions",
+      "name": "Create done cool action",
+      "method": "POST",
+      "url": "{{ _.base_url }}/done-cool-actions",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": \"\",\n  \"coolActionId\": \"\",\n  \"solicitationId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_dca_list",
+      "_type": "request",
+      "parentId": "fld_done_cool_actions",
+      "name": "List done cool actions",
+      "method": "GET",
+      "url": "{{ _.base_url }}/done-cool-actions?page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_dca_list_by_user",
+      "_type": "request",
+      "parentId": "fld_done_cool_actions",
+      "name": "List done cool actions by user",
+      "method": "GET",
+      "url": "{{ _.base_url }}/done-cool-actions?userId=&page=1&perPage=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_dca_get",
+      "_type": "request",
+      "parentId": "fld_done_cool_actions",
+      "name": "Get done cool action by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/done-cool-actions/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_dca_update",
+      "_type": "request",
+      "parentId": "fld_done_cool_actions",
+      "name": "Update done cool action",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/done-cool-actions/:id",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"coolActionId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_dca_delete",
+      "_type": "request",
+      "parentId": "fld_done_cool_actions",
+      "name": "Delete done cool action",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/done-cool-actions/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_logs",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Logs"
+    },
+    {
+      "_id": "req_logs_create",
+      "_type": "request",
+      "parentId": "fld_logs",
+      "name": "Create log",
+      "method": "POST",
+      "url": "{{ _.base_url }}/logs",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": \"\",\n  \"userName\": \"Pablo Silva\",\n  \"email\": \"pablo@example.com\",\n  \"activityDescription\": \"User created a solicitation\"\n}"
+      }
+    },
+    {
+      "_id": "req_logs_list",
+      "_type": "request",
+      "parentId": "fld_logs",
+      "name": "List logs",
+      "method": "GET",
+      "url": "{{ _.base_url }}/logs?page=1&perPage=10"
+    },
+    {
+      "_id": "req_logs_get",
+      "_type": "request",
+      "parentId": "fld_logs",
+      "name": "Get log by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/logs/:id",
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_logs_update",
+      "_type": "request",
+      "parentId": "fld_logs",
+      "name": "Update log",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/logs/:id",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "parameters": [{ "name": "id", "value": "" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"activityDescription\": \"Updated activity description\"\n}"
+      }
+    },
+    {
+      "_id": "req_logs_delete",
+      "_type": "request",
+      "parentId": "fld_logs",
+      "name": "Delete log",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/logs/:id",
+      "parameters": [{ "name": "id", "value": "" }]
+    }
+  ]
+}
