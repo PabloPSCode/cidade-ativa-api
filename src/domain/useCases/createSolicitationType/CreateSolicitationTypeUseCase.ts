@@ -6,11 +6,21 @@ import { ISolicitationTypeRepository } from '../../repositories/ISolicitationTyp
 export class CreateSolicitationTypeUseCase {
   constructor(private readonly repository: ISolicitationTypeRepository) {}
 
-  async execute(data: CreateSolicitationTypeDTO): Promise<SolicitationTypeResponseDTO> {
+  async execute(
+    data: CreateSolicitationTypeDTO,
+  ): Promise<SolicitationTypeResponseDTO> {
     const existing = await this.repository.findByDescription(data.description);
-    if (existing) throw new AppError('Solicitation type with this description already exists', 409);
+    if (existing)
+      throw new AppError(
+        'Solicitation type with this description already exists',
+        409,
+      );
 
     const solicitationType = await this.repository.create(data);
-    return { id: solicitationType.id, description: solicitationType.description, points: solicitationType.points };
+    return {
+      id: solicitationType.id,
+      description: solicitationType.description,
+      points: solicitationType.points,
+    };
   }
 }

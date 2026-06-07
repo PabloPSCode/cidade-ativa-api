@@ -15,11 +15,36 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
   providers: [
     JwtUserStrategy,
     PrismaPublicPhoneRepository,
-    { provide: CreatePublicPhoneUseCase, useFactory: (r: PrismaPublicPhoneRepository) => new CreatePublicPhoneUseCase(r), inject: [PrismaPublicPhoneRepository] },
-    { provide: UpdatePublicPhoneUseCase, useFactory: (r: PrismaPublicPhoneRepository) => new UpdatePublicPhoneUseCase(r), inject: [PrismaPublicPhoneRepository] },
-    { provide: DeletePublicPhoneUseCase, useFactory: (r: PrismaPublicPhoneRepository) => new DeletePublicPhoneUseCase(r), inject: [PrismaPublicPhoneRepository] },
-    { provide: FindPublicPhoneByIdUseCase, useFactory: (r: PrismaPublicPhoneRepository) => new FindPublicPhoneByIdUseCase(r), inject: [PrismaPublicPhoneRepository] },
-    { provide: ListPublicPhonesUseCase, useFactory: (r: PrismaPublicPhoneRepository) => new ListPublicPhonesUseCase(r), inject: [PrismaPublicPhoneRepository] },
+    {
+      provide: CreatePublicPhoneUseCase,
+      useFactory: (r: PrismaPublicPhoneRepository) =>
+        new CreatePublicPhoneUseCase(r),
+      inject: [PrismaPublicPhoneRepository],
+    },
+    {
+      provide: UpdatePublicPhoneUseCase,
+      useFactory: (r: PrismaPublicPhoneRepository) =>
+        new UpdatePublicPhoneUseCase(r),
+      inject: [PrismaPublicPhoneRepository],
+    },
+    {
+      provide: DeletePublicPhoneUseCase,
+      useFactory: (r: PrismaPublicPhoneRepository) =>
+        new DeletePublicPhoneUseCase(r),
+      inject: [PrismaPublicPhoneRepository],
+    },
+    {
+      provide: FindPublicPhoneByIdUseCase,
+      useFactory: (r: PrismaPublicPhoneRepository) =>
+        new FindPublicPhoneByIdUseCase(r),
+      inject: [PrismaPublicPhoneRepository],
+    },
+    {
+      provide: ListPublicPhonesUseCase,
+      useFactory: (r: PrismaPublicPhoneRepository) =>
+        new ListPublicPhonesUseCase(r),
+      inject: [PrismaPublicPhoneRepository],
+    },
   ],
 })
 export class PublicPhoneModule {}

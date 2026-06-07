@@ -38,7 +38,10 @@ export class PrismaLogRepository implements ILogRepository {
     return PrismaLogMapper.toDomain(log);
   }
 
-  async findAll(page: number, perPage: number): Promise<{ data: Log[]; total: number }> {
+  async findAll(
+    page: number,
+    perPage: number,
+  ): Promise<{ data: Log[]; total: number }> {
     const [logs, total] = await Promise.all([
       this.prisma.log.findMany({
         skip: (page - 1) * perPage,

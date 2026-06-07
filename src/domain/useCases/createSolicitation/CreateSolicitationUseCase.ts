@@ -15,8 +15,14 @@ export class CreateSolicitationUseCase {
     if (!user) throw new AppError('Requesting user not found', 404);
 
     if (!user.isCouncilman && !user.isAdmin) {
-      const openCount = await this.solicitationRepository.countOpenByUser(data.requestingUserId);
-      if (openCount >= 3) throw new AppError('Regular users cannot have more than 3 open solicitations', 422);
+      const openCount = await this.solicitationRepository.countOpenByUser(
+        data.requestingUserId,
+      );
+      if (openCount >= 3)
+        throw new AppError(
+          'Regular users cannot have more than 3 open solicitations',
+          422,
+        );
     }
 
     const s = await this.solicitationRepository.create(data);
@@ -25,13 +31,24 @@ export class CreateSolicitationUseCase {
 
   private toDTO(s: any): SolicitationResponseDTO {
     return {
-      id: s.id, protocolNumber: s.protocolNumber, title: s.title,
-      description: s.description, neighborhood: s.neighborhood, city: s.city,
-      uf: s.uf, street: s.street, requestingUserId: s.requestingUserId,
-      solicitationTypeId: s.solicitationTypeId, status: s.status,
-      unsolvedImageUrls: s.unsolvedImageUrls, solvedImageUrls: s.solvedImageUrls,
-      solvedDate: s.solvedDate, solvedCommentary: s.solvedCommentary,
-      solvedUserId: s.solvedUserId, createdAt: s.createdAt, updatedAt: s.updatedAt,
+      id: s.id,
+      protocolNumber: s.protocolNumber,
+      title: s.title,
+      description: s.description,
+      neighborhood: s.neighborhood,
+      city: s.city,
+      uf: s.uf,
+      street: s.street,
+      requestingUserId: s.requestingUserId,
+      solicitationTypeId: s.solicitationTypeId,
+      status: s.status,
+      unsolvedImageUrls: s.unsolvedImageUrls,
+      solvedImageUrls: s.solvedImageUrls,
+      solvedDate: s.solvedDate,
+      solvedCommentary: s.solvedCommentary,
+      solvedUserId: s.solvedUserId,
+      createdAt: s.createdAt,
+      updatedAt: s.updatedAt,
     };
   }
 }

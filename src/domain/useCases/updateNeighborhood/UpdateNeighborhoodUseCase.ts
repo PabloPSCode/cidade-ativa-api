@@ -5,7 +5,10 @@ import { INeighborhoodRepository } from '../../repositories/INeighborhoodReposit
 
 export class UpdateNeighborhoodUseCase {
   constructor(private readonly repository: INeighborhoodRepository) {}
-  async execute(id: string, data: UpdateNeighborhoodDTO): Promise<NeighborhoodResponseDTO> {
+  async execute(
+    id: string,
+    data: UpdateNeighborhoodDTO,
+  ): Promise<NeighborhoodResponseDTO> {
     const existing = await this.repository.findById(id);
     if (!existing) throw new AppError('Neighborhood not found', 404);
     const updated = await this.repository.update(id, data);

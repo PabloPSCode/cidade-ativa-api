@@ -15,11 +15,31 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
   providers: [
     JwtUserStrategy,
     PrismaCityRepository,
-    { provide: CreateCityUseCase, useFactory: (r: PrismaCityRepository) => new CreateCityUseCase(r), inject: [PrismaCityRepository] },
-    { provide: UpdateCityUseCase, useFactory: (r: PrismaCityRepository) => new UpdateCityUseCase(r), inject: [PrismaCityRepository] },
-    { provide: DeleteCityUseCase, useFactory: (r: PrismaCityRepository) => new DeleteCityUseCase(r), inject: [PrismaCityRepository] },
-    { provide: FindCityByIdUseCase, useFactory: (r: PrismaCityRepository) => new FindCityByIdUseCase(r), inject: [PrismaCityRepository] },
-    { provide: ListCitiesUseCase, useFactory: (r: PrismaCityRepository) => new ListCitiesUseCase(r), inject: [PrismaCityRepository] },
+    {
+      provide: CreateCityUseCase,
+      useFactory: (r: PrismaCityRepository) => new CreateCityUseCase(r),
+      inject: [PrismaCityRepository],
+    },
+    {
+      provide: UpdateCityUseCase,
+      useFactory: (r: PrismaCityRepository) => new UpdateCityUseCase(r),
+      inject: [PrismaCityRepository],
+    },
+    {
+      provide: DeleteCityUseCase,
+      useFactory: (r: PrismaCityRepository) => new DeleteCityUseCase(r),
+      inject: [PrismaCityRepository],
+    },
+    {
+      provide: FindCityByIdUseCase,
+      useFactory: (r: PrismaCityRepository) => new FindCityByIdUseCase(r),
+      inject: [PrismaCityRepository],
+    },
+    {
+      provide: ListCitiesUseCase,
+      useFactory: (r: PrismaCityRepository) => new ListCitiesUseCase(r),
+      inject: [PrismaCityRepository],
+    },
   ],
 })
 export class CityModule {}

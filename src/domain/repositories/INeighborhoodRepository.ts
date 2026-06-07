@@ -10,5 +10,8 @@ export interface INeighborhoodRepository {
   findByNameAndCity(name: string, cityId: string): Promise<Neighborhood | null>;
   update(id: string, data: UpdateNeighborhoodDTO): Promise<Neighborhood>;
   delete(id: string): Promise<void>;
-  list(pagination: PaginationDTO, cityId?: string): Promise<PaginatedResultDTO<Neighborhood>>;
+  list(
+    pagination: PaginationDTO,
+    cityId?: string,
+  ): Promise<PaginatedResultDTO<Neighborhood>>;
 }

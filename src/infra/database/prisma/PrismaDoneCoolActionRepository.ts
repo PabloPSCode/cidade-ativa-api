@@ -8,7 +8,13 @@ import { PaginatedResultDTO } from '../../../domain/dtos/PaginatedResultDTO.js';
 
 export class PrismaDoneCoolActionRepository implements IDoneCoolActionRepository {
   private toEntity(r: any): DoneCoolAction {
-    return new DoneCoolAction(r.id, r.userId, r.coolActionId, r.solicitationId, r.createdAt);
+    return new DoneCoolAction(
+      r.id,
+      r.userId,
+      r.coolActionId,
+      r.solicitationId,
+      r.createdAt,
+    );
   }
 
   async create(data: CreateDoneCoolActionDTO): Promise<DoneCoolAction> {
@@ -21,7 +27,10 @@ export class PrismaDoneCoolActionRepository implements IDoneCoolActionRepository
     return r ? this.toEntity(r) : null;
   }
 
-  async update(id: string, data: UpdateDoneCoolActionDTO): Promise<DoneCoolAction> {
+  async update(
+    id: string,
+    data: UpdateDoneCoolActionDTO,
+  ): Promise<DoneCoolAction> {
     const r = await prisma.doneCoolAction.update({ where: { id }, data });
     return this.toEntity(r);
   }
@@ -30,11 +39,25 @@ export class PrismaDoneCoolActionRepository implements IDoneCoolActionRepository
     await prisma.doneCoolAction.delete({ where: { id } });
   }
 
-  async list(pagination: PaginationDTO, userId?: string): Promise<PaginatedResultDTO<DoneCoolAction>> {
+  async list(
+    pagination: PaginationDTO,
+    userId?: string,
+  ): Promise<PaginatedResultDTO<DoneCoolAction>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
     const where = userId ? { userId } : {};
-    const [records, total] = await Promise.all([prisma.doneCoolAction.findMany({ skip, take: perPage, where, orderBy: { createdAt: 'desc' } }), prisma.doneCoolAction.count({ where })]);
-    return { data: records.map((r) => this.toEntity(r)), meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) } };
+    const [records, total] = await Promise.all([
+      prisma.doneCoolAction.findMany({
+        skip,
+        take: perPage,
+        where,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.doneCoolAction.count({ where }),
+    ]);
+    return {
+      data: records.map((r) => this.toEntity(r)),
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
   }
 }

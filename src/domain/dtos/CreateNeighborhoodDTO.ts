@@ -1,1 +1,4 @@
-export interface CreateNeighborhoodDTO { name: string; cityId: string; }
+export interface CreateNeighborhoodDTO {
+  name: string;
+  cityId: string;
+}

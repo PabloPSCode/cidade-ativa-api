@@ -9,6 +9,7 @@ import { FindUserByIdUseCase } from '../../domain/useCases/findUserById/FindUser
 import { FindUserByEmailUseCase } from '../../domain/useCases/findUserByEmail/FindUserByEmailUseCase.js';
 import { ListUsersUseCase } from '../../domain/useCases/listUsers/ListUsersUseCase.js';
 import { AuthenticateUserUseCase } from '../../domain/useCases/authenticateUser/AuthenticateUserUseCase.js';
+import { AuthenticateWithGoogleUseCase } from '../../domain/useCases/authenticateWithGoogle/AuthenticateWithGoogleUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
 import { JwtAdminStrategy } from '../../infra/auth/strategies/JwtAdminStrategy.js';
 import { env } from '../../infra/config/env.js';
@@ -20,13 +21,48 @@ import { env } from '../../infra/config/env.js';
     JwtUserStrategy,
     JwtAdminStrategy,
     PrismaUserRepository,
-    { provide: CreateUserUseCase, useFactory: (r: PrismaUserRepository) => new CreateUserUseCase(r), inject: [PrismaUserRepository] },
-    { provide: UpdateUserUseCase, useFactory: (r: PrismaUserRepository) => new UpdateUserUseCase(r), inject: [PrismaUserRepository] },
-    { provide: DeleteUserUseCase, useFactory: (r: PrismaUserRepository) => new DeleteUserUseCase(r), inject: [PrismaUserRepository] },
-    { provide: FindUserByIdUseCase, useFactory: (r: PrismaUserRepository) => new FindUserByIdUseCase(r), inject: [PrismaUserRepository] },
-    { provide: FindUserByEmailUseCase, useFactory: (r: PrismaUserRepository) => new FindUserByEmailUseCase(r), inject: [PrismaUserRepository] },
-    { provide: ListUsersUseCase, useFactory: (r: PrismaUserRepository) => new ListUsersUseCase(r), inject: [PrismaUserRepository] },
-    { provide: AuthenticateUserUseCase, useFactory: (r: PrismaUserRepository) => new AuthenticateUserUseCase(r, env.jwtPrivateKey), inject: [PrismaUserRepository] },
+    {
+      provide: CreateUserUseCase,
+      useFactory: (r: PrismaUserRepository) => new CreateUserUseCase(r),
+      inject: [PrismaUserRepository],
+    },
+    {
+      provide: UpdateUserUseCase,
+      useFactory: (r: PrismaUserRepository) => new UpdateUserUseCase(r),
+      inject: [PrismaUserRepository],
+    },
+    {
+      provide: DeleteUserUseCase,
+      useFactory: (r: PrismaUserRepository) => new DeleteUserUseCase(r),
+      inject: [PrismaUserRepository],
+    },
+    {
+      provide: FindUserByIdUseCase,
+      useFactory: (r: PrismaUserRepository) => new FindUserByIdUseCase(r),
+      inject: [PrismaUserRepository],
+    },
+    {
+      provide: FindUserByEmailUseCase,
+      useFactory: (r: PrismaUserRepository) => new FindUserByEmailUseCase(r),
+      inject: [PrismaUserRepository],
+    },
+    {
+      provide: ListUsersUseCase,
+      useFactory: (r: PrismaUserRepository) => new ListUsersUseCase(r),
+      inject: [PrismaUserRepository],
+    },
+    {
+      provide: AuthenticateUserUseCase,
+      useFactory: (r: PrismaUserRepository) =>
+        new AuthenticateUserUseCase(r, env.jwtPrivateKey),
+      inject: [PrismaUserRepository],
+    },
+    {
+      provide: AuthenticateWithGoogleUseCase,
+      useFactory: (r: PrismaUserRepository) =>
+        new AuthenticateWithGoogleUseCase(r, env.jwtPrivateKey),
+      inject: [PrismaUserRepository],
+    },
   ],
   exports: [PrismaUserRepository],
 })

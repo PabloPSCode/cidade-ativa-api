@@ -9,6 +9,9 @@ export interface ISolicitationRepository {
   findById(id: string): Promise<Solicitation | null>;
   update(id: string, data: UpdateSolicitationDTO): Promise<Solicitation>;
   delete(id: string): Promise<void>;
-  list(pagination: PaginationDTO, filters?: { userId?: string; status?: string }): Promise<PaginatedResultDTO<Solicitation>>;
+  list(
+    pagination: PaginationDTO,
+    filters?: { userId?: string; status?: string },
+  ): Promise<PaginatedResultDTO<Solicitation>>;
   countOpenByUser(userId: string): Promise<number>;
 }

@@ -10,7 +10,9 @@ const MAX_PER_PAGE = 100;
 export class ListLogsUseCase {
   constructor(private readonly logRepository: ILogRepository) {}
 
-  async execute(pagination?: Partial<PaginationDTO>): Promise<PaginatedResult<Log>> {
+  async execute(
+    pagination?: Partial<PaginationDTO>,
+  ): Promise<PaginatedResult<Log>> {
     const page = Math.max(pagination?.page ?? DEFAULT_PAGE, 1);
     const perPage = Math.min(
       Math.max(pagination?.perPage ?? DEFAULT_PER_PAGE, 1),

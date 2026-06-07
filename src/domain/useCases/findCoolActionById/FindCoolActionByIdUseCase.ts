@@ -8,6 +8,11 @@ export class FindCoolActionByIdUseCase {
   async execute(id: string): Promise<CoolActionResponseDTO> {
     const ca = await this.repository.findById(id);
     if (!ca) throw new AppError('Cool action not found', 404);
-    return { id: ca.id, solicitationTypeId: ca.solicitationTypeId, solicitationId: ca.solicitationId, createdAt: ca.createdAt };
+    return {
+      id: ca.id,
+      solicitationTypeId: ca.solicitationTypeId,
+      solicitationId: ca.solicitationId,
+      createdAt: ca.createdAt,
+    };
   }
 }

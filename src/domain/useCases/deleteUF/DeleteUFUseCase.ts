@@ -7,7 +7,8 @@ export class DeleteUFUseCase {
     const existing = await this.repository.findById(id);
     if (!existing) throw new AppError('UF not found', 404);
     const hasCities = await this.repository.hasCities(id);
-    if (hasCities) throw new AppError('Cannot delete a UF that has linked cities', 400);
+    if (hasCities)
+      throw new AppError('Cannot delete a UF that has linked cities', 400);
     await this.repository.delete(id);
   }
 }

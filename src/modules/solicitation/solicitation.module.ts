@@ -17,11 +17,38 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
     JwtUserStrategy,
     PrismaSolicitationRepository,
     PrismaUserRepository,
-    { provide: CreateSolicitationUseCase, useFactory: (sr: PrismaSolicitationRepository, ur: PrismaUserRepository) => new CreateSolicitationUseCase(sr, ur), inject: [PrismaSolicitationRepository, PrismaUserRepository] },
-    { provide: UpdateSolicitationUseCase, useFactory: (r: PrismaSolicitationRepository) => new UpdateSolicitationUseCase(r), inject: [PrismaSolicitationRepository] },
-    { provide: DeleteSolicitationUseCase, useFactory: (r: PrismaSolicitationRepository) => new DeleteSolicitationUseCase(r), inject: [PrismaSolicitationRepository] },
-    { provide: FindSolicitationByIdUseCase, useFactory: (r: PrismaSolicitationRepository) => new FindSolicitationByIdUseCase(r), inject: [PrismaSolicitationRepository] },
-    { provide: ListSolicitationsUseCase, useFactory: (r: PrismaSolicitationRepository) => new ListSolicitationsUseCase(r), inject: [PrismaSolicitationRepository] },
+    {
+      provide: CreateSolicitationUseCase,
+      useFactory: (
+        sr: PrismaSolicitationRepository,
+        ur: PrismaUserRepository,
+      ) => new CreateSolicitationUseCase(sr, ur),
+      inject: [PrismaSolicitationRepository, PrismaUserRepository],
+    },
+    {
+      provide: UpdateSolicitationUseCase,
+      useFactory: (r: PrismaSolicitationRepository) =>
+        new UpdateSolicitationUseCase(r),
+      inject: [PrismaSolicitationRepository],
+    },
+    {
+      provide: DeleteSolicitationUseCase,
+      useFactory: (r: PrismaSolicitationRepository) =>
+        new DeleteSolicitationUseCase(r),
+      inject: [PrismaSolicitationRepository],
+    },
+    {
+      provide: FindSolicitationByIdUseCase,
+      useFactory: (r: PrismaSolicitationRepository) =>
+        new FindSolicitationByIdUseCase(r),
+      inject: [PrismaSolicitationRepository],
+    },
+    {
+      provide: ListSolicitationsUseCase,
+      useFactory: (r: PrismaSolicitationRepository) =>
+        new ListSolicitationsUseCase(r),
+      inject: [PrismaSolicitationRepository],
+    },
   ],
 })
 export class SolicitationModule {}

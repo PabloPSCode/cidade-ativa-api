@@ -1,1 +1,3 @@
-export interface UpdateUFDTO { name?: string; }
+export interface UpdateUFDTO {
+  name?: string;
+}

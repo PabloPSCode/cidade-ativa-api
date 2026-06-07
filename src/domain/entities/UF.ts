@@ -1,3 +1,6 @@
 export class UF {
-  constructor(public readonly id: string, public name: string) {}
+  constructor(
+    public readonly id: string,
+    public name: string,
+  ) {}
 }

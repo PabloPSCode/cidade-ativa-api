@@ -1,1 +1,4 @@
-export interface UFResponseDTO { id: string; name: string; }
+export interface UFResponseDTO {
+  id: string;
+  name: string;
+}

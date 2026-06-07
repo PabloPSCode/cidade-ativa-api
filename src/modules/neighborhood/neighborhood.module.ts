@@ -15,11 +15,36 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
   providers: [
     JwtUserStrategy,
     PrismaNeighborhoodRepository,
-    { provide: CreateNeighborhoodUseCase, useFactory: (r: PrismaNeighborhoodRepository) => new CreateNeighborhoodUseCase(r), inject: [PrismaNeighborhoodRepository] },
-    { provide: UpdateNeighborhoodUseCase, useFactory: (r: PrismaNeighborhoodRepository) => new UpdateNeighborhoodUseCase(r), inject: [PrismaNeighborhoodRepository] },
-    { provide: DeleteNeighborhoodUseCase, useFactory: (r: PrismaNeighborhoodRepository) => new DeleteNeighborhoodUseCase(r), inject: [PrismaNeighborhoodRepository] },
-    { provide: FindNeighborhoodByIdUseCase, useFactory: (r: PrismaNeighborhoodRepository) => new FindNeighborhoodByIdUseCase(r), inject: [PrismaNeighborhoodRepository] },
-    { provide: ListNeighborhoodsUseCase, useFactory: (r: PrismaNeighborhoodRepository) => new ListNeighborhoodsUseCase(r), inject: [PrismaNeighborhoodRepository] },
+    {
+      provide: CreateNeighborhoodUseCase,
+      useFactory: (r: PrismaNeighborhoodRepository) =>
+        new CreateNeighborhoodUseCase(r),
+      inject: [PrismaNeighborhoodRepository],
+    },
+    {
+      provide: UpdateNeighborhoodUseCase,
+      useFactory: (r: PrismaNeighborhoodRepository) =>
+        new UpdateNeighborhoodUseCase(r),
+      inject: [PrismaNeighborhoodRepository],
+    },
+    {
+      provide: DeleteNeighborhoodUseCase,
+      useFactory: (r: PrismaNeighborhoodRepository) =>
+        new DeleteNeighborhoodUseCase(r),
+      inject: [PrismaNeighborhoodRepository],
+    },
+    {
+      provide: FindNeighborhoodByIdUseCase,
+      useFactory: (r: PrismaNeighborhoodRepository) =>
+        new FindNeighborhoodByIdUseCase(r),
+      inject: [PrismaNeighborhoodRepository],
+    },
+    {
+      provide: ListNeighborhoodsUseCase,
+      useFactory: (r: PrismaNeighborhoodRepository) =>
+        new ListNeighborhoodsUseCase(r),
+      inject: [PrismaNeighborhoodRepository],
+    },
   ],
 })
 export class NeighborhoodModule {}

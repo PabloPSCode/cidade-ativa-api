@@ -1,1 +1,3 @@
-export interface CreateUFDTO { name: string; }
+export interface CreateUFDTO {
+  name: string;
+}

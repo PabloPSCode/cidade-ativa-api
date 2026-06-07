@@ -6,7 +6,10 @@ import { IPublicPhoneRepository } from '../../repositories/IPublicPhoneRepositor
 export class UpdatePublicPhoneUseCase {
   constructor(private readonly repository: IPublicPhoneRepository) {}
 
-  async execute(id: string, data: UpdatePublicPhoneDTO): Promise<PublicPhoneResponseDTO> {
+  async execute(
+    id: string,
+    data: UpdatePublicPhoneDTO,
+  ): Promise<PublicPhoneResponseDTO> {
     const existing = await this.repository.findById(id);
     if (!existing) throw new AppError('Public phone not found', 404);
     const updated = await this.repository.update(id, data);

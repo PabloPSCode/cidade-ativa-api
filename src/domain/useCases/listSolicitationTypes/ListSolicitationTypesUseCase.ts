@@ -6,10 +6,16 @@ import { ISolicitationTypeRepository } from '../../repositories/ISolicitationTyp
 export class ListSolicitationTypesUseCase {
   constructor(private readonly repository: ISolicitationTypeRepository) {}
 
-  async execute(pagination: PaginationDTO): Promise<PaginatedResultDTO<SolicitationTypeResponseDTO>> {
+  async execute(
+    pagination: PaginationDTO,
+  ): Promise<PaginatedResultDTO<SolicitationTypeResponseDTO>> {
     const result = await this.repository.list(pagination);
     return {
-      data: result.data.map((s) => ({ id: s.id, description: s.description, points: s.points })),
+      data: result.data.map((s) => ({
+        id: s.id,
+        description: s.description,
+        points: s.points,
+      })),
       meta: result.meta,
     };
   }

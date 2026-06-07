@@ -6,18 +6,32 @@ import { ISolicitationRepository } from '../../repositories/ISolicitationReposit
 export class UpdateSolicitationUseCase {
   constructor(private readonly repository: ISolicitationRepository) {}
 
-  async execute(id: string, data: UpdateSolicitationDTO): Promise<SolicitationResponseDTO> {
+  async execute(
+    id: string,
+    data: UpdateSolicitationDTO,
+  ): Promise<SolicitationResponseDTO> {
     const existing = await this.repository.findById(id);
     if (!existing) throw new AppError('Solicitation not found', 404);
     const s = await this.repository.update(id, data);
     return {
-      id: s.id, protocolNumber: s.protocolNumber, title: s.title,
-      description: s.description, neighborhood: s.neighborhood, city: s.city,
-      uf: s.uf, street: s.street, requestingUserId: s.requestingUserId,
-      solicitationTypeId: s.solicitationTypeId, status: s.status,
-      unsolvedImageUrls: s.unsolvedImageUrls, solvedImageUrls: s.solvedImageUrls,
-      solvedDate: s.solvedDate, solvedCommentary: s.solvedCommentary,
-      solvedUserId: s.solvedUserId, createdAt: s.createdAt, updatedAt: s.updatedAt,
+      id: s.id,
+      protocolNumber: s.protocolNumber,
+      title: s.title,
+      description: s.description,
+      neighborhood: s.neighborhood,
+      city: s.city,
+      uf: s.uf,
+      street: s.street,
+      requestingUserId: s.requestingUserId,
+      solicitationTypeId: s.solicitationTypeId,
+      status: s.status,
+      unsolvedImageUrls: s.unsolvedImageUrls,
+      solvedImageUrls: s.solvedImageUrls,
+      solvedDate: s.solvedDate,
+      solvedCommentary: s.solvedCommentary,
+      solvedUserId: s.solvedUserId,
+      createdAt: s.createdAt,
+      updatedAt: s.updatedAt,
     };
   }
 }

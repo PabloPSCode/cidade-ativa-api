@@ -6,8 +6,13 @@ import { IPublicPhoneRepository } from '../../repositories/IPublicPhoneRepositor
 export class ListPublicPhonesUseCase {
   constructor(private readonly repository: IPublicPhoneRepository) {}
 
-  async execute(pagination: PaginationDTO): Promise<PaginatedResultDTO<PublicPhoneResponseDTO>> {
+  async execute(
+    pagination: PaginationDTO,
+  ): Promise<PaginatedResultDTO<PublicPhoneResponseDTO>> {
     const result = await this.repository.list(pagination);
-    return { data: result.data.map((p) => ({ id: p.id, phone: p.phone })), meta: result.meta };
+    return {
+      data: result.data.map((p) => ({ id: p.id, phone: p.phone })),
+      meta: result.meta,
+    };
   }
 }

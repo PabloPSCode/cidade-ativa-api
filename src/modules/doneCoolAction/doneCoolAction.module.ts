@@ -19,11 +19,43 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
     PrismaDoneCoolActionRepository,
     PrismaUserRepository,
     PrismaCoolActionRepository,
-    { provide: CreateDoneCoolActionUseCase, useFactory: (r: PrismaDoneCoolActionRepository, u: PrismaUserRepository, ca: PrismaCoolActionRepository) => new CreateDoneCoolActionUseCase(r, u, ca), inject: [PrismaDoneCoolActionRepository, PrismaUserRepository, PrismaCoolActionRepository] },
-    { provide: UpdateDoneCoolActionUseCase, useFactory: (r: PrismaDoneCoolActionRepository) => new UpdateDoneCoolActionUseCase(r), inject: [PrismaDoneCoolActionRepository] },
-    { provide: DeleteDoneCoolActionUseCase, useFactory: (r: PrismaDoneCoolActionRepository) => new DeleteDoneCoolActionUseCase(r), inject: [PrismaDoneCoolActionRepository] },
-    { provide: FindDoneCoolActionByIdUseCase, useFactory: (r: PrismaDoneCoolActionRepository) => new FindDoneCoolActionByIdUseCase(r), inject: [PrismaDoneCoolActionRepository] },
-    { provide: ListDoneCoolActionsUseCase, useFactory: (r: PrismaDoneCoolActionRepository) => new ListDoneCoolActionsUseCase(r), inject: [PrismaDoneCoolActionRepository] },
+    {
+      provide: CreateDoneCoolActionUseCase,
+      useFactory: (
+        r: PrismaDoneCoolActionRepository,
+        u: PrismaUserRepository,
+        ca: PrismaCoolActionRepository,
+      ) => new CreateDoneCoolActionUseCase(r, u, ca),
+      inject: [
+        PrismaDoneCoolActionRepository,
+        PrismaUserRepository,
+        PrismaCoolActionRepository,
+      ],
+    },
+    {
+      provide: UpdateDoneCoolActionUseCase,
+      useFactory: (r: PrismaDoneCoolActionRepository) =>
+        new UpdateDoneCoolActionUseCase(r),
+      inject: [PrismaDoneCoolActionRepository],
+    },
+    {
+      provide: DeleteDoneCoolActionUseCase,
+      useFactory: (r: PrismaDoneCoolActionRepository) =>
+        new DeleteDoneCoolActionUseCase(r),
+      inject: [PrismaDoneCoolActionRepository],
+    },
+    {
+      provide: FindDoneCoolActionByIdUseCase,
+      useFactory: (r: PrismaDoneCoolActionRepository) =>
+        new FindDoneCoolActionByIdUseCase(r),
+      inject: [PrismaDoneCoolActionRepository],
+    },
+    {
+      provide: ListDoneCoolActionsUseCase,
+      useFactory: (r: PrismaDoneCoolActionRepository) =>
+        new ListDoneCoolActionsUseCase(r),
+      inject: [PrismaDoneCoolActionRepository],
+    },
   ],
 })
 export class DoneCoolActionModule {}

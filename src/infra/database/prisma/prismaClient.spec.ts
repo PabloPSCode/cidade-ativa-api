@@ -16,7 +16,8 @@ jest.mock(
 import { createPrismaClient } from './prismaClient.js';
 
 describe('createPrismaClient', () => {
-  const databaseUrl = 'postgresql://postgres:postgres@localhost:5432/cidade_ativa_db';
+  const databaseUrl =
+    'postgresql://postgres:postgres@localhost:5432/cidade_ativa_db';
   const originalDatabaseUrl = process.env.DATABASE_URL;
 
   beforeEach(() => {

@@ -1,1 +1,4 @@
-export interface CreateCityDTO { name: string; ufId: string; }
+export interface CreateCityDTO {
+  name: string;
+  ufId: string;
+}

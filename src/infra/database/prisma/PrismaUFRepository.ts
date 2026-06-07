@@ -29,8 +29,14 @@ export class PrismaUFRepository implements IUFRepository {
   async list(pagination: PaginationDTO): Promise<PaginatedResultDTO<UF>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
-    const [records, total] = await Promise.all([prisma.uF.findMany({ skip, take: perPage, orderBy: { name: 'asc' } }), prisma.uF.count()]);
-    return { data: records.map((r) => new UF(r.id, r.name)), meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) } };
+    const [records, total] = await Promise.all([
+      prisma.uF.findMany({ skip, take: perPage, orderBy: { name: 'asc' } }),
+      prisma.uF.count(),
+    ]);
+    return {
+      data: records.map((r) => new UF(r.id, r.name)),
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
   }
   async hasCities(id: string): Promise<boolean> {
     const count = await prisma.city.count({ where: { ufId: id } });

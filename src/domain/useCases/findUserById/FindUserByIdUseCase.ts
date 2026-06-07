@@ -9,10 +9,16 @@ export class FindUserByIdUseCase {
     const user = await this.repository.findById(id);
     if (!user) throw new AppError('User not found', 404);
     return {
-      id: user.id, name: user.name, email: user.email,
-      isCouncilman: user.isCouncilman, isAdmin: user.isAdmin,
-      address: user.address, neighborhood: user.neighborhood,
-      city: user.city, uf: user.uf, createdAt: user.createdAt,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isCouncilman: user.isCouncilman,
+      isAdmin: user.isAdmin,
+      address: user.address,
+      neighborhood: user.neighborhood,
+      city: user.city,
+      uf: user.uf,
+      createdAt: user.createdAt,
     };
   }
 }

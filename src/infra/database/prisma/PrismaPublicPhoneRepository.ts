@@ -31,13 +31,18 @@ export class PrismaPublicPhoneRepository implements IPublicPhoneRepository {
     await prisma.publicPhone.delete({ where: { id } });
   }
 
-  async list(pagination: PaginationDTO): Promise<PaginatedResultDTO<PublicPhone>> {
+  async list(
+    pagination: PaginationDTO,
+  ): Promise<PaginatedResultDTO<PublicPhone>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
     const [records, total] = await Promise.all([
       prisma.publicPhone.findMany({ skip, take: perPage }),
       prisma.publicPhone.count(),
     ]);
-    return { data: records.map((r) => new PublicPhone(r.id, r.phone)), meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) } };
+    return {
+      data: records.map((r) => new PublicPhone(r.id, r.phone)),
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
   }
 }

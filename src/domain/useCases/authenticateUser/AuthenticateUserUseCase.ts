@@ -11,12 +11,19 @@ export class AuthenticateUserUseCase {
     private readonly jwtPrivateKey: string,
   ) {}
 
-  async execute(data: AuthenticateUserDTO): Promise<AuthenticateUserResponseDTO> {
+  async execute(
+    data: AuthenticateUserDTO,
+  ): Promise<AuthenticateUserResponseDTO> {
     const user = await this.repository.findByEmail(data.email);
-    if (!user) throw new AppError('User not found or credentials do not match', 401);
+    if (!user)
+      throw new AppError('User not found or credentials do not match', 401);
 
-    const passwordMatch = await bcrypt.compare(data.password, user.passwordHash);
-    if (!passwordMatch) throw new AppError('User not found or credentials do not match', 401);
+    const passwordMatch = await bcrypt.compare(
+      data.password,
+      user.passwordHash,
+    );
+    if (!passwordMatch)
+      throw new AppError('User not found or credentials do not match', 401);
 
     const privateKey = Buffer.from(this.jwtPrivateKey, 'base64');
     const token = jwt.sign(

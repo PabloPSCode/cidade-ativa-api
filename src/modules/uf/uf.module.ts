@@ -15,11 +15,31 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
   providers: [
     JwtUserStrategy,
     PrismaUFRepository,
-    { provide: CreateUFUseCase, useFactory: (r: PrismaUFRepository) => new CreateUFUseCase(r), inject: [PrismaUFRepository] },
-    { provide: UpdateUFUseCase, useFactory: (r: PrismaUFRepository) => new UpdateUFUseCase(r), inject: [PrismaUFRepository] },
-    { provide: DeleteUFUseCase, useFactory: (r: PrismaUFRepository) => new DeleteUFUseCase(r), inject: [PrismaUFRepository] },
-    { provide: FindUFByIdUseCase, useFactory: (r: PrismaUFRepository) => new FindUFByIdUseCase(r), inject: [PrismaUFRepository] },
-    { provide: ListUFsUseCase, useFactory: (r: PrismaUFRepository) => new ListUFsUseCase(r), inject: [PrismaUFRepository] },
+    {
+      provide: CreateUFUseCase,
+      useFactory: (r: PrismaUFRepository) => new CreateUFUseCase(r),
+      inject: [PrismaUFRepository],
+    },
+    {
+      provide: UpdateUFUseCase,
+      useFactory: (r: PrismaUFRepository) => new UpdateUFUseCase(r),
+      inject: [PrismaUFRepository],
+    },
+    {
+      provide: DeleteUFUseCase,
+      useFactory: (r: PrismaUFRepository) => new DeleteUFUseCase(r),
+      inject: [PrismaUFRepository],
+    },
+    {
+      provide: FindUFByIdUseCase,
+      useFactory: (r: PrismaUFRepository) => new FindUFByIdUseCase(r),
+      inject: [PrismaUFRepository],
+    },
+    {
+      provide: ListUFsUseCase,
+      useFactory: (r: PrismaUFRepository) => new ListUFsUseCase(r),
+      inject: [PrismaUFRepository],
+    },
   ],
 })
 export class UFModule {}

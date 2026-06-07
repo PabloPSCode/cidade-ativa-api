@@ -1,4 +1,8 @@
-export type SolicitationStatus = 'not_resolved' | 'in_progress' | 'resolved' | 'unconsidered';
+export type SolicitationStatus =
+  | 'not_resolved'
+  | 'in_progress'
+  | 'resolved'
+  | 'unconsidered';
 
 export interface UpdateSolicitationDTO {
   title?: string;

@@ -15,11 +15,36 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
   providers: [
     JwtUserStrategy,
     PrismaCoolActionRepository,
-    { provide: CreateCoolActionUseCase, useFactory: (r: PrismaCoolActionRepository) => new CreateCoolActionUseCase(r), inject: [PrismaCoolActionRepository] },
-    { provide: UpdateCoolActionUseCase, useFactory: (r: PrismaCoolActionRepository) => new UpdateCoolActionUseCase(r), inject: [PrismaCoolActionRepository] },
-    { provide: DeleteCoolActionUseCase, useFactory: (r: PrismaCoolActionRepository) => new DeleteCoolActionUseCase(r), inject: [PrismaCoolActionRepository] },
-    { provide: FindCoolActionByIdUseCase, useFactory: (r: PrismaCoolActionRepository) => new FindCoolActionByIdUseCase(r), inject: [PrismaCoolActionRepository] },
-    { provide: ListCoolActionsUseCase, useFactory: (r: PrismaCoolActionRepository) => new ListCoolActionsUseCase(r), inject: [PrismaCoolActionRepository] },
+    {
+      provide: CreateCoolActionUseCase,
+      useFactory: (r: PrismaCoolActionRepository) =>
+        new CreateCoolActionUseCase(r),
+      inject: [PrismaCoolActionRepository],
+    },
+    {
+      provide: UpdateCoolActionUseCase,
+      useFactory: (r: PrismaCoolActionRepository) =>
+        new UpdateCoolActionUseCase(r),
+      inject: [PrismaCoolActionRepository],
+    },
+    {
+      provide: DeleteCoolActionUseCase,
+      useFactory: (r: PrismaCoolActionRepository) =>
+        new DeleteCoolActionUseCase(r),
+      inject: [PrismaCoolActionRepository],
+    },
+    {
+      provide: FindCoolActionByIdUseCase,
+      useFactory: (r: PrismaCoolActionRepository) =>
+        new FindCoolActionByIdUseCase(r),
+      inject: [PrismaCoolActionRepository],
+    },
+    {
+      provide: ListCoolActionsUseCase,
+      useFactory: (r: PrismaCoolActionRepository) =>
+        new ListCoolActionsUseCase(r),
+      inject: [PrismaCoolActionRepository],
+    },
   ],
 })
 export class CoolActionModule {}

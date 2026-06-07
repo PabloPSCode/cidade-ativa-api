@@ -11,10 +11,16 @@ export class UpdateUserUseCase {
     if (!existing) throw new AppError('User not found', 404);
     const updated = await this.repository.update(id, data);
     return {
-      id: updated.id, name: updated.name, email: updated.email,
-      isCouncilman: updated.isCouncilman, isAdmin: updated.isAdmin,
-      address: updated.address, neighborhood: updated.neighborhood,
-      city: updated.city, uf: updated.uf, createdAt: updated.createdAt,
+      id: updated.id,
+      name: updated.name,
+      email: updated.email,
+      isCouncilman: updated.isCouncilman,
+      isAdmin: updated.isAdmin,
+      address: updated.address,
+      neighborhood: updated.neighborhood,
+      city: updated.city,
+      uf: updated.uf,
+      createdAt: updated.createdAt,
     };
   }
 }

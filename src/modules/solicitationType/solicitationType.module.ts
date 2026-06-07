@@ -15,11 +15,36 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
   providers: [
     JwtUserStrategy,
     PrismaSolicitationTypeRepository,
-    { provide: CreateSolicitationTypeUseCase, useFactory: (r: PrismaSolicitationTypeRepository) => new CreateSolicitationTypeUseCase(r), inject: [PrismaSolicitationTypeRepository] },
-    { provide: UpdateSolicitationTypeUseCase, useFactory: (r: PrismaSolicitationTypeRepository) => new UpdateSolicitationTypeUseCase(r), inject: [PrismaSolicitationTypeRepository] },
-    { provide: DeleteSolicitationTypeUseCase, useFactory: (r: PrismaSolicitationTypeRepository) => new DeleteSolicitationTypeUseCase(r), inject: [PrismaSolicitationTypeRepository] },
-    { provide: FindSolicitationTypeByIdUseCase, useFactory: (r: PrismaSolicitationTypeRepository) => new FindSolicitationTypeByIdUseCase(r), inject: [PrismaSolicitationTypeRepository] },
-    { provide: ListSolicitationTypesUseCase, useFactory: (r: PrismaSolicitationTypeRepository) => new ListSolicitationTypesUseCase(r), inject: [PrismaSolicitationTypeRepository] },
+    {
+      provide: CreateSolicitationTypeUseCase,
+      useFactory: (r: PrismaSolicitationTypeRepository) =>
+        new CreateSolicitationTypeUseCase(r),
+      inject: [PrismaSolicitationTypeRepository],
+    },
+    {
+      provide: UpdateSolicitationTypeUseCase,
+      useFactory: (r: PrismaSolicitationTypeRepository) =>
+        new UpdateSolicitationTypeUseCase(r),
+      inject: [PrismaSolicitationTypeRepository],
+    },
+    {
+      provide: DeleteSolicitationTypeUseCase,
+      useFactory: (r: PrismaSolicitationTypeRepository) =>
+        new DeleteSolicitationTypeUseCase(r),
+      inject: [PrismaSolicitationTypeRepository],
+    },
+    {
+      provide: FindSolicitationTypeByIdUseCase,
+      useFactory: (r: PrismaSolicitationTypeRepository) =>
+        new FindSolicitationTypeByIdUseCase(r),
+      inject: [PrismaSolicitationTypeRepository],
+    },
+    {
+      provide: ListSolicitationTypesUseCase,
+      useFactory: (r: PrismaSolicitationTypeRepository) =>
+        new ListSolicitationTypesUseCase(r),
+      inject: [PrismaSolicitationTypeRepository],
+    },
   ],
 })
 export class SolicitationTypeModule {}

@@ -9,16 +9,23 @@ export class CreateUserUseCase {
 
   async execute(data: CreateUserDTO): Promise<UserResponseDTO> {
     const existing = await this.repository.findByEmail(data.email);
-    if (existing) throw new AppError('User with this email already exists', 409);
+    if (existing)
+      throw new AppError('User with this email already exists', 409);
 
     const passwordHash = await bcrypt.hash(data.password, 6);
     const user = await this.repository.create({ ...data, passwordHash });
 
     return {
-      id: user.id, name: user.name, email: user.email,
-      isCouncilman: user.isCouncilman, isAdmin: user.isAdmin,
-      address: user.address, neighborhood: user.neighborhood,
-      city: user.city, uf: user.uf, createdAt: user.createdAt,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isCouncilman: user.isCouncilman,
+      isAdmin: user.isAdmin,
+      address: user.address,
+      neighborhood: user.neighborhood,
+      city: user.city,
+      uf: user.uf,
+      createdAt: user.createdAt,
     };
   }
 }

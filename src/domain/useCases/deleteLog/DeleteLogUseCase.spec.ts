@@ -27,7 +27,10 @@ class FakeLogRepository implements ILogRepository {
     return this.logs.find((log) => log.id === id) ?? null;
   }
 
-  async findAll(page: number, perPage: number): Promise<{ data: Log[]; total: number }> {
+  async findAll(
+    page: number,
+    perPage: number,
+  ): Promise<{ data: Log[]; total: number }> {
     const start = (page - 1) * perPage;
     const data = this.logs.slice(start, start + perPage);
 
@@ -46,7 +49,8 @@ class FakeLogRepository implements ILogRepository {
     if (data.userId !== undefined) log.userId = data.userId;
     if (data.userName !== undefined) log.userName = data.userName;
     if (data.email !== undefined) log.email = data.email;
-    if (data.activityDescription !== undefined) log.activityDescription = data.activityDescription;
+    if (data.activityDescription !== undefined)
+      log.activityDescription = data.activityDescription;
 
     return log;
   }
@@ -81,12 +85,12 @@ describe('DeleteLogUseCase', () => {
   });
 
   it('should throw AppError when log is not found', async () => {
-    await expect(
-      deleteLogUseCase.execute('non-existent-id'),
-    ).rejects.toThrow(AppError);
+    await expect(deleteLogUseCase.execute('non-existent-id')).rejects.toThrow(
+      AppError,
+    );
 
-    await expect(
-      deleteLogUseCase.execute('non-existent-id'),
-    ).rejects.toThrow('Log not found');
+    await expect(deleteLogUseCase.execute('non-existent-id')).rejects.toThrow(
+      'Log not found',
+    );
   });
 });

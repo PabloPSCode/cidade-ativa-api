@@ -10,6 +10,9 @@ export interface ICityRepository {
   findByNameAndUF(name: string, ufId: string): Promise<City | null>;
   update(id: string, data: UpdateCityDTO): Promise<City>;
   delete(id: string): Promise<void>;
-  list(pagination: PaginationDTO, ufId?: string): Promise<PaginatedResultDTO<City>>;
+  list(
+    pagination: PaginationDTO,
+    ufId?: string,
+  ): Promise<PaginatedResultDTO<City>>;
   hasNeighborhoods(id: string): Promise<boolean>;
 }

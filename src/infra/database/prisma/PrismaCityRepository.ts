@@ -16,7 +16,9 @@ export class PrismaCityRepository implements ICityRepository {
     return r ? new City(r.id, r.name, r.ufId) : null;
   }
   async findByNameAndUF(name: string, ufId: string): Promise<City | null> {
-    const r = await prisma.city.findUnique({ where: { name_ufId: { name, ufId } } });
+    const r = await prisma.city.findUnique({
+      where: { name_ufId: { name, ufId } },
+    });
     return r ? new City(r.id, r.name, r.ufId) : null;
   }
   async update(id: string, data: UpdateCityDTO): Promise<City> {
@@ -26,12 +28,26 @@ export class PrismaCityRepository implements ICityRepository {
   async delete(id: string): Promise<void> {
     await prisma.city.delete({ where: { id } });
   }
-  async list(pagination: PaginationDTO, ufId?: string): Promise<PaginatedResultDTO<City>> {
+  async list(
+    pagination: PaginationDTO,
+    ufId?: string,
+  ): Promise<PaginatedResultDTO<City>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
     const where = ufId ? { ufId } : {};
-    const [records, total] = await Promise.all([prisma.city.findMany({ skip, take: perPage, where, orderBy: { name: 'asc' } }), prisma.city.count({ where })]);
-    return { data: records.map((r) => new City(r.id, r.name, r.ufId)), meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) } };
+    const [records, total] = await Promise.all([
+      prisma.city.findMany({
+        skip,
+        take: perPage,
+        where,
+        orderBy: { name: 'asc' },
+      }),
+      prisma.city.count({ where }),
+    ]);
+    return {
+      data: records.map((r) => new City(r.id, r.name, r.ufId)),
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
   }
   async hasNeighborhoods(id: string): Promise<boolean> {
     const count = await prisma.neighborhood.count({ where: { cityId: id } });

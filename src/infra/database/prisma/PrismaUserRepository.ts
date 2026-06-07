@@ -10,7 +10,19 @@ type CreateInput = CreateUserDTO & { passwordHash: string };
 
 export class PrismaUserRepository implements IUserRepository {
   private toEntity(r: any): User {
-    return new User(r.id, r.name, r.email, r.passwordHash, r.isCouncilman, r.isAdmin, r.address, r.neighborhood, r.city, r.uf, r.createdAt);
+    return new User(
+      r.id,
+      r.name,
+      r.email,
+      r.passwordHash,
+      r.isCouncilman,
+      r.isAdmin,
+      r.address,
+      r.neighborhood,
+      r.city,
+      r.uf,
+      r.createdAt,
+    );
   }
 
   async create(data: CreateInput): Promise<User> {
@@ -42,9 +54,16 @@ export class PrismaUserRepository implements IUserRepository {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
     const [records, total] = await Promise.all([
-      prisma.user.findMany({ skip, take: perPage, orderBy: { createdAt: 'desc' } }),
+      prisma.user.findMany({
+        skip,
+        take: perPage,
+        orderBy: { createdAt: 'desc' },
+      }),
       prisma.user.count(),
     ]);
-    return { data: records.map((r) => this.toEntity(r)), meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) } };
+    return {
+      data: records.map((r) => this.toEntity(r)),
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
   }
 }

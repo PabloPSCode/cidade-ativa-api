@@ -9,7 +9,11 @@ export class DeleteSolicitationTypeUseCase {
     if (!existing) throw new AppError('Solicitation type not found', 404);
 
     const hasLinked = await this.repository.hasLinkedRecords(id);
-    if (hasLinked) throw new AppError('Cannot delete a solicitation type linked to existing solicitations or cool actions', 400);
+    if (hasLinked)
+      throw new AppError(
+        'Cannot delete a solicitation type linked to existing solicitations or cool actions',
+        400,
+      );
 
     await this.repository.delete(id);
   }

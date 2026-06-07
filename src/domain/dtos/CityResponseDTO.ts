@@ -1,1 +1,5 @@
-export interface CityResponseDTO { id: string; name: string; ufId: string; }
+export interface CityResponseDTO {
+  id: string;
+  name: string;
+  ufId: string;
+}

@@ -6,8 +6,18 @@ import { ICoolActionRepository } from '../../repositories/ICoolActionRepository.
 export class ListCoolActionsUseCase {
   constructor(private readonly repository: ICoolActionRepository) {}
 
-  async execute(pagination: PaginationDTO): Promise<PaginatedResultDTO<CoolActionResponseDTO>> {
+  async execute(
+    pagination: PaginationDTO,
+  ): Promise<PaginatedResultDTO<CoolActionResponseDTO>> {
     const result = await this.repository.list(pagination);
-    return { data: result.data.map((ca) => ({ id: ca.id, solicitationTypeId: ca.solicitationTypeId, solicitationId: ca.solicitationId, createdAt: ca.createdAt })), meta: result.meta };
+    return {
+      data: result.data.map((ca) => ({
+        id: ca.id,
+        solicitationTypeId: ca.solicitationTypeId,
+        solicitationId: ca.solicitationId,
+        createdAt: ca.createdAt,
+      })),
+      meta: result.meta,
+    };
   }
 }
