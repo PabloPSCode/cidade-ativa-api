@@ -8,5 +8,4 @@ export interface CreateSolicitationDTO {
   requestingUserId: string;
   solicitationTypeId: string;
   unsolvedImageUrls?: string[];
-  protocolNumber?: string;
 }

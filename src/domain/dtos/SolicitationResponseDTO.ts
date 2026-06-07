@@ -6,7 +6,7 @@ export type SolicitationStatus =
 
 export interface SolicitationResponseDTO {
   id: string;
-  protocolNumber: string | null;
+  protocolNumber: number;
   title: string;
   description: string;
   neighborhood: string;

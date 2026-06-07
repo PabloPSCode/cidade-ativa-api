@@ -10,7 +10,6 @@ export const createSolicitationSchema = z.object({
   requestingUserId: z.string().uuid(),
   solicitationTypeId: z.string().uuid(),
   unsolvedImageUrls: z.array(z.string().min(1)).optional(),
-  protocolNumber: z.string().optional(),
 });
 
 export const updateSolicitationSchema = z.object({

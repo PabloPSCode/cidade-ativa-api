@@ -7,7 +7,7 @@ export type SolicitationStatus =
 export class Solicitation {
   constructor(
     public readonly id: string,
-    public protocolNumber: string | null,
+    public protocolNumber: number,
     public title: string,
     public description: string,
     public neighborhood: string,

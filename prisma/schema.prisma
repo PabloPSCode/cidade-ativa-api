@@ -49,7 +49,7 @@ model SolicitationType {
 
 model Solicitation {
   id                 String             @id @default(uuid())
-  protocolNumber     String?            @unique
+  protocolNumber     Int                @default(autoincrement()) @unique
   title              String
   description        String
   neighborhood       String
