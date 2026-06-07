@@ -9,7 +9,7 @@ export const createSolicitationSchema = z.object({
   street: z.string().min(1),
   requestingUserId: z.string().uuid(),
   solicitationTypeId: z.string().uuid(),
-  unsolvedImageUrls: z.array(z.string().url()).optional(),
+  unsolvedImageUrls: z.array(z.string().min(1)).optional(),
   protocolNumber: z.string().optional(),
 });
 
@@ -20,8 +20,10 @@ export const updateSolicitationSchema = z.object({
   city: z.string().min(1).optional(),
   uf: z.string().min(2).max(2).optional(),
   street: z.string().min(1).optional(),
-  status: z.enum(['not_resolved', 'in_progress', 'resolved', 'unconsidered']).optional(),
-  solvedImageUrls: z.array(z.string().url()).optional(),
+  status: z
+    .enum(['not_resolved', 'in_progress', 'resolved', 'unconsidered'])
+    .optional(),
+  solvedImageUrls: z.array(z.string().min(1)).optional(),
   solvedDate: z.coerce.date().optional(),
   solvedCommentary: z.string().optional(),
   solvedUserId: z.string().uuid().optional(),
