@@ -11,7 +11,11 @@ export class ListPublicPhonesUseCase {
   ): Promise<PaginatedResultDTO<PublicPhoneResponseDTO>> {
     const result = await this.repository.list(pagination);
     return {
-      data: result.data.map((p) => ({ id: p.id, phone: p.phone })),
+      data: result.data.map((p) => ({
+        id: p.id,
+        institutionName: p.institutionName,
+        phone: p.phone,
+      })),
       meta: result.meta,
     };
   }

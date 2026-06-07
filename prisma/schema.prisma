@@ -94,8 +94,9 @@ model DoneCoolAction {
 }
 
 model PublicPhone {
-  id    String @id @default(uuid())
-  phone String @unique
+  id              String @id @default(uuid())
+  institutionName String
+  phone           String @unique
 }
 
 model UF {

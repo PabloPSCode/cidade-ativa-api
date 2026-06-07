@@ -10,6 +10,10 @@ export class CreatePublicPhoneUseCase {
     const existing = await this.repository.findByPhone(data.phone);
     if (existing) throw new AppError('Phone number already registered', 409);
     const phone = await this.repository.create(data);
-    return { id: phone.id, phone: phone.phone };
+    return {
+      id: phone.id,
+      institutionName: phone.institutionName,
+      phone: phone.phone,
+    };
   }
 }

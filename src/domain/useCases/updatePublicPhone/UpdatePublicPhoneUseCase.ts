@@ -13,6 +13,10 @@ export class UpdatePublicPhoneUseCase {
     const existing = await this.repository.findById(id);
     if (!existing) throw new AppError('Public phone not found', 404);
     const updated = await this.repository.update(id, data);
-    return { id: updated.id, phone: updated.phone };
+    return {
+      id: updated.id,
+      institutionName: updated.institutionName,
+      phone: updated.phone,
+    };
   }
 }
