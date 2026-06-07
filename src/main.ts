@@ -6,6 +6,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { env } from './infra/config/env.js';
 import { AppErrorFilter } from './middlewares/appErrorFilter.js';
+import { runSeeds } from './infra/seeds/SeedRunner.js';
+import { seeds } from './infra/seeds/index.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
@@ -15,6 +17,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new AppErrorFilter());
   app.enableCors();
+
+  await runSeeds(seeds);
 
   await app.listen(env.port);
 
