@@ -24,3 +24,7 @@ export const authenticateUserSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
 });
+
+export const authenticateWithGoogleSchema = z.object({
+  email: z.string().email(),
+});
