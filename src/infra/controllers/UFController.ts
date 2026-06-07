@@ -9,6 +9,7 @@ import { UpdateUFUseCase } from '../../domain/useCases/updateUF/UpdateUFUseCase.
 import { DeleteUFUseCase } from '../../domain/useCases/deleteUF/DeleteUFUseCase.js';
 import { FindUFByIdUseCase } from '../../domain/useCases/findUFById/FindUFByIdUseCase.js';
 import { ListUFsUseCase } from '../../domain/useCases/listUFs/ListUFsUseCase.js';
+import { logger } from '../logger/logger.js';
 
 @Controller('ufs')
 @UseGuards(JwtUserGuard)
@@ -24,32 +25,62 @@ export class UFController {
   @Post()
   @UsePipes(new ZodValidationPipe(createUFSchema))
   async create(@Body() body: any, @Req() req: Request) {
-    const result = await this.createUseCase.execute(body);
-    return buildResponse({ res: result, success: true, status: 201, path: req.path });
+    try {
+      const result = await this.createUseCase.execute(body);
+      logger.info({ module: 'UFs', action: 'createUF', message: 'UF created' });
+      return buildResponse({ res: result, success: true, status: 201, path: req.path });
+    } catch (error) {
+      logger.error({ module: 'UFs', action: 'createUF', message: 'Error at creating UF' });
+      throw error;
+    }
   }
 
   @Get()
   async list(@Query('page') page: string, @Query('perPage') perPage: string, @Req() req: Request) {
-    const result = await this.listUseCase.execute({ page: Number(page) || 1, perPage: Number(perPage) || 10 });
-    return buildResponse({ res: result, success: true, status: 200, path: req.path });
+    try {
+      const result = await this.listUseCase.execute({ page: Number(page) || 1, perPage: Number(perPage) || 10 });
+      logger.info({ module: 'UFs', action: 'listUFs', message: 'UFs listed' });
+      return buildResponse({ res: result, success: true, status: 200, path: req.path });
+    } catch (error) {
+      logger.error({ module: 'UFs', action: 'listUFs', message: 'Error at listing UFs' });
+      throw error;
+    }
   }
 
   @Get(':id')
   async findById(@Param('id') id: string, @Req() req: Request) {
-    const result = await this.findByIdUseCase.execute(id);
-    return buildResponse({ res: result, success: true, status: 200, path: req.path });
+    try {
+      const result = await this.findByIdUseCase.execute(id);
+      logger.info({ module: 'UFs', action: 'findUFById', message: 'UF found' });
+      return buildResponse({ res: result, success: true, status: 200, path: req.path });
+    } catch (error) {
+      logger.error({ module: 'UFs', action: 'findUFById', message: 'Error at finding UF' });
+      throw error;
+    }
   }
 
   @Put(':id')
   @UsePipes(new ZodValidationPipe(updateUFSchema))
   async update(@Param('id') id: string, @Body() body: any, @Req() req: Request) {
-    const result = await this.updateUseCase.execute(id, body);
-    return buildResponse({ res: result, success: true, status: 200, path: req.path });
+    try {
+      const result = await this.updateUseCase.execute(id, body);
+      logger.info({ module: 'UFs', action: 'updateUF', message: 'UF updated' });
+      return buildResponse({ res: result, success: true, status: 200, path: req.path });
+    } catch (error) {
+      logger.error({ module: 'UFs', action: 'updateUF', message: 'Error at updating UF' });
+      throw error;
+    }
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req: Request) {
-    await this.deleteUseCase.execute(id);
-    return buildResponse({ res: null, success: true, status: 200, path: req.path });
+    try {
+      await this.deleteUseCase.execute(id);
+      logger.info({ module: 'UFs', action: 'deleteUF', message: 'UF deleted' });
+      return buildResponse({ res: null, success: true, status: 200, path: req.path });
+    } catch (error) {
+      logger.error({ module: 'UFs', action: 'deleteUF', message: 'Error at deleting UF' });
+      throw error;
+    }
   }
 }

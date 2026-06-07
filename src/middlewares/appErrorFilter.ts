@@ -7,6 +7,7 @@ import {
 import type { Request, Response } from 'express';
 import { AppError } from '../domain/errors/AppError.js';
 import { buildResponse } from '../infra/helpers/apiResponse.js';
+import { logger } from '../infra/logger/logger.js';
 
 @Catch()
 export class AppErrorFilter implements ExceptionFilter {
@@ -17,6 +18,7 @@ export class AppErrorFilter implements ExceptionFilter {
     const path = request.path ?? '/';
 
     if (exception instanceof AppError) {
+      logger.error({ module: 'AppErrorFilter', action: request.method, message: exception.message });
       response.status(exception.statusCode).json(
         buildResponse({
           res: null,
@@ -38,6 +40,7 @@ export class AppErrorFilter implements ExceptionFilter {
           ? exceptionResponse
           : (exceptionResponse as { message?: string }).message ?? exception.message;
 
+      logger.error({ module: 'AppErrorFilter', action: request.method, message: errorMessage });
       response.status(status).json(
         buildResponse({
           res: null,
@@ -51,7 +54,7 @@ export class AppErrorFilter implements ExceptionFilter {
       return;
     }
 
-    console.error(exception);
+    logger.error({ module: 'AppErrorFilter', action: request.method, message: 'Unexpected internal server error' });
 
     response.status(500).json(
       buildResponse({
