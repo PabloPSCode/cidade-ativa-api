@@ -14,7 +14,6 @@ export class ListSolicitationTypesUseCase {
       data: result.data.map((s) => ({
         id: s.id,
         description: s.description,
-        points: s.points,
       })),
       meta: result.meta,
     };

@@ -1,22 +1,22 @@
 import { prisma } from '../database/prisma/prismaClient.js';
 import type { Seed } from './SeedRunner.js';
 
-const solicitationTypes: { description: string; points: number }[] = [
-  { description: 'Buraco em via pública', points: 50 },
-  { description: 'Lote sujo ou terreno abandonado', points: 30 },
-  { description: 'Iluminação pública com defeito', points: 40 },
-  { description: 'Calçada danificada ou irregular', points: 35 },
-  { description: 'Entulho ou descarte irregular de resíduos', points: 45 },
-  { description: 'Árvore com risco de queda', points: 60 },
-  { description: 'Esgoto a céu aberto', points: 70 },
-  { description: 'Alagamento ou drenagem insuficiente', points: 55 },
-  { description: 'Sinalização de trânsito danificada', points: 40 },
-  { description: 'Pichação em bem público', points: 20 },
-  { description: 'Animal solto ou abandonado', points: 25 },
-  { description: 'Poda de árvore necessária', points: 30 },
-  { description: 'Vazamento de água em via pública', points: 65 },
-  { description: 'Fossa ou sumidouro com problema', points: 50 },
-  { description: 'Lixo acumulado em via pública', points: 35 },
+const solicitationTypes: { description: string }[] = [
+  { description: 'Buraco em via pública' },
+  { description: 'Lote sujo ou terreno abandonado' },
+  { description: 'Iluminação pública com defeito' },
+  { description: 'Calçada danificada ou irregular' },
+  { description: 'Entulho ou descarte irregular de resíduos' },
+  { description: 'Árvore com risco de queda' },
+  { description: 'Esgoto a céu aberto' },
+  { description: 'Alagamento ou drenagem insuficiente' },
+  { description: 'Sinalização de trânsito danificada' },
+  { description: 'Pichação em bem público' },
+  { description: 'Animal solto ou abandonado' },
+  { description: 'Poda de árvore necessária' },
+  { description: 'Vazamento de água em via pública' },
+  { description: 'Fossa ou sumidouro com problema' },
+  { description: 'Lixo acumulado em via pública' },
 ];
 
 export const seedSolicitationTypes: Seed = {

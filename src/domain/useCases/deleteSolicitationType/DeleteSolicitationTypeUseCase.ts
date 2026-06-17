@@ -6,13 +6,14 @@ export class DeleteSolicitationTypeUseCase {
 
   async execute(id: string): Promise<void> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Solicitation type not found', 404);
+    if (!existing)
+      throw new AppError('Tipo de solicitação não encontrado.', 404);
 
     const hasLinked = await this.repository.hasLinkedRecords(id);
     if (hasLinked)
       throw new AppError(
-        'Cannot delete a solicitation type linked to existing solicitations or cool actions',
-        400,
+        'Não é possível excluir um tipo de solicitação que possui solicitações ou ações legais vinculadas.',
+        409,
       );
 
     await this.repository.delete(id);

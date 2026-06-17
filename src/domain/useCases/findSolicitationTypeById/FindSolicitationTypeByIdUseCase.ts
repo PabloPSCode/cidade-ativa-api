@@ -8,11 +8,10 @@ export class FindSolicitationTypeByIdUseCase {
   async execute(id: string): Promise<SolicitationTypeResponseDTO> {
     const solicitationType = await this.repository.findById(id);
     if (!solicitationType)
-      throw new AppError('Solicitation type not found', 404);
+      throw new AppError('Tipo de solicitação não encontrado.', 404);
     return {
       id: solicitationType.id,
       description: solicitationType.description,
-      points: solicitationType.points,
     };
   }
 }

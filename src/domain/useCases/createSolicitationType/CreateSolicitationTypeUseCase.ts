@@ -12,7 +12,7 @@ export class CreateSolicitationTypeUseCase {
     const existing = await this.repository.findByDescription(data.description);
     if (existing)
       throw new AppError(
-        'Solicitation type with this description already exists',
+        'Já existe um tipo de solicitação com esta descrição.',
         409,
       );
 
@@ -20,7 +20,6 @@ export class CreateSolicitationTypeUseCase {
     return {
       id: solicitationType.id,
       description: solicitationType.description,
-      points: solicitationType.points,
     };
   }
 }

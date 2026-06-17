@@ -11,13 +11,13 @@ export class UpdateSolicitationTypeUseCase {
     data: UpdateSolicitationTypeDTO,
   ): Promise<SolicitationTypeResponseDTO> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Solicitation type not found', 404);
+    if (!existing)
+      throw new AppError('Tipo de solicitação não encontrado.', 404);
 
     const updated = await this.repository.update(id, data);
     return {
       id: updated.id,
       description: updated.description,
-      points: updated.points,
     };
   }
 }
