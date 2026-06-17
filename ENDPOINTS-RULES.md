@@ -121,9 +121,10 @@ export class JWTAdminStrategy extends PassportStrategy(Strategy, "jwt-admin") {
 - Create solicitation. POST /solicitations
 - List solicitations. GET /solicitations?perPage=10&page=1
 - List solicitations by userId. GET /solicitations?userId=1
-- Get solicitation by Id. GET /solicitations:id
-- Update solicitation. PUT /solicitations:id
-- Delete solicitation. DELETE /solicitations:id
+- Get solicitation by Id. GET /solicitations/:id
+- Solve solicitation. POST /solicitations/:id/solve
+- Update solicitation. PUT /solicitations/:id
+- Delete solicitation. DELETE /solicitations/:id
 
 ### RF
 - Its not possible registering a new solicitation if user is a regular user and has at least 3 open solicitations with status different of solved.
@@ -132,10 +133,16 @@ export class JWTAdminStrategy extends PassportStrategy(Strategy, "jwt-admin") {
 - Its not possible creating a new solicitation using an invalid cool action.
 - Its not possible updating a solicitation that does not exists.
 - Its not possible deleting a solicitation that does not exists.
-  
+- Its not possible solving a solicitation that does not exists.
+- Solving a solicitation requires at least one solved photo URL.
+- Only users creates a new solicitation, the administration does not creates solicitations.
+- A new solicitation always is created with "waiting_approval" status waiting for the city admin approval.
+
 ### RN
 - Solicitation registration must follow ICreateSolicitationDTO interface.
 - Solicitation update must follow IUpdateSolicitationDTO interface.
+- Solicitation solve must follow ISolveSolicitationDTO interface: `{ solvedImageUrls: string[], solvedCommentary?: string, solvedUserId: string }`.
+- Solving a solicitation automatically sets status to `resolved` and records the current timestamp as `solvedDate`.
 - All listage must be paginated with 10 items by default.
 - Solicitation UUID V4 to generate solicitation ids.
 
@@ -224,66 +231,63 @@ export class JWTAdminStrategy extends PassportStrategy(Strategy, "jwt-admin") {
 
 ---
 
-## UFs
-- Create UF. POST /ufs
-- List UFs. GET /ufs?perPage=10&page=1
-- Get UF by Id. GET /ufs/:id
-- Update UF. PUT /ufs/:id
-- Delete UF. DELETE /ufs/:id
-
+## Vote Options
+- Create vote option. POST /vote-options
+- List vote options. GET /vote-options?perPage=10&page=1
+- List vote options by vote. GET /vote-options?voteId=id&perPage=10&page=1
+- Get vote option by Id. GET /vote-options/:id
+- Update vote option. PUT /vote-options/:id
+- Delete vote option. DELETE /vote-options/:id
+  
 ### RF
-- Its not possible registering a new UF with the same name.
-- Its not possible updating a UF that does not exists.
-- Its not possible deleting a UF that does not exists.
-- Its not possible deleting a UF that has cities linked to it.
+- Its not possible listing vote options for a non existing vote.
+- Its not possible listing vote options that does not exists.
+- Its not possible updating a vote option that does not exists.
+- Its not possible deleting a vote option that does not exists.
+- Its not possible deleting a vote option that is linked to an existing vote.
 
 ### RN
-- UF registration must follow ICreateUFDTO interface.
-- UF update must follow IUpdateUFDTO interface.
-- All listage must be paginated with 10 items by default.
-- Use UUID V4 to generate UF ids.
+- Vote option registration must follow ICreateVoteOptionDTO interface.
+- Vote option update must follow IUpdateVoteOptionDTO interface.
+- Use UUID V4 to generate vote option.
 
 ---
 
-## Cities
-- Create city. POST /cities
-- List cities. GET /cities?perPage=10&page=1
-- List cities by UF. GET /cities?ufId=:ufId&perPage=10&page=1
-- Get city by Id. GET /cities/:id
-- Update city. PUT /cities/:id
-- Delete city. DELETE /cities/:id
-
+## Vote
+- Create vote. POST /votes
+- List votes. GET /votes?perPage=10&page=1
+- List votes by poll. GET /votes?pollId=id&perPage=10&page=1
+- Get vote by Id. GET /votes/:id
+- Update vote. PUT /votes/:id
+- Delete vote. DELETE /votes/:id
+  
 ### RF
-- Its not possible registering a new city with the same name in the same UF.
-- Its not possible registering a new city with an invalid UF.
-- Its not possible updating a city that does not exists.
-- Its not possible deleting a city that does not exists.
-- Its not possible deleting a city that has neighborhoods linked to it.
+- Its not possible listing votes for a non existing poll.
+- Its not possible listing votes that does not exists.
+- Its not possible updating a vote that does not exists.
+- Its not possible deleting a vote that does not exists.
+- Its not possible deleting a vote that is linked to an existing poll.
 
 ### RN
-- City registration must follow ICreateCityDTO interface.
-- City update must follow IUpdateCityDTO interface.
-- All listage must be paginated with 10 items by default.
-- Use UUID V4 to generate city ids.
-
+- Vote registration must follow ICreateVoteDTO interface.
+- Vote update must follow IUpdateVoteDTO interface.
+- Use UUID V4 to generate vote.
+  
 ---
 
-## Neighborhoods
-- Create neighborhood. POST /neighborhoods
-- List neighborhoods. GET /neighborhoods?perPage=10&page=1
-- List neighborhoods by city. GET /neighborhoods?cityId=:cityId&perPage=10&page=1
-- Get neighborhood by Id. GET /neighborhoods/:id
-- Update neighborhood. PUT /neighborhoods/:id
-- Delete neighborhood. DELETE /neighborhoods/:id
-
+## Polls
+- Create poll. POST /polls
+- List polls. GET /polls?perPage=10&page=1
+- Get poll by Id. GET /polls/:id
+- Update poll. PUT /polls/:id
+- Delete poll. DELETE /polls/:id
+  
 ### RF
-- Its not possible registering a new neighborhood with the same name in the same city.
-- Its not possible registering a new neighborhood with an invalid city.
-- Its not possible updating a neighborhood that does not exists.
-- Its not possible deleting a neighborhood that does not exists.
+- Its not possible listing polls that does not exists.
+- Its not possible updating a poll that does not exists.
+- Its not possible deleting a poll that does not exists.
 
 ### RN
-- Neighborhood registration must follow ICreateNeighborhoodDTO interface.
-- Neighborhood update must follow IUpdateNeighborhoodDTO interface.
-- All listage must be paginated with 10 items by default.
-- Use UUID V4 to generate neighborhood ids.
+- Vote registration must follow ICreatePollDTO interface.
+- Vote update must follow IUpdatePollDTO interface.
+- Use UUID V4 to generate vote.
