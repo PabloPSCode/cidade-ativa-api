@@ -11,11 +11,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { CreateSolicitationTypeUseCase } from '../../domain/useCases/createSolicitationType/CreateSolicitationTypeUseCase.js';
-import { DeleteSolicitationTypeUseCase } from '../../domain/useCases/deleteSolicitationType/DeleteSolicitationTypeUseCase.js';
-import { FindSolicitationTypeByIdUseCase } from '../../domain/useCases/findSolicitationTypeById/FindSolicitationTypeByIdUseCase.js';
-import { ListSolicitationTypesUseCase } from '../../domain/useCases/listSolicitationTypes/ListSolicitationTypesUseCase.js';
-import { UpdateSolicitationTypeUseCase } from '../../domain/useCases/updateSolicitationType/UpdateSolicitationTypeUseCase.js';
+import { CreateSolicitationTypeUseCase } from '../../domain/useCases/SolicitationType/createSolicitationType/CreateSolicitationTypeUseCase.js';
+import { DeleteSolicitationTypeUseCase } from '../../domain/useCases/SolicitationType/deleteSolicitationType/DeleteSolicitationTypeUseCase.js';
+import { FindSolicitationTypeByIdUseCase } from '../../domain/useCases/SolicitationType/findSolicitationTypeById/FindSolicitationTypeByIdUseCase.js';
+import { ListSolicitationTypesUseCase } from '../../domain/useCases/SolicitationType/listSolicitationTypes/ListSolicitationTypesUseCase.js';
+import { UpdateSolicitationTypeUseCase } from '../../domain/useCases/SolicitationType/updateSolicitationType/UpdateSolicitationTypeUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';

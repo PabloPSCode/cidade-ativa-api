@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { PublicPhoneController } from '../../infra/controllers/PublicPhoneController.js';
 import { PrismaPublicPhoneRepository } from '../../infra/database/prisma/PrismaPublicPhoneRepository.js';
-import { CreatePublicPhoneUseCase } from '../../domain/useCases/createPublicPhone/CreatePublicPhoneUseCase.js';
-import { UpdatePublicPhoneUseCase } from '../../domain/useCases/updatePublicPhone/UpdatePublicPhoneUseCase.js';
-import { DeletePublicPhoneUseCase } from '../../domain/useCases/deletePublicPhone/DeletePublicPhoneUseCase.js';
-import { FindPublicPhoneByIdUseCase } from '../../domain/useCases/findPublicPhoneById/FindPublicPhoneByIdUseCase.js';
-import { ListPublicPhonesUseCase } from '../../domain/useCases/listPublicPhones/ListPublicPhonesUseCase.js';
+import { CreatePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/createPublicPhone/CreatePublicPhoneUseCase.js';
+import { UpdatePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/updatePublicPhone/UpdatePublicPhoneUseCase.js';
+import { DeletePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/deletePublicPhone/DeletePublicPhoneUseCase.js';
+import { FindPublicPhoneByIdUseCase } from '../../domain/useCases/PublicPhone/findPublicPhoneById/FindPublicPhoneByIdUseCase.js';
+import { ListPublicPhonesUseCase } from '../../domain/useCases/PublicPhone/listPublicPhones/ListPublicPhonesUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
 
 @Module({

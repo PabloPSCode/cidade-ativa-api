@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { NeighborhoodController } from '../../infra/controllers/NeighborhoodController.js';
 import { PrismaNeighborhoodRepository } from '../../infra/database/prisma/PrismaNeighborhoodRepository.js';
-import { ListNeighborhoodsUseCase } from '../../domain/useCases/listNeighborhoods/ListNeighborhoodsUseCase.js';
+import { ListNeighborhoodsUseCase } from '../../domain/useCases/Neighborhood/listNeighborhoods/ListNeighborhoodsUseCase.js';
 
 @Module({
   controllers: [NeighborhoodController],

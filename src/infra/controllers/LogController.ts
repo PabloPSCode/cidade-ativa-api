@@ -10,11 +10,11 @@ import {
   HttpCode,
   Inject,
 } from '@nestjs/common';
-import { CreateLogUseCase } from '../../domain/useCases/createLog/CreateLogUseCase.js';
-import { FindLogByIdUseCase } from '../../domain/useCases/findLogById/FindLogByIdUseCase.js';
-import { ListLogsUseCase } from '../../domain/useCases/listLogs/ListLogsUseCase.js';
-import { UpdateLogUseCase } from '../../domain/useCases/updateLog/UpdateLogUseCase.js';
-import { DeleteLogUseCase } from '../../domain/useCases/deleteLog/DeleteLogUseCase.js';
+import { CreateLogUseCase } from '../../domain/useCases/Log/createLog/CreateLogUseCase.js';
+import { FindLogByIdUseCase } from '../../domain/useCases/Log/findLogById/FindLogByIdUseCase.js';
+import { ListLogsUseCase } from '../../domain/useCases/Log/listLogs/ListLogsUseCase.js';
+import { UpdateLogUseCase } from '../../domain/useCases/Log/updateLog/UpdateLogUseCase.js';
+import { DeleteLogUseCase } from '../../domain/useCases/Log/deleteLog/DeleteLogUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import {
   createLogSchema,

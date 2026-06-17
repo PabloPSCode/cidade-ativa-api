@@ -11,12 +11,12 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { CreateDoneCoolActionUseCase } from '../../domain/useCases/createDoneCoolAction/CreateDoneCoolActionUseCase.js';
-import { DeleteDoneCoolActionUseCase } from '../../domain/useCases/deleteDoneCoolAction/DeleteDoneCoolActionUseCase.js';
-import { FindDoneCoolActionByIdUseCase } from '../../domain/useCases/findDoneCoolActionById/FindDoneCoolActionByIdUseCase.js';
-import { ListDoneCoolActionsUseCase } from '../../domain/useCases/listDoneCoolActions/ListDoneCoolActionsUseCase.js';
-import { ListDoneCoolActionsRankingUseCase } from '../../domain/useCases/listDoneCoolActionsRanking/ListDoneCoolActionsRankingUseCase.js';
-import { UpdateDoneCoolActionUseCase } from '../../domain/useCases/updateDoneCoolAction/UpdateDoneCoolActionUseCase.js';
+import { CreateDoneCoolActionUseCase } from '../../domain/useCases/DoneCoolAction/createDoneCoolAction/CreateDoneCoolActionUseCase.js';
+import { DeleteDoneCoolActionUseCase } from '../../domain/useCases/DoneCoolAction/deleteDoneCoolAction/DeleteDoneCoolActionUseCase.js';
+import { FindDoneCoolActionByIdUseCase } from '../../domain/useCases/DoneCoolAction/findDoneCoolActionById/FindDoneCoolActionByIdUseCase.js';
+import { ListDoneCoolActionsUseCase } from '../../domain/useCases/DoneCoolAction/listDoneCoolActions/ListDoneCoolActionsUseCase.js';
+import { ListDoneCoolActionsRankingUseCase } from '../../domain/useCases/DoneCoolAction/listDoneCoolActionsRanking/ListDoneCoolActionsRankingUseCase.js';
+import { UpdateDoneCoolActionUseCase } from '../../domain/useCases/DoneCoolAction/updateDoneCoolAction/UpdateDoneCoolActionUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';

@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { CoolActionController } from '../../infra/controllers/CoolActionController.js';
 import { PrismaCoolActionRepository } from '../../infra/database/prisma/PrismaCoolActionRepository.js';
-import { CreateCoolActionUseCase } from '../../domain/useCases/createCoolAction/CreateCoolActionUseCase.js';
-import { UpdateCoolActionUseCase } from '../../domain/useCases/updateCoolAction/UpdateCoolActionUseCase.js';
-import { DeleteCoolActionUseCase } from '../../domain/useCases/deleteCoolAction/DeleteCoolActionUseCase.js';
-import { FindCoolActionByIdUseCase } from '../../domain/useCases/findCoolActionById/FindCoolActionByIdUseCase.js';
-import { ListCoolActionsUseCase } from '../../domain/useCases/listCoolActions/ListCoolActionsUseCase.js';
+import { CreateCoolActionUseCase } from '../../domain/useCases/CoolAction/createCoolAction/CreateCoolActionUseCase.js';
+import { UpdateCoolActionUseCase } from '../../domain/useCases/CoolAction/updateCoolAction/UpdateCoolActionUseCase.js';
+import { DeleteCoolActionUseCase } from '../../domain/useCases/CoolAction/deleteCoolAction/DeleteCoolActionUseCase.js';
+import { FindCoolActionByIdUseCase } from '../../domain/useCases/CoolAction/findCoolActionById/FindCoolActionByIdUseCase.js';
+import { ListCoolActionsUseCase } from '../../domain/useCases/CoolAction/listCoolActions/ListCoolActionsUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
 
 @Module({

@@ -12,11 +12,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { CreateVoteOptionUseCase } from '../../domain/useCases/createVoteOption/CreateVoteOptionUseCase.js';
-import { UpdateVoteOptionUseCase } from '../../domain/useCases/updateVoteOption/UpdateVoteOptionUseCase.js';
-import { DeleteVoteOptionUseCase } from '../../domain/useCases/deleteVoteOption/DeleteVoteOptionUseCase.js';
-import { FindVoteOptionByIdUseCase } from '../../domain/useCases/findVoteOptionById/FindVoteOptionByIdUseCase.js';
-import { ListVoteOptionsUseCase } from '../../domain/useCases/listVoteOptions/ListVoteOptionsUseCase.js';
+import { CreateVoteOptionUseCase } from '../../domain/useCases/VoteOption/createVoteOption/CreateVoteOptionUseCase.js';
+import { UpdateVoteOptionUseCase } from '../../domain/useCases/VoteOption/updateVoteOption/UpdateVoteOptionUseCase.js';
+import { DeleteVoteOptionUseCase } from '../../domain/useCases/VoteOption/deleteVoteOption/DeleteVoteOptionUseCase.js';
+import { FindVoteOptionByIdUseCase } from '../../domain/useCases/VoteOption/findVoteOptionById/FindVoteOptionByIdUseCase.js';
+import { ListVoteOptionsUseCase } from '../../domain/useCases/VoteOption/listVoteOptions/ListVoteOptionsUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';

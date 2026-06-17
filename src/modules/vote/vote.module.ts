@@ -4,11 +4,11 @@ import { VoteController } from '../../infra/controllers/VoteController.js';
 import { PrismaVoteRepository } from '../../infra/database/prisma/PrismaVoteRepository.js';
 import { PrismaUserRepository } from '../../infra/database/prisma/PrismaUserRepository.js';
 import { PrismaPollRepository } from '../../infra/database/prisma/PrismaPollRepository.js';
-import { CreateVoteUseCase } from '../../domain/useCases/createVote/CreateVoteUseCase.js';
-import { UpdateVoteUseCase } from '../../domain/useCases/updateVote/UpdateVoteUseCase.js';
-import { DeleteVoteUseCase } from '../../domain/useCases/deleteVote/DeleteVoteUseCase.js';
-import { FindVoteByIdUseCase } from '../../domain/useCases/findVoteById/FindVoteByIdUseCase.js';
-import { ListVotesUseCase } from '../../domain/useCases/listVotes/ListVotesUseCase.js';
+import { CreateVoteUseCase } from '../../domain/useCases/Vote/createVote/CreateVoteUseCase.js';
+import { UpdateVoteUseCase } from '../../domain/useCases/Vote/updateVote/UpdateVoteUseCase.js';
+import { DeleteVoteUseCase } from '../../domain/useCases/Vote/deleteVote/DeleteVoteUseCase.js';
+import { FindVoteByIdUseCase } from '../../domain/useCases/Vote/findVoteById/FindVoteByIdUseCase.js';
+import { ListVotesUseCase } from '../../domain/useCases/Vote/listVotes/ListVotesUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
 
 @Module({

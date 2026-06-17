@@ -12,11 +12,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { CreateVoteUseCase } from '../../domain/useCases/createVote/CreateVoteUseCase.js';
-import { UpdateVoteUseCase } from '../../domain/useCases/updateVote/UpdateVoteUseCase.js';
-import { DeleteVoteUseCase } from '../../domain/useCases/deleteVote/DeleteVoteUseCase.js';
-import { FindVoteByIdUseCase } from '../../domain/useCases/findVoteById/FindVoteByIdUseCase.js';
-import { ListVotesUseCase } from '../../domain/useCases/listVotes/ListVotesUseCase.js';
+import { CreateVoteUseCase } from '../../domain/useCases/Vote/createVote/CreateVoteUseCase.js';
+import { UpdateVoteUseCase } from '../../domain/useCases/Vote/updateVote/UpdateVoteUseCase.js';
+import { DeleteVoteUseCase } from '../../domain/useCases/Vote/deleteVote/DeleteVoteUseCase.js';
+import { FindVoteByIdUseCase } from '../../domain/useCases/Vote/findVoteById/FindVoteByIdUseCase.js';
+import { ListVotesUseCase } from '../../domain/useCases/Vote/listVotes/ListVotesUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';

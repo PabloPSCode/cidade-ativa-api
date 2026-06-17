@@ -11,14 +11,14 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { AuthenticateUserUseCase } from '../../domain/useCases/authenticateUser/AuthenticateUserUseCase.js';
-import { AuthenticateWithGoogleUseCase } from '../../domain/useCases/authenticateWithGoogle/AuthenticateWithGoogleUseCase.js';
-import { CreateUserUseCase } from '../../domain/useCases/createUser/CreateUserUseCase.js';
-import { DeleteUserUseCase } from '../../domain/useCases/deleteUser/DeleteUserUseCase.js';
-import { FindUserByEmailUseCase } from '../../domain/useCases/findUserByEmail/FindUserByEmailUseCase.js';
-import { FindUserByIdUseCase } from '../../domain/useCases/findUserById/FindUserByIdUseCase.js';
-import { ListUsersUseCase } from '../../domain/useCases/listUsers/ListUsersUseCase.js';
-import { UpdateUserUseCase } from '../../domain/useCases/updateUser/UpdateUserUseCase.js';
+import { AuthenticateUserUseCase } from '../../domain/useCases/User/authenticateUser/AuthenticateUserUseCase.js';
+import { AuthenticateWithGoogleUseCase } from '../../domain/useCases/User/authenticateWithGoogle/AuthenticateWithGoogleUseCase.js';
+import { CreateUserUseCase } from '../../domain/useCases/User/createUser/CreateUserUseCase.js';
+import { DeleteUserUseCase } from '../../domain/useCases/User/deleteUser/DeleteUserUseCase.js';
+import { FindUserByEmailUseCase } from '../../domain/useCases/User/findUserByEmail/FindUserByEmailUseCase.js';
+import { FindUserByIdUseCase } from '../../domain/useCases/User/findUserById/FindUserByIdUseCase.js';
+import { ListUsersUseCase } from '../../domain/useCases/User/listUsers/ListUsersUseCase.js';
+import { UpdateUserUseCase } from '../../domain/useCases/User/updateUser/UpdateUserUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';

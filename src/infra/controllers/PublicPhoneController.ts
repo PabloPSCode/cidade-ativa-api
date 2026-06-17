@@ -12,11 +12,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { DeletePublicPhoneUseCase } from '../../domain/useCases/deletePublicPhone/DeletePublicPhoneUseCase.js';
-import { FindPublicPhoneByIdUseCase } from '../../domain/useCases/findPublicPhoneById/FindPublicPhoneByIdUseCase.js';
-import { ListPublicPhonesUseCase } from '../../domain/useCases/listPublicPhones/ListPublicPhonesUseCase.js';
-import { CreatePublicPhoneUseCase } from '../../domain/useCases/createPublicPhone/CreatePublicPhoneUseCase.js';
-import { UpdatePublicPhoneUseCase } from '../../domain/useCases/updatePublicPhone/UpdatePublicPhoneUseCase.js';
+import { DeletePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/deletePublicPhone/DeletePublicPhoneUseCase.js';
+import { FindPublicPhoneByIdUseCase } from '../../domain/useCases/PublicPhone/findPublicPhoneById/FindPublicPhoneByIdUseCase.js';
+import { ListPublicPhonesUseCase } from '../../domain/useCases/PublicPhone/listPublicPhones/ListPublicPhonesUseCase.js';
+import { CreatePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/createPublicPhone/CreatePublicPhoneUseCase.js';
+import { UpdatePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/updatePublicPhone/UpdatePublicPhoneUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';

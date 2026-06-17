@@ -11,11 +11,11 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { CreateCoolActionUseCase } from '../../domain/useCases/createCoolAction/CreateCoolActionUseCase.js';
-import { DeleteCoolActionUseCase } from '../../domain/useCases/deleteCoolAction/DeleteCoolActionUseCase.js';
-import { FindCoolActionByIdUseCase } from '../../domain/useCases/findCoolActionById/FindCoolActionByIdUseCase.js';
-import { ListCoolActionsUseCase } from '../../domain/useCases/listCoolActions/ListCoolActionsUseCase.js';
-import { UpdateCoolActionUseCase } from '../../domain/useCases/updateCoolAction/UpdateCoolActionUseCase.js';
+import { CreateCoolActionUseCase } from '../../domain/useCases/CoolAction/createCoolAction/CreateCoolActionUseCase.js';
+import { DeleteCoolActionUseCase } from '../../domain/useCases/CoolAction/deleteCoolAction/DeleteCoolActionUseCase.js';
+import { FindCoolActionByIdUseCase } from '../../domain/useCases/CoolAction/findCoolActionById/FindCoolActionByIdUseCase.js';
+import { ListCoolActionsUseCase } from '../../domain/useCases/CoolAction/listCoolActions/ListCoolActionsUseCase.js';
+import { UpdateCoolActionUseCase } from '../../domain/useCases/CoolAction/updateCoolAction/UpdateCoolActionUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';

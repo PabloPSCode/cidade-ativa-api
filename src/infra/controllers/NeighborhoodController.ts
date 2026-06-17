@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Req } from '@nestjs/common';
 import type { Request } from 'express';
-import { ListNeighborhoodsUseCase } from '../../domain/useCases/listNeighborhoods/ListNeighborhoodsUseCase.js';
+import { ListNeighborhoodsUseCase } from '../../domain/useCases/Neighborhood/listNeighborhoods/ListNeighborhoodsUseCase.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
 
