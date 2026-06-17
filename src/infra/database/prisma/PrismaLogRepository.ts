@@ -27,8 +27,8 @@ export class PrismaLogRepository implements ILogRepository {
   }
 
   async findById(id: string): Promise<Log | null> {
-    const log = await this.prisma.log.findUnique({
-      where: { id },
+    const log = await this.prisma.log.findFirst({
+      where: { id, deletedAt: null },
     });
 
     if (!log) {
@@ -42,13 +42,15 @@ export class PrismaLogRepository implements ILogRepository {
     page: number,
     perPage: number,
   ): Promise<{ data: Log[]; total: number }> {
+    const where = { deletedAt: null };
     const [logs, total] = await Promise.all([
       this.prisma.log.findMany({
         skip: (page - 1) * perPage,
         take: perPage,
+        where,
         orderBy: { createdAt: 'desc' },
       }),
-      this.prisma.log.count(),
+      this.prisma.log.count({ where }),
     ]);
 
     return {
@@ -74,8 +76,9 @@ export class PrismaLogRepository implements ILogRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await this.prisma.log.delete({
+    await this.prisma.log.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 }
