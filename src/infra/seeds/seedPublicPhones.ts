@@ -19,12 +19,6 @@ export const seedPublicPhones: Seed = {
   },
 
   async run() {
-    for (const entry of publicPhones) {
-      await prisma.publicPhone.upsert({
-        where: { phone: entry.phone },
-        update: {},
-        create: entry,
-      });
-    }
+    await prisma.publicPhone.createMany({ data: publicPhones });
   },
 };

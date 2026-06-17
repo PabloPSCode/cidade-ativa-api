@@ -11,7 +11,7 @@ export class UpdatePublicPhoneUseCase {
     data: UpdatePublicPhoneDTO,
   ): Promise<PublicPhoneResponseDTO> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Public phone not found', 404);
+    if (!existing) throw new AppError('Telefone público não encontrado.', 404);
     const updated = await this.repository.update(id, data);
     return {
       id: updated.id,

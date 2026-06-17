@@ -7,7 +7,7 @@ export class FindPublicPhoneByIdUseCase {
 
   async execute(id: string): Promise<PublicPhoneResponseDTO> {
     const phone = await this.repository.findById(id);
-    if (!phone) throw new AppError('Public phone not found', 404);
+    if (!phone) throw new AppError('Telefone público não encontrado.', 404);
     return {
       id: phone.id,
       institutionName: phone.institutionName,

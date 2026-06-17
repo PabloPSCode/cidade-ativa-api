@@ -6,7 +6,7 @@ export class DeletePublicPhoneUseCase {
 
   async execute(id: string): Promise<void> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Public phone not found', 404);
+    if (!existing) throw new AppError('Telefone público não encontrado.', 404);
     await this.repository.delete(id);
   }
 }
