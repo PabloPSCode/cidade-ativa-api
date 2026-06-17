@@ -4,10 +4,11 @@ import { SolicitationController } from '../../infra/controllers/SolicitationCont
 import { PrismaSolicitationRepository } from '../../infra/database/prisma/PrismaSolicitationRepository.js';
 import { PrismaUserRepository } from '../../infra/database/prisma/PrismaUserRepository.js';
 import { CreateSolicitationUseCase } from '../../domain/useCases/createSolicitation/CreateSolicitationUseCase.js';
-import { UpdateSolicitationUseCase } from '../../domain/useCases/updateSolicitation/UpdateSolicitationUseCase.js';
 import { DeleteSolicitationUseCase } from '../../domain/useCases/deleteSolicitation/DeleteSolicitationUseCase.js';
 import { FindSolicitationByIdUseCase } from '../../domain/useCases/findSolicitationById/FindSolicitationByIdUseCase.js';
 import { ListSolicitationsUseCase } from '../../domain/useCases/listSolicitations/ListSolicitationsUseCase.js';
+import { SolveSolicitationUseCase } from '../../domain/useCases/solveSolicitation/SolveSolicitationUseCase.js';
+import { UpdateSolicitationUseCase } from '../../domain/useCases/updateSolicitation/UpdateSolicitationUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
 
 @Module({
@@ -26,12 +27,6 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
       inject: [PrismaSolicitationRepository, PrismaUserRepository],
     },
     {
-      provide: UpdateSolicitationUseCase,
-      useFactory: (r: PrismaSolicitationRepository) =>
-        new UpdateSolicitationUseCase(r),
-      inject: [PrismaSolicitationRepository],
-    },
-    {
       provide: DeleteSolicitationUseCase,
       useFactory: (r: PrismaSolicitationRepository) =>
         new DeleteSolicitationUseCase(r),
@@ -47,6 +42,18 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
       provide: ListSolicitationsUseCase,
       useFactory: (r: PrismaSolicitationRepository) =>
         new ListSolicitationsUseCase(r),
+      inject: [PrismaSolicitationRepository],
+    },
+    {
+      provide: SolveSolicitationUseCase,
+      useFactory: (r: PrismaSolicitationRepository) =>
+        new SolveSolicitationUseCase(r),
+      inject: [PrismaSolicitationRepository],
+    },
+    {
+      provide: UpdateSolicitationUseCase,
+      useFactory: (r: PrismaSolicitationRepository) =>
+        new UpdateSolicitationUseCase(r),
       inject: [PrismaSolicitationRepository],
     },
   ],

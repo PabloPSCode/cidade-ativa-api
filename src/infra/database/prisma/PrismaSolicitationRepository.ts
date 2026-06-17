@@ -11,7 +11,7 @@ import { PaginatedResultDTO } from '../../../domain/dtos/PaginatedResultDTO.js';
 
 export class PrismaSolicitationRepository implements ISolicitationRepository {
   private toEntity(r: any): Solicitation {
-    return new Solicitation(
+    const entity = new Solicitation(
       r.id,
       r.protocolNumber,
       r.title,
@@ -37,21 +37,30 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
       r.createdAt,
       r.updatedAt,
     );
+    if (r.requestingUser?.name) {
+      entity.requestingUserName = r.requestingUser.name;
+    }
+    return entity;
   }
 
   async create(data: CreateSolicitationDTO): Promise<Solicitation> {
     const r = await prisma.solicitation.create({
       data: {
         ...data,
+        city: '',
+        uf: '',
         unsolvedImageUrls: data.unsolvedImageUrls ?? [],
-        status: 'not_resolved',
+        status: 'waiting_approval',
       },
     });
     return this.toEntity(r);
   }
 
   async findById(id: string): Promise<Solicitation | null> {
-    const r = await prisma.solicitation.findUnique({ where: { id } });
+    const r = await prisma.solicitation.findFirst({
+      where: { id, deletedAt: null },
+      include: { requestingUser: true },
+    });
     return r ? this.toEntity(r) : null;
   }
 
@@ -64,7 +73,10 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await prisma.solicitation.delete({ where: { id } });
+    await prisma.solicitation.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 
   async list(
@@ -73,7 +85,7 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
   ): Promise<PaginatedResultDTO<Solicitation>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
-    const where: any = {};
+    const where: any = { deletedAt: null };
     if (filters?.userId) where.requestingUserId = filters.userId;
     if (filters?.status) where.status = filters.status;
     const [records, total] = await Promise.all([
@@ -82,6 +94,7 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
         take: perPage,
         where,
         orderBy: { createdAt: 'desc' },
+        include: { requestingUser: true },
       }),
       prisma.solicitation.count({ where }),
     ]);
@@ -93,7 +106,11 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
 
   async countOpenByUser(userId: string): Promise<number> {
     return prisma.solicitation.count({
-      where: { requestingUserId: userId, status: { not: 'resolved' } },
+      where: {
+        requestingUserId: userId,
+        status: { not: 'resolved' },
+        deletedAt: null,
+      },
     });
   }
 }

@@ -22,6 +22,7 @@ export class ListSolicitationsUseCase {
         uf: s.uf,
         street: s.street,
         requestingUserId: s.requestingUserId,
+        requestingUserName: s.requestingUserName ?? '',
         solicitationTypeId: s.solicitationTypeId,
         status: s.status,
         unsolvedImageUrls: s.unsolvedImageUrls,

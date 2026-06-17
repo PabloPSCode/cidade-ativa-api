@@ -1,4 +1,5 @@
 export type SolicitationStatus =
+  | 'waiting_approval'
   | 'not_resolved'
   | 'in_progress'
   | 'resolved'
@@ -8,8 +9,6 @@ export interface UpdateSolicitationDTO {
   title?: string;
   description?: string;
   neighborhood?: string;
-  city?: string;
-  uf?: string;
   street?: string;
   status?: SolicitationStatus;
   solvedImageUrls?: string[];

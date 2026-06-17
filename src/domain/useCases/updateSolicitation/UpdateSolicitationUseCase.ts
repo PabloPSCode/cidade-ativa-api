@@ -11,7 +11,7 @@ export class UpdateSolicitationUseCase {
     data: UpdateSolicitationDTO,
   ): Promise<SolicitationResponseDTO> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Solicitation not found', 404);
+    if (!existing) throw new AppError('Solicitação não encontrada.', 404);
     const s = await this.repository.update(id, data);
     return {
       id: s.id,
@@ -23,6 +23,7 @@ export class UpdateSolicitationUseCase {
       uf: s.uf,
       street: s.street,
       requestingUserId: s.requestingUserId,
+      requestingUserName: s.requestingUserName ?? '',
       solicitationTypeId: s.solicitationTypeId,
       status: s.status,
       unsolvedImageUrls: s.unsolvedImageUrls,

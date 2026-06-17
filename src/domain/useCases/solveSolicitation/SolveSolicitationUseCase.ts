@@ -1,13 +1,24 @@
 import { AppError } from '../../errors/AppError.js';
+import { SolveSolicitationDTO } from '../../dtos/SolveSolicitationDTO.js';
 import { SolicitationResponseDTO } from '../../dtos/SolicitationResponseDTO.js';
 import { ISolicitationRepository } from '../../repositories/ISolicitationRepository.js';
 
-export class FindSolicitationByIdUseCase {
+export class SolveSolicitationUseCase {
   constructor(private readonly repository: ISolicitationRepository) {}
 
-  async execute(id: string): Promise<SolicitationResponseDTO> {
-    const s = await this.repository.findById(id);
-    if (!s) throw new AppError('Solicitação não encontrada.', 404);
+  async execute(
+    id: string,
+    data: SolveSolicitationDTO,
+  ): Promise<SolicitationResponseDTO> {
+    const existing = await this.repository.findById(id);
+    if (!existing) throw new AppError('Solicitação não encontrada.', 404);
+    const s = await this.repository.update(id, {
+      status: 'resolved',
+      solvedDate: new Date(),
+      solvedImageUrls: data.solvedImageUrls,
+      solvedCommentary: data.solvedCommentary,
+      solvedUserId: data.solvedUserId,
+    });
     return {
       id: s.id,
       protocolNumber: s.protocolNumber,

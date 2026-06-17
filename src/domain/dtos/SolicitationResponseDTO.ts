@@ -1,4 +1,5 @@
 export type SolicitationStatus =
+  | 'waiting_approval'
   | 'not_resolved'
   | 'in_progress'
   | 'resolved'
@@ -14,6 +15,7 @@ export interface SolicitationResponseDTO {
   uf: string;
   street: string;
   requestingUserId: string;
+  requestingUserName: string;
   solicitationTypeId: string;
   status: SolicitationStatus;
   unsolvedImageUrls: string[];

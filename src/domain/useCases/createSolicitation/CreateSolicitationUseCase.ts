@@ -12,7 +12,8 @@ export class CreateSolicitationUseCase {
 
   async execute(data: CreateSolicitationDTO): Promise<SolicitationResponseDTO> {
     const user = await this.userRepository.findById(data.requestingUserId);
-    if (!user) throw new AppError('Requesting user not found', 404);
+    if (!user)
+      throw new AppError('Usuário solicitante não encontrado.', 404);
 
     if (!user.isCouncilman && !user.isAdmin) {
       const openCount = await this.solicitationRepository.countOpenByUser(
@@ -20,7 +21,7 @@ export class CreateSolicitationUseCase {
       );
       if (openCount >= 3)
         throw new AppError(
-          'Regular users cannot have more than 3 open solicitations',
+          'Você já possui 3 solicitações abertas. Aguarde a resolução de uma delas antes de criar uma nova.',
           422,
         );
     }
@@ -40,6 +41,7 @@ export class CreateSolicitationUseCase {
       uf: s.uf,
       street: s.street,
       requestingUserId: s.requestingUserId,
+      requestingUserName: s.requestingUserName ?? '',
       solicitationTypeId: s.solicitationTypeId,
       status: s.status,
       unsolvedImageUrls: s.unsolvedImageUrls,

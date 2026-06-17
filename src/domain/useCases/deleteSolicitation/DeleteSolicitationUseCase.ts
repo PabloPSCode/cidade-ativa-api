@@ -6,7 +6,7 @@ export class DeleteSolicitationUseCase {
 
   async execute(id: string): Promise<void> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Solicitation not found', 404);
+    if (!existing) throw new AppError('Solicitação não encontrada.', 404);
     await this.repository.delete(id);
   }
 }
