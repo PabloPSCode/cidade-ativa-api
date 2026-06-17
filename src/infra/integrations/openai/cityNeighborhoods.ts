@@ -35,6 +35,10 @@ export const listNeighborhoodsByCity = async (
   cityName: string,
 ): Promise<string[]> => {
   const { openAiApiKey, openAiModel } = getEnv();
+  const model =
+    typeof openAiModel === 'string' && openAiModel.trim().length > 0
+      ? openAiModel
+      : 'gpt-5.5';
 
   if (!cityName.trim()) {
     logger.warn({
@@ -61,7 +65,7 @@ export const listNeighborhoodsByCity = async (
       Authorization: `Bearer ${openAiApiKey}`,
     },
     body: JSON.stringify({
-      model: openAiModel,
+      model,
       response_format: { type: 'json_object' },
       messages: [
         {
