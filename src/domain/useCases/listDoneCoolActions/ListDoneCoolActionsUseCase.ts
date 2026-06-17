@@ -15,8 +15,11 @@ export class ListDoneCoolActionsUseCase {
       data: result.data.map((d) => ({
         id: d.id,
         userId: d.userId,
+        description: d.description,
+        neighborhood: d.neighborhood,
+        street: d.street,
+        actionPhotoURL: d.actionPhotoURL,
         coolActionId: d.coolActionId,
-        solicitationId: d.solicitationId,
         createdAt: d.createdAt,
       })),
       meta: result.meta,

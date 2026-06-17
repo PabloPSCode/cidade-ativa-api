@@ -7,12 +7,16 @@ export class FindDoneCoolActionByIdUseCase {
 
   async execute(id: string): Promise<DoneCoolActionResponseDTO> {
     const dca = await this.repository.findById(id);
-    if (!dca) throw new AppError('Done cool action not found', 404);
+    if (!dca)
+      throw new AppError('Registro de ação legal não encontrado.', 404);
     return {
       id: dca.id,
       userId: dca.userId,
+      description: dca.description,
+      neighborhood: dca.neighborhood,
+      street: dca.street,
+      actionPhotoURL: dca.actionPhotoURL,
       coolActionId: dca.coolActionId,
-      solicitationId: dca.solicitationId,
       createdAt: dca.createdAt,
     };
   }

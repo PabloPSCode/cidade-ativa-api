@@ -9,6 +9,7 @@ import { UpdateDoneCoolActionUseCase } from '../../domain/useCases/updateDoneCoo
 import { DeleteDoneCoolActionUseCase } from '../../domain/useCases/deleteDoneCoolAction/DeleteDoneCoolActionUseCase.js';
 import { FindDoneCoolActionByIdUseCase } from '../../domain/useCases/findDoneCoolActionById/FindDoneCoolActionByIdUseCase.js';
 import { ListDoneCoolActionsUseCase } from '../../domain/useCases/listDoneCoolActions/ListDoneCoolActionsUseCase.js';
+import { ListDoneCoolActionsRankingUseCase } from '../../domain/useCases/listDoneCoolActionsRanking/ListDoneCoolActionsRankingUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
 
 @Module({
@@ -54,6 +55,12 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
       provide: ListDoneCoolActionsUseCase,
       useFactory: (r: PrismaDoneCoolActionRepository) =>
         new ListDoneCoolActionsUseCase(r),
+      inject: [PrismaDoneCoolActionRepository],
+    },
+    {
+      provide: ListDoneCoolActionsRankingUseCase,
+      useFactory: (r: PrismaDoneCoolActionRepository) =>
+        new ListDoneCoolActionsRankingUseCase(r),
       inject: [PrismaDoneCoolActionRepository],
     },
   ],

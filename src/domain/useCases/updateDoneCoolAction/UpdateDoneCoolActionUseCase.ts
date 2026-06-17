@@ -11,13 +11,17 @@ export class UpdateDoneCoolActionUseCase {
     data: UpdateDoneCoolActionDTO,
   ): Promise<DoneCoolActionResponseDTO> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Done cool action not found', 404);
+    if (!existing)
+      throw new AppError('Registro de ação legal não encontrado.', 404);
     const dca = await this.repository.update(id, data);
     return {
       id: dca.id,
       userId: dca.userId,
+      description: dca.description,
+      neighborhood: dca.neighborhood,
+      street: dca.street,
+      actionPhotoURL: dca.actionPhotoURL,
       coolActionId: dca.coolActionId,
-      solicitationId: dca.solicitationId,
       createdAt: dca.createdAt,
     };
   }

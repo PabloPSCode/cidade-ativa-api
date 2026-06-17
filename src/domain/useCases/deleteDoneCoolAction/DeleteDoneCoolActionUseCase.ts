@@ -6,7 +6,8 @@ export class DeleteDoneCoolActionUseCase {
 
   async execute(id: string): Promise<void> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Done cool action not found', 404);
+    if (!existing)
+      throw new AppError('Registro de ação legal não encontrado.', 404);
     await this.repository.delete(id);
   }
 }
