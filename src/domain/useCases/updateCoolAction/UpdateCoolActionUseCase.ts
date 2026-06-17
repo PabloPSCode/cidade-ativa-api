@@ -11,12 +11,13 @@ export class UpdateCoolActionUseCase {
     data: UpdateCoolActionDTO,
   ): Promise<CoolActionResponseDTO> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('Cool action not found', 404);
+    if (!existing) throw new AppError('Ação legal não encontrada.', 404);
     const ca = await this.repository.update(id, data);
     return {
       id: ca.id,
-      solicitationTypeId: ca.solicitationTypeId,
-      solicitationId: ca.solicitationId,
+      title: ca.title,
+      category: ca.category,
+      points: ca.points,
       createdAt: ca.createdAt,
     };
   }

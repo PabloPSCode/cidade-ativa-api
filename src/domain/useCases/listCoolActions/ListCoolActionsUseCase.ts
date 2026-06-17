@@ -13,8 +13,9 @@ export class ListCoolActionsUseCase {
     return {
       data: result.data.map((ca) => ({
         id: ca.id,
-        solicitationTypeId: ca.solicitationTypeId,
-        solicitationId: ca.solicitationId,
+        title: ca.title,
+        category: ca.category,
+        points: ca.points,
         createdAt: ca.createdAt,
       })),
       meta: result.meta,

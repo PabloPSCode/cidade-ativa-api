@@ -1,4 +1,7 @@
+import { CoolActionCategory } from '../entities/CoolAction.js';
+
 export interface CreateCoolActionDTO {
-  solicitationTypeId: string;
-  solicitationId: string;
+  title: string;
+  category: CoolActionCategory;
+  points: number;
 }

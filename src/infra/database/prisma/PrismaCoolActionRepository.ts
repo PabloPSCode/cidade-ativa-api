@@ -1,6 +1,9 @@
 import { prisma } from './prismaClient.js';
 import { ICoolActionRepository } from '../../../domain/repositories/ICoolActionRepository.js';
-import { CoolAction } from '../../../domain/entities/CoolAction.js';
+import {
+  CoolAction,
+  CoolActionCategory,
+} from '../../../domain/entities/CoolAction.js';
 import { CreateCoolActionDTO } from '../../../domain/dtos/CreateCoolActionDTO.js';
 import { UpdateCoolActionDTO } from '../../../domain/dtos/UpdateCoolActionDTO.js';
 import { PaginationDTO } from '../../../domain/dtos/PaginationDTO.js';
@@ -10,8 +13,9 @@ export class PrismaCoolActionRepository implements ICoolActionRepository {
   private toEntity(r: any): CoolAction {
     return new CoolAction(
       r.id,
-      r.solicitationTypeId,
-      r.solicitationId,
+      r.title,
+      r.category as CoolActionCategory,
+      r.points,
       r.createdAt,
     );
   }
@@ -22,15 +26,8 @@ export class PrismaCoolActionRepository implements ICoolActionRepository {
   }
 
   async findById(id: string): Promise<CoolAction | null> {
-    const r = await prisma.coolAction.findUnique({ where: { id } });
-    return r ? this.toEntity(r) : null;
-  }
-
-  async findBySolicitationTypeId(
-    solicitationTypeId: string,
-  ): Promise<CoolAction | null> {
     const r = await prisma.coolAction.findFirst({
-      where: { solicitationTypeId },
+      where: { id, deletedAt: null },
     });
     return r ? this.toEntity(r) : null;
   }
@@ -41,7 +38,10 @@ export class PrismaCoolActionRepository implements ICoolActionRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await prisma.coolAction.delete({ where: { id } });
+    await prisma.coolAction.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 
   async list(
@@ -49,13 +49,15 @@ export class PrismaCoolActionRepository implements ICoolActionRepository {
   ): Promise<PaginatedResultDTO<CoolAction>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
+    const where = { deletedAt: null };
     const [records, total] = await Promise.all([
       prisma.coolAction.findMany({
         skip,
         take: perPage,
+        where,
         orderBy: { createdAt: 'desc' },
       }),
-      prisma.coolAction.count(),
+      prisma.coolAction.count({ where }),
     ]);
     return {
       data: records.map((r) => this.toEntity(r)),
