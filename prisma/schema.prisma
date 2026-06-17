@@ -7,19 +7,37 @@ datasource db {
 }
 
 enum SolicitationStatus {
+  waiting_approval
   not_resolved
   in_progress
   resolved
   unconsidered
 }
 
+enum CoolActionCategory {
+  LIMPEZA_URBANA
+  MEIO_AMBIENTE
+  EDUCACAO
+  BEM_ESTAR_ANIMAL
+  ZELADORIA
+  SEGURANCA_COMUNITARIA
+  ENGAJAMENTO_COMUNITARIO
+}
+
+enum PollStatus {
+  active
+  inactive
+  finished
+}
+
 model Log {
-  id                  String   @id @default(uuid())
+  id                  String    @id @default(uuid())
   userId              String
   userName            String
   email               String
   activityDescription String
-  createdAt           DateTime @default(now())
+  createdAt           DateTime  @default(now())
+  deletedAt           DateTime?
 }
 
 model User {
@@ -35,16 +53,17 @@ model User {
   uf              String
   createdAt       DateTime         @default(now())
   updatedAt       DateTime?        @updatedAt
+  deletedAt       DateTime?
   solicitations   Solicitation[]
   doneCoolActions DoneCoolAction[]
+  votes           Vote[]
 }
 
 model SolicitationType {
   id            String         @id @default(uuid())
   description   String         @unique
-  points        Int
+  deletedAt     DateTime?
   solicitations Solicitation[]
-  coolActions   CoolAction[]
 }
 
 model Solicitation {
@@ -66,31 +85,33 @@ model Solicitation {
   solvedUserId       String?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime?          @updatedAt
+  deletedAt          DateTime?
   requestingUser     User               @relation(fields: [requestingUserId], references: [id])
   solicitationType   SolicitationType   @relation(fields: [solicitationTypeId], references: [id])
-  coolAction         CoolAction?
-  doneCoolAction     DoneCoolAction?
 }
 
 model CoolAction {
-  id                 String           @id @default(uuid())
-  solicitationTypeId String
-  solicitationId     String           @unique
-  createdAt          DateTime         @default(now())
-  solicitationType   SolicitationType @relation(fields: [solicitationTypeId], references: [id])
-  solicitation       Solicitation     @relation(fields: [solicitationId], references: [id])
-  doneCoolActions    DoneCoolAction[]
+  id              String             @id @default(uuid())
+  title           String
+  category        CoolActionCategory
+  points          Int
+  createdAt       DateTime           @default(now())
+  deletedAt       DateTime?
+  doneCoolActions DoneCoolAction[]
 }
 
 model DoneCoolAction {
-  id             String       @id @default(uuid())
+  id             String     @id @default(uuid())
   userId         String
+  description    String
+  neighborhood   String
+  street         String
+  actionPhotoURL String
   coolActionId   String
-  solicitationId String       @unique
-  createdAt      DateTime     @default(now())
-  user           User         @relation(fields: [userId], references: [id])
-  coolAction     CoolAction   @relation(fields: [coolActionId], references: [id])
-  solicitation   Solicitation @relation(fields: [solicitationId], references: [id])
+  createdAt      DateTime   @default(now())
+  deletedAt      DateTime?
+  user           User       @relation(fields: [userId], references: [id])
+  coolAction     CoolAction @relation(fields: [coolActionId], references: [id])
 }
 
 model PublicPhone {
@@ -99,27 +120,47 @@ model PublicPhone {
   phone           String @unique
 }
 
-model UF {
-  id     String @id @default(uuid())
-  name   String @unique
-  cities City[]
-}
-
-model City {
-  id            String         @id @default(uuid())
-  name          String
-  ufId          String
-  uf            UF             @relation(fields: [ufId], references: [id])
-  neighborhoods Neighborhood[]
-
-  @@unique([name, ufId])
-}
-
 model Neighborhood {
-  id     String @id @default(uuid())
-  name   String
-  cityId String
-  city   City   @relation(fields: [cityId], references: [id])
-
-  @@unique([name, cityId])
+  id       String @id @default(uuid())
+  name     String
+  cityName String
 }
+
+model Poll {
+  id           String     @id @default(uuid())
+  title        String
+  description  String
+  pollCoverUrl String
+  startedAt    DateTime?
+  finishedAt   DateTime?
+  status       PollStatus @default(inactive)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime?  @updatedAt
+  deletedAt    DateTime?
+  votes        Vote[]
+}
+
+model Vote {
+  id               String       @id @default(uuid())
+  title            String
+  description      String
+  pollId           String
+  userId           String
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime?    @updatedAt
+  deletedAt        DateTime?
+  poll             Poll         @relation(fields: [pollId], references: [id])
+  user             User         @relation(fields: [userId], references: [id])
+  availableOptions VoteOption[]
+}
+
+model VoteOption {
+  id         String    @id @default(uuid())
+  optionText String
+  voteId     String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  deletedAt  DateTime?
+  vote       Vote      @relation(fields: [voteId], references: [id])
+}
+
