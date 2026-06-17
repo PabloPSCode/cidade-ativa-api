@@ -8,7 +8,6 @@ import {
   Put,
   Query,
   Req,
-  UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import type { Request } from 'express';
@@ -21,7 +20,6 @@ import { FindUserByIdUseCase } from '../../domain/useCases/findUserById/FindUser
 import { ListUsersUseCase } from '../../domain/useCases/listUsers/ListUsersUseCase.js';
 import { UpdateUserUseCase } from '../../domain/useCases/updateUser/UpdateUserUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
-import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
 import {
@@ -71,7 +69,6 @@ export class UserController {
   }
 
   @Get('users')
-  @UseGuards(JwtUserGuard)
   async list(
     @Query('page') page: string,
     @Query('perPage') perPage: string,
@@ -104,7 +101,6 @@ export class UserController {
   }
 
   @Get('users/email/:email')
-  @UseGuards(JwtUserGuard)
   async findByEmail(@Param('email') email: string, @Req() req: Request) {
     try {
       const result = await this.findByEmailUseCase.execute(email);
@@ -130,7 +126,6 @@ export class UserController {
   }
 
   @Get('users/:id')
-  @UseGuards(JwtUserGuard)
   async findById(@Param('id') id: string, @Req() req: Request) {
     try {
       const result = await this.findByIdUseCase.execute(id);
@@ -156,7 +151,6 @@ export class UserController {
   }
 
   @Put('users/:id')
-  @UseGuards(JwtUserGuard)
   @UsePipes(new ZodValidationPipe(updateUserSchema))
   async update(
     @Param('id') id: string,
@@ -187,7 +181,6 @@ export class UserController {
   }
 
   @Delete('users/:id')
-  @UseGuards(JwtUserGuard)
   async remove(@Param('id') id: string, @Req() req: Request) {
     try {
       await this.deleteUseCase.execute(id);

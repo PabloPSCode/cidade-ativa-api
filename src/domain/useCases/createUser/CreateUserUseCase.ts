@@ -10,7 +10,10 @@ export class CreateUserUseCase {
   async execute(data: CreateUserDTO): Promise<UserResponseDTO> {
     const existing = await this.repository.findByEmail(data.email);
     if (existing)
-      throw new AppError('User with this email already exists', 409);
+      throw new AppError(
+        'Já existe um usuário cadastrado com este e-mail.',
+        409,
+      );
 
     const passwordHash = await bcrypt.hash(data.password, 6);
     const user = await this.repository.create({ ...data, passwordHash });

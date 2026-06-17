@@ -27,17 +27,25 @@ export class PrismaUserRepository implements IUserRepository {
 
   async create(data: CreateInput): Promise<User> {
     const { password: _p, ...rest } = data as any;
-    const r = await prisma.user.create({ data: { ...rest } });
+    const r = await prisma.user.create({
+      data: {
+        ...rest,
+        address: rest.address ?? '',
+        neighborhood: rest.neighborhood ?? '',
+        city: rest.city ?? '',
+        uf: rest.uf ?? '',
+      },
+    });
     return this.toEntity(r);
   }
 
   async findById(id: string): Promise<User | null> {
-    const r = await prisma.user.findUnique({ where: { id } });
+    const r = await prisma.user.findFirst({ where: { id, deletedAt: null } });
     return r ? this.toEntity(r) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const r = await prisma.user.findFirst({ where: { email } });
+    const r = await prisma.user.findFirst({ where: { email, deletedAt: null } });
     return r ? this.toEntity(r) : null;
   }
 
@@ -47,19 +55,24 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await prisma.user.delete({ where: { id } });
+    await prisma.user.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 
   async list(pagination: PaginationDTO): Promise<PaginatedResultDTO<User>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
+    const where = { deletedAt: null };
     const [records, total] = await Promise.all([
       prisma.user.findMany({
         skip,
         take: perPage,
+        where,
         orderBy: { createdAt: 'desc' },
       }),
-      prisma.user.count(),
+      prisma.user.count({ where }),
     ]);
     return {
       data: records.map((r) => this.toEntity(r)),

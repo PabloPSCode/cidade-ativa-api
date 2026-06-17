@@ -8,7 +8,7 @@ export class UpdateUserUseCase {
 
   async execute(id: string, data: UpdateUserDTO): Promise<UserResponseDTO> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('User not found', 404);
+    if (!existing) throw new AppError('Usuário não encontrado.', 404);
     const updated = await this.repository.update(id, data);
     return {
       id: updated.id,

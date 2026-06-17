@@ -6,10 +6,10 @@ export const createUserSchema = z.object({
   password: z.string().min(8),
   isCouncilman: z.boolean().optional(),
   isAdmin: z.boolean().optional(),
-  address: z.string().min(1),
-  neighborhood: z.string().min(1),
-  city: z.string().min(1),
-  uf: z.string().min(2).max(2),
+  address: z.string().optional(),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  uf: z.string().min(2).max(2).optional(),
 });
 
 export const updateUserSchema = z.object({

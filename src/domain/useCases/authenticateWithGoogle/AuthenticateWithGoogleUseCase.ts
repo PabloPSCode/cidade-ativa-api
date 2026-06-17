@@ -11,7 +11,11 @@ export class AuthenticateWithGoogleUseCase {
 
   async execute(email: string): Promise<AuthenticateUserResponseDTO> {
     const user = await this.repository.findByEmail(email);
-    if (!user) throw new AppError('User not found', 404);
+    if (!user)
+      throw new AppError(
+        'Usuário não encontrado. Faça o cadastro antes de entrar com o Google.',
+        404,
+      );
 
     const privateKey = Buffer.from(this.jwtPrivateKey, 'base64');
     const token = jwt.sign(

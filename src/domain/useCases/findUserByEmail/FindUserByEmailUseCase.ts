@@ -7,7 +7,7 @@ export class FindUserByEmailUseCase {
 
   async execute(email: string): Promise<UserResponseDTO> {
     const user = await this.repository.findByEmail(email);
-    if (!user) throw new AppError('User not found', 404);
+    if (!user) throw new AppError('Usuário não encontrado.', 404);
     return {
       id: user.id,
       name: user.name,

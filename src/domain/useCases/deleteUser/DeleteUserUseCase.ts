@@ -6,7 +6,7 @@ export class DeleteUserUseCase {
 
   async execute(id: string): Promise<void> {
     const existing = await this.repository.findById(id);
-    if (!existing) throw new AppError('User not found', 404);
+    if (!existing) throw new AppError('Usuário não encontrado.', 404);
     await this.repository.delete(id);
   }
 }
