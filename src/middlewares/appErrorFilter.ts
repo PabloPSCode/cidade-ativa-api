@@ -45,10 +45,16 @@ export class AppErrorFilter implements ExceptionFilter {
           : ((exceptionResponse as { message?: string }).message ??
             exception.message);
 
+      const errorDetails =
+        typeof exceptionResponse === 'object'
+          ? (exceptionResponse as { errors?: unknown }).errors
+          : undefined;
+
       logger.error({
         module: 'AppErrorFilter',
         action: request.method,
         message: errorMessage,
+        ...(errorDetails ? { details: errorDetails } : {}),
       });
       response.status(status).json(
         buildResponse({
