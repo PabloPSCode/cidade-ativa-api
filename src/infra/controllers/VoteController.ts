@@ -64,7 +64,6 @@ export class VoteController {
   }
 
   @Get()
-  @UseGuards(JwtUserGuard)
   async list(
     @Query('page') page: string,
     @Query('perPage') perPage: string,
@@ -99,7 +98,6 @@ export class VoteController {
   }
 
   @Get(':id')
-  @UseGuards(JwtUserGuard)
   async findById(@Param('id') id: string, @Req() req: Request) {
     try {
       const result = await this.findByIdUseCase.execute(id);
