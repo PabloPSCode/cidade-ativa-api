@@ -9,35 +9,42 @@ import { PaginatedResultDTO } from '../../../domain/dtos/PaginatedResultDTO.js';
 export class PrismaPublicPhoneRepository implements IPublicPhoneRepository {
   async create(data: CreatePublicPhoneDTO): Promise<PublicPhone> {
     const r = await prisma.publicPhone.create({ data });
-    return new PublicPhone(r.id, r.phone);
+    return new PublicPhone(r.id, r.institutionName, r.phone);
   }
 
   async findById(id: string): Promise<PublicPhone | null> {
     const r = await prisma.publicPhone.findUnique({ where: { id } });
-    return r ? new PublicPhone(r.id, r.phone) : null;
+    return r ? new PublicPhone(r.id, r.institutionName, r.phone) : null;
   }
 
   async findByPhone(phone: string): Promise<PublicPhone | null> {
     const r = await prisma.publicPhone.findUnique({ where: { phone } });
-    return r ? new PublicPhone(r.id, r.phone) : null;
+    return r ? new PublicPhone(r.id, r.institutionName, r.phone) : null;
   }
 
   async update(id: string, data: UpdatePublicPhoneDTO): Promise<PublicPhone> {
     const r = await prisma.publicPhone.update({ where: { id }, data });
-    return new PublicPhone(r.id, r.phone);
+    return new PublicPhone(r.id, r.institutionName, r.phone);
   }
 
   async delete(id: string): Promise<void> {
     await prisma.publicPhone.delete({ where: { id } });
   }
 
-  async list(pagination: PaginationDTO): Promise<PaginatedResultDTO<PublicPhone>> {
+  async list(
+    pagination: PaginationDTO,
+  ): Promise<PaginatedResultDTO<PublicPhone>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
     const [records, total] = await Promise.all([
       prisma.publicPhone.findMany({ skip, take: perPage }),
       prisma.publicPhone.count(),
     ]);
-    return { data: records.map((r) => new PublicPhone(r.id, r.phone)), meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) } };
+    return {
+      data: records.map(
+        (r) => new PublicPhone(r.id, r.institutionName, r.phone),
+      ),
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
   }
 }

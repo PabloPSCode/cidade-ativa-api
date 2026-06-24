@@ -1,6 +1,9 @@
 import { prisma } from './prismaClient.js';
 import { ICoolActionRepository } from '../../../domain/repositories/ICoolActionRepository.js';
-import { CoolAction } from '../../../domain/entities/CoolAction.js';
+import {
+  CoolAction,
+  CoolActionCategory,
+} from '../../../domain/entities/CoolAction.js';
 import { CreateCoolActionDTO } from '../../../domain/dtos/CreateCoolActionDTO.js';
 import { UpdateCoolActionDTO } from '../../../domain/dtos/UpdateCoolActionDTO.js';
 import { PaginationDTO } from '../../../domain/dtos/PaginationDTO.js';
@@ -8,7 +11,13 @@ import { PaginatedResultDTO } from '../../../domain/dtos/PaginatedResultDTO.js';
 
 export class PrismaCoolActionRepository implements ICoolActionRepository {
   private toEntity(r: any): CoolAction {
-    return new CoolAction(r.id, r.solicitationTypeId, r.solicitationId, r.createdAt);
+    return new CoolAction(
+      r.id,
+      r.title,
+      r.category as CoolActionCategory,
+      r.points,
+      r.createdAt,
+    );
   }
 
   async create(data: CreateCoolActionDTO): Promise<CoolAction> {
@@ -17,12 +26,9 @@ export class PrismaCoolActionRepository implements ICoolActionRepository {
   }
 
   async findById(id: string): Promise<CoolAction | null> {
-    const r = await prisma.coolAction.findUnique({ where: { id } });
-    return r ? this.toEntity(r) : null;
-  }
-
-  async findBySolicitationTypeId(solicitationTypeId: string): Promise<CoolAction | null> {
-    const r = await prisma.coolAction.findFirst({ where: { solicitationTypeId } });
+    const r = await prisma.coolAction.findFirst({
+      where: { id, deletedAt: null },
+    });
     return r ? this.toEntity(r) : null;
   }
 
@@ -32,13 +38,30 @@ export class PrismaCoolActionRepository implements ICoolActionRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await prisma.coolAction.delete({ where: { id } });
+    await prisma.coolAction.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 
-  async list(pagination: PaginationDTO): Promise<PaginatedResultDTO<CoolAction>> {
+  async list(
+    pagination: PaginationDTO,
+  ): Promise<PaginatedResultDTO<CoolAction>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
-    const [records, total] = await Promise.all([prisma.coolAction.findMany({ skip, take: perPage, orderBy: { createdAt: 'desc' } }), prisma.coolAction.count()]);
-    return { data: records.map((r) => this.toEntity(r)), meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) } };
+    const where = { deletedAt: null };
+    const [records, total] = await Promise.all([
+      prisma.coolAction.findMany({
+        skip,
+        take: perPage,
+        where,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.coolAction.count({ where }),
+    ]);
+    return {
+      data: records.map((r) => this.toEntity(r)),
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
   }
 }

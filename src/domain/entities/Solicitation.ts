@@ -1,9 +1,16 @@
-export type SolicitationStatus = 'not_resolved' | 'in_progress' | 'resolved' | 'unconsidered';
+export type SolicitationStatus =
+  | 'waiting_approval'
+  | 'not_resolved'
+  | 'in_progress'
+  | 'resolved'
+  | 'unconsidered';
 
 export class Solicitation {
+  public requestingUserName?: string;
+
   constructor(
     public readonly id: string,
-    public protocolNumber: string | null,
+    public protocolNumber: number,
     public title: string,
     public description: string,
     public neighborhood: string,

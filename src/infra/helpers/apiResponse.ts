@@ -19,7 +19,10 @@ export function buildResponse<T>(params: {
     RES: params.res,
     MSG: params.success
       ? null
-      : { message: params.message ?? 'An error occurred.', error: params.error },
+      : {
+          message: params.message ?? 'An error occurred.',
+          error: params.error,
+        },
     SUCCESS: params.success,
     TIMESTAMP: new Date().toISOString(),
     PATH: params.path,

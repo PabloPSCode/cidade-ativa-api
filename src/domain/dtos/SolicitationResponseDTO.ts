@@ -1,8 +1,13 @@
-export type SolicitationStatus = 'not_resolved' | 'in_progress' | 'resolved' | 'unconsidered';
+export type SolicitationStatus =
+  | 'waiting_approval'
+  | 'not_resolved'
+  | 'in_progress'
+  | 'resolved'
+  | 'unconsidered';
 
 export interface SolicitationResponseDTO {
   id: string;
-  protocolNumber: string | null;
+  protocolNumber: number;
   title: string;
   description: string;
   neighborhood: string;
@@ -10,6 +15,7 @@ export interface SolicitationResponseDTO {
   uf: string;
   street: string;
   requestingUserId: string;
+  requestingUserName: string;
   solicitationTypeId: string;
   status: SolicitationStatus;
   unsolvedImageUrls: string[];

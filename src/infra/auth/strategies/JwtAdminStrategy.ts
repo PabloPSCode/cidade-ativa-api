@@ -23,7 +23,9 @@ export class JwtAdminStrategy extends PassportStrategy(Strategy, 'jwt-admin') {
 
   async validate(payload: AdminPayload): Promise<AdminPayload> {
     if (!payload.isAdmin) {
-      throw new UnauthorizedException('Only admins have access to this resource');
+      throw new UnauthorizedException(
+        'Only admins have access to this resource',
+      );
     }
     return AdminPayloadSchema.parse(payload);
   }

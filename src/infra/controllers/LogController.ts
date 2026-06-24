@@ -10,17 +10,18 @@ import {
   HttpCode,
   Inject,
 } from '@nestjs/common';
-import { CreateLogUseCase } from '../../domain/useCases/createLog/CreateLogUseCase.js';
-import { FindLogByIdUseCase } from '../../domain/useCases/findLogById/FindLogByIdUseCase.js';
-import { ListLogsUseCase } from '../../domain/useCases/listLogs/ListLogsUseCase.js';
-import { UpdateLogUseCase } from '../../domain/useCases/updateLog/UpdateLogUseCase.js';
-import { DeleteLogUseCase } from '../../domain/useCases/deleteLog/DeleteLogUseCase.js';
+import { CreateLogUseCase } from '../../domain/useCases/Log/createLog/CreateLogUseCase.js';
+import { FindLogByIdUseCase } from '../../domain/useCases/Log/findLogById/FindLogByIdUseCase.js';
+import { ListLogsUseCase } from '../../domain/useCases/Log/listLogs/ListLogsUseCase.js';
+import { UpdateLogUseCase } from '../../domain/useCases/Log/updateLog/UpdateLogUseCase.js';
+import { DeleteLogUseCase } from '../../domain/useCases/Log/deleteLog/DeleteLogUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import {
   createLogSchema,
   updateLogSchema,
 } from '../validation/schemas/logSchemas.js';
 import type { CreateLogInput, UpdateLogInput } from '../validation/schemas/logSchemas.js';
+import { logger } from '../logger/logger.js';
 
 @Controller('logs')
 export class LogController {
@@ -41,9 +42,14 @@ export class LogController {
   async create(
     @Body(new ZodValidationPipe(createLogSchema)) body: CreateLogInput,
   ) {
-    const log = await this.createLogUseCase.execute(body);
-
-    return { data: log };
+    try {
+      const log = await this.createLogUseCase.execute(body);
+      logger.info({ module: 'Logs', action: 'createLog', message: 'Log created' });
+      return { data: log };
+    } catch (error) {
+      logger.error({ module: 'Logs', action: 'createLog', message: 'Error at creating log' });
+      throw error;
+    }
   }
 
   @Get()
@@ -51,19 +57,29 @@ export class LogController {
     @Query('page') page?: string,
     @Query('perPage') perPage?: string,
   ) {
-    const result = await this.listLogsUseCase.execute({
-      page: page ? Number(page) : undefined,
-      perPage: perPage ? Number(perPage) : undefined,
-    });
-
-    return result;
+    try {
+      const result = await this.listLogsUseCase.execute({
+        page: page ? Number(page) : undefined,
+        perPage: perPage ? Number(perPage) : undefined,
+      });
+      logger.info({ module: 'Logs', action: 'listLogs', message: 'Logs listed' });
+      return result;
+    } catch (error) {
+      logger.error({ module: 'Logs', action: 'listLogs', message: 'Error at listing logs' });
+      throw error;
+    }
   }
 
   @Get(':id')
   async findById(@Param('id') id: string) {
-    const log = await this.findLogByIdUseCase.execute(id);
-
-    return { data: log };
+    try {
+      const log = await this.findLogByIdUseCase.execute(id);
+      logger.info({ module: 'Logs', action: 'findLogById', message: 'Log found' });
+      return { data: log };
+    } catch (error) {
+      logger.error({ module: 'Logs', action: 'findLogById', message: 'Error at finding log' });
+      throw error;
+    }
   }
 
   @Put(':id')
@@ -71,14 +87,25 @@ export class LogController {
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateLogSchema)) body: UpdateLogInput,
   ) {
-    const log = await this.updateLogUseCase.execute(id, body);
-
-    return { data: log };
+    try {
+      const log = await this.updateLogUseCase.execute(id, body);
+      logger.info({ module: 'Logs', action: 'updateLog', message: 'Log updated' });
+      return { data: log };
+    } catch (error) {
+      logger.error({ module: 'Logs', action: 'updateLog', message: 'Error at updating log' });
+      throw error;
+    }
   }
 
   @Delete(':id')
   @HttpCode(204)
   async delete(@Param('id') id: string): Promise<void> {
-    await this.deleteLogUseCase.execute(id);
+    try {
+      await this.deleteLogUseCase.execute(id);
+      logger.info({ module: 'Logs', action: 'deleteLog', message: 'Log deleted' });
+    } catch (error) {
+      logger.error({ module: 'Logs', action: 'deleteLog', message: 'Error at deleting log' });
+      throw error;
+    }
   }
 }
