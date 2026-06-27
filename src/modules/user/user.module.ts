@@ -12,6 +12,7 @@ import { AuthenticateUserUseCase } from '../../domain/useCases/User/authenticate
 import { AuthenticateWithGoogleUseCase } from '../../domain/useCases/User/authenticateWithGoogle/AuthenticateWithGoogleUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
 import { JwtAdminStrategy } from '../../infra/auth/strategies/JwtAdminStrategy.js';
+import { CityCatalogSeeder } from '../../infra/seeds/CityCatalogSeeder.js';
 import { env } from '../../infra/config/env.js';
 
 @Module({
@@ -21,10 +22,12 @@ import { env } from '../../infra/config/env.js';
     JwtUserStrategy,
     JwtAdminStrategy,
     PrismaUserRepository,
+    CityCatalogSeeder,
     {
       provide: CreateUserUseCase,
-      useFactory: (r: PrismaUserRepository) => new CreateUserUseCase(r),
-      inject: [PrismaUserRepository],
+      useFactory: (r: PrismaUserRepository, seeder: CityCatalogSeeder) =>
+        new CreateUserUseCase(r, seeder),
+      inject: [PrismaUserRepository, CityCatalogSeeder],
     },
     {
       provide: UpdateUserUseCase,
