@@ -1,13 +1,10 @@
 import { prisma } from '../database/prisma/prismaClient.js';
+import { getCurrentCityId } from '../database/prisma/cityContext.js';
 import type { Seed } from './SeedRunner.js';
 
 const publicPhones: { institutionName: string; phone: string }[] = [
-  { institutionName: 'Bombeiros', phone: '193' },
   { institutionName: 'Polícia Militar', phone: '190' },
-  { institutionName: 'Prefeitura', phone: '156' },
-  { institutionName: 'SAMU', phone: '192' },
   { institutionName: 'Defesa Civil', phone: '199' },
-  { institutionName: 'Guarda Municipal', phone: '153' },
 ];
 
 export const seedPublicPhones: Seed = {
@@ -19,6 +16,9 @@ export const seedPublicPhones: Seed = {
   },
 
   async run() {
-    await prisma.publicPhone.createMany({ data: publicPhones });
+    const cityId = await getCurrentCityId();
+    await prisma.publicPhone.createMany({
+      data: publicPhones.map((phone) => ({ ...phone, cityId })),
+    });
   },
 };
