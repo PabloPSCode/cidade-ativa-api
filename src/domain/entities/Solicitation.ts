@@ -21,6 +21,7 @@ export class Solicitation {
     public requestingUserId: string,
     public solicitationTypeId: string,
     public status: SolicitationStatus,
+    public isCollective: boolean,
     public unsolvedImageUrls: string[],
     public solvedImageUrls: string[] | null,
     public solvedDate: Date | null,

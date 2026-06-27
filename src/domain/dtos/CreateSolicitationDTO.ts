@@ -6,5 +6,6 @@ export interface CreateSolicitationDTO {
   cep: string;
   requestingUserId: string;
   solicitationTypeId: string;
+  isCollective?: boolean;
   unsolvedImageUrls?: string[];
 }

@@ -25,6 +25,7 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
       r.requestingUserId,
       r.solicitationTypeId,
       r.status as SolicitationStatus,
+      r.isCollective,
       Array.isArray(r.unsolvedImageUrls)
         ? r.unsolvedImageUrls
         : JSON.parse(r.unsolvedImageUrls ?? '[]'),

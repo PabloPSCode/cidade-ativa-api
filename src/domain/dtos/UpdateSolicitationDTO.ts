@@ -12,6 +12,7 @@ export interface UpdateSolicitationDTO {
   street?: string;
   cep?: string;
   status?: SolicitationStatus;
+  isCollective?: boolean;
   solvedImageUrls?: string[];
   solvedDate?: Date;
   solvedCommentary?: string;

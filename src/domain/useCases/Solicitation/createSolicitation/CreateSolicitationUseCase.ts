@@ -45,6 +45,7 @@ export class CreateSolicitationUseCase {
       requestingUserName: s.requestingUserName ?? '',
       solicitationTypeId: s.solicitationTypeId,
       status: s.status,
+      isCollective: s.isCollective,
       unsolvedImageUrls: s.unsolvedImageUrls,
       solvedImageUrls: s.solvedImageUrls,
       solvedDate: s.solvedDate,

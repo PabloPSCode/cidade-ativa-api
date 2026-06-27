@@ -33,6 +33,7 @@ export class SolveSolicitationUseCase {
       requestingUserName: s.requestingUserName ?? '',
       solicitationTypeId: s.solicitationTypeId,
       status: s.status,
+      isCollective: s.isCollective,
       unsolvedImageUrls: s.unsolvedImageUrls,
       solvedImageUrls: s.solvedImageUrls,
       solvedDate: s.solvedDate,

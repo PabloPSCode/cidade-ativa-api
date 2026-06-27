@@ -10,6 +10,7 @@ export const createSolicitationSchema = z.object({
     .regex(/^\d{5}-?\d{3}$/, 'CEP must be in the format 00000-000'),
   requestingUserId: z.string().uuid(),
   solicitationTypeId: z.string().uuid(),
+  isCollective: z.boolean().optional(),
   unsolvedImageUrls: z.array(z.string().min(1)).optional(),
 });
 
@@ -31,6 +32,7 @@ export const updateSolicitationSchema = z.object({
       'unconsidered',
     ])
     .optional(),
+  isCollective: z.boolean().optional(),
   solvedImageUrls: z.array(z.string().min(1)).optional(),
   solvedDate: z.coerce.date().optional(),
   solvedCommentary: z.string().optional(),
