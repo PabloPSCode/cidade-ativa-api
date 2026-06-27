@@ -18,6 +18,7 @@ import { ListSolicitationsUseCase } from '../../domain/useCases/Solicitation/lis
 import { SolveSolicitationUseCase } from '../../domain/useCases/Solicitation/solveSolicitation/SolveSolicitationUseCase.js';
 import { UpdateSolicitationUseCase } from '../../domain/useCases/Solicitation/updateSolicitation/UpdateSolicitationUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
 import {
@@ -69,12 +70,14 @@ export class SolicitationController {
     @Query('perPage') perPage: string,
     @Query('userId') userId: string,
     @Query('status') status: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
       const result = await this.listUseCase.execute(
         { page: Number(page) || 1, perPage: Number(perPage) || 10 },
         { userId, status },
+        cityId,
       );
       logger.info({
         module: 'Solicitations',

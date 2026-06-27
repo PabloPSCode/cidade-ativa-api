@@ -15,6 +15,7 @@ import type { Request } from 'express';
 import { DeletePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/deletePublicPhone/DeletePublicPhoneUseCase.js';
 import { FindPublicPhoneByIdUseCase } from '../../domain/useCases/PublicPhone/findPublicPhoneById/FindPublicPhoneByIdUseCase.js';
 import { ListPublicPhonesUseCase } from '../../domain/useCases/PublicPhone/listPublicPhones/ListPublicPhonesUseCase.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { CreatePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/createPublicPhone/CreatePublicPhoneUseCase.js';
 import { UpdatePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/updatePublicPhone/UpdatePublicPhoneUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
@@ -67,13 +68,17 @@ export class PublicPhoneController {
   async list(
     @Query('page') page: string,
     @Query('perPage') perPage: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
-      const result = await this.listUseCase.execute({
-        page: Number(page) || 1,
-        perPage: Number(perPage) || 10,
-      });
+      const result = await this.listUseCase.execute(
+        {
+          page: Number(page) || 1,
+          perPage: Number(perPage) || 10,
+        },
+        cityId,
+      );
       logger.info({
         module: 'PublicPhones',
         action: 'listPublicPhones',

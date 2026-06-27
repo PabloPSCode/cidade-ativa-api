@@ -18,6 +18,7 @@ import { DeleteUserUseCase } from '../../domain/useCases/User/deleteUser/DeleteU
 import { FindUserByEmailUseCase } from '../../domain/useCases/User/findUserByEmail/FindUserByEmailUseCase.js';
 import { FindUserByIdUseCase } from '../../domain/useCases/User/findUserById/FindUserByIdUseCase.js';
 import { ListUsersUseCase } from '../../domain/useCases/User/listUsers/ListUsersUseCase.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { UpdateUserUseCase } from '../../domain/useCases/User/updateUser/UpdateUserUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
@@ -72,13 +73,17 @@ export class UserController {
   async list(
     @Query('page') page: string,
     @Query('perPage') perPage: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
-      const result = await this.listUseCase.execute({
-        page: Number(page) || 1,
-        perPage: Number(perPage) || 10,
-      });
+      const result = await this.listUseCase.execute(
+        {
+          page: Number(page) || 1,
+          perPage: Number(perPage) || 10,
+        },
+        cityId,
+      );
       logger.info({
         module: 'Users',
         action: 'listUsers',

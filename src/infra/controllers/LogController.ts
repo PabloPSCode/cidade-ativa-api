@@ -22,6 +22,7 @@ import {
 } from '../validation/schemas/logSchemas.js';
 import type { CreateLogInput, UpdateLogInput } from '../validation/schemas/logSchemas.js';
 import { logger } from '../logger/logger.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 
 @Controller('logs')
 export class LogController {
@@ -54,14 +55,18 @@ export class LogController {
 
   @Get()
   async list(
+    @CurrentCityId() cityId: string | undefined,
     @Query('page') page?: string,
     @Query('perPage') perPage?: string,
   ) {
     try {
-      const result = await this.listLogsUseCase.execute({
-        page: page ? Number(page) : undefined,
-        perPage: perPage ? Number(perPage) : undefined,
-      });
+      const result = await this.listLogsUseCase.execute(
+        {
+          page: page ? Number(page) : undefined,
+          perPage: perPage ? Number(perPage) : undefined,
+        },
+        cityId,
+      );
       logger.info({ module: 'Logs', action: 'listLogs', message: 'Logs listed' });
       return result;
     } catch (error) {

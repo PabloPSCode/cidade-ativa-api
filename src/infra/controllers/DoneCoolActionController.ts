@@ -18,6 +18,7 @@ import { ListDoneCoolActionsUseCase } from '../../domain/useCases/DoneCoolAction
 import { ListDoneCoolActionsRankingUseCase } from '../../domain/useCases/DoneCoolAction/listDoneCoolActionsRanking/ListDoneCoolActionsRankingUseCase.js';
 import { UpdateDoneCoolActionUseCase } from '../../domain/useCases/DoneCoolAction/updateDoneCoolAction/UpdateDoneCoolActionUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
 import {
@@ -67,12 +68,14 @@ export class DoneCoolActionController {
     @Query('page') page: string,
     @Query('perPage') perPage: string,
     @Query('userId') userId: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
       const result = await this.listUseCase.execute(
         { page: Number(page) || 1, perPage: Number(perPage) || 10 },
         userId,
+        cityId,
       );
       logger.info({
         module: 'DoneCoolActions',
@@ -96,9 +99,12 @@ export class DoneCoolActionController {
   }
 
   @Get('ranking')
-  async ranking(@Req() req: Request) {
+  async ranking(
+    @Req() req: Request,
+    @CurrentCityId() cityId: string | undefined,
+  ) {
     try {
-      const result = await this.rankingUseCase.execute();
+      const result = await this.rankingUseCase.execute(cityId);
       logger.info({
         module: 'DoneCoolActions',
         action: 'listDoneCoolActionsRanking',
