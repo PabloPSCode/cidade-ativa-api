@@ -14,13 +14,14 @@ export class ListVotesUseCase {
   async execute(
     pagination: PaginationDTO,
     filters?: { pollId?: string; userId?: string },
+    cityId?: string,
   ): Promise<PaginatedResultDTO<VoteResponseDTO>> {
     if (filters?.pollId) {
       const poll = await this.pollRepository.findById(filters.pollId);
       if (!poll) throw new AppError('Enquete não encontrada.', 404);
     }
 
-    const result = await this.repository.list(pagination, filters);
+    const result = await this.repository.list(pagination, filters, cityId);
     return {
       data: result.data.map((v) => ({
         id: v.id,

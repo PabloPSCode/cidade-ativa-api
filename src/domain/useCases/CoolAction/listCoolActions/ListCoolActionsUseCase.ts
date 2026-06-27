@@ -8,8 +8,9 @@ export class ListCoolActionsUseCase {
 
   async execute(
     pagination: PaginationDTO,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<CoolActionResponseDTO>> {
-    const result = await this.repository.list(pagination);
+    const result = await this.repository.list(pagination, cityId);
     return {
       data: result.data.map((ca) => ({
         id: ca.id,

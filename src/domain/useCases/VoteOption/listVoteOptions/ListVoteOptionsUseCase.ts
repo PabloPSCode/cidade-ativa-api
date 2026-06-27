@@ -14,13 +14,14 @@ export class ListVoteOptionsUseCase {
   async execute(
     pagination: PaginationDTO,
     voteId?: string,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<VoteOptionResponseDTO>> {
     if (voteId) {
       const vote = await this.voteRepository.findById(voteId);
       if (!vote) throw new AppError('Voto não encontrado.', 404);
     }
 
-    const result = await this.repository.list(pagination, voteId);
+    const result = await this.repository.list(pagination, voteId, cityId);
     return {
       data: result.data.map((v) => ({
         id: v.id,

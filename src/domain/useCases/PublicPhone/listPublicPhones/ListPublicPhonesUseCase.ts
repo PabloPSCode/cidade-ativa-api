@@ -8,8 +8,9 @@ export class ListPublicPhonesUseCase {
 
   async execute(
     pagination: PaginationDTO,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<PublicPhoneResponseDTO>> {
-    const result = await this.repository.list(pagination);
+    const result = await this.repository.list(pagination, cityId);
     return {
       data: result.data.map((p) => ({
         id: p.id,

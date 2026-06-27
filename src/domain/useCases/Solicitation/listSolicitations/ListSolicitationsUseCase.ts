@@ -9,8 +9,9 @@ export class ListSolicitationsUseCase {
   async execute(
     pagination: PaginationDTO,
     filters?: { userId?: string; status?: string },
+    cityId?: string,
   ): Promise<PaginatedResultDTO<SolicitationResponseDTO>> {
-    const result = await this.repository.list(pagination, filters);
+    const result = await this.repository.list(pagination, filters, cityId);
     return {
       data: result.data.map((s) => ({
         id: s.id,
@@ -21,6 +22,7 @@ export class ListSolicitationsUseCase {
         city: s.city,
         uf: s.uf,
         street: s.street,
+        cep: s.cep,
         requestingUserId: s.requestingUserId,
         requestingUserName: s.requestingUserName ?? '',
         solicitationTypeId: s.solicitationTypeId,

@@ -4,8 +4,8 @@ import { IDoneCoolActionRepository } from '../../../repositories/IDoneCoolAction
 export class ListDoneCoolActionsRankingUseCase {
   constructor(private readonly repository: IDoneCoolActionRepository) {}
 
-  async execute(): Promise<DoneCoolActionRankingDTO[]> {
-    const aggregates = await this.repository.rankingByPoints();
+  async execute(cityId?: string): Promise<DoneCoolActionRankingDTO[]> {
+    const aggregates = await this.repository.rankingByPoints(cityId);
     return aggregates.map((aggregate, index) => ({
       rank: index + 1,
       ...aggregate,

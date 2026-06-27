@@ -4,8 +4,11 @@ import { INeighborhoodRepository } from '../../../repositories/INeighborhoodRepo
 export class ListNeighborhoodsUseCase {
   constructor(private readonly repository: INeighborhoodRepository) {}
 
-  async execute(cityName?: string): Promise<NeighborhoodResponseDTO[]> {
-    const neighborhoods = await this.repository.list(cityName);
+  async execute(
+    cityName?: string,
+    cityId?: string,
+  ): Promise<NeighborhoodResponseDTO[]> {
+    const neighborhoods = await this.repository.list(cityName, cityId);
     return neighborhoods.map((n) => ({
       id: n.id,
       name: n.name,
