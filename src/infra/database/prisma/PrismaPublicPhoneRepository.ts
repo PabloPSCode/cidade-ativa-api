@@ -21,7 +21,11 @@ export class PrismaPublicPhoneRepository implements IPublicPhoneRepository {
   }
 
   async findByPhone(phone: string): Promise<PublicPhone | null> {
-    const r = await prisma.publicPhone.findUnique({ where: { phone } });
+    // Phone uniqueness is scoped per city, so look it up within the tenant.
+    const cityId = await getCurrentCityId();
+    const r = await prisma.publicPhone.findUnique({
+      where: { cityId_phone: { cityId, phone } },
+    });
     return r ? new PublicPhone(r.id, r.institutionName, r.phone, r.cityId) : null;
   }
 

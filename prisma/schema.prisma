@@ -150,9 +150,11 @@ model DoneCoolAction {
 model PublicPhone {
   id              String @id @default(uuid())
   institutionName String
-  phone           String @unique
+  phone           String
   cityId          String
   cityTenant      City   @relation(fields: [cityId], references: [id])
+
+  @@unique([cityId, phone])
 }
 
 model Neighborhood {
