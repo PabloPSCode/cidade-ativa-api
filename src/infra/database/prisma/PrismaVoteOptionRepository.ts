@@ -1,4 +1,5 @@
 import { prisma } from './prismaClient.js';
+import { getCurrentCityId } from './cityContext.js';
 import { IVoteOptionRepository } from '../../../domain/repositories/IVoteOptionRepository.js';
 import { VoteOption } from '../../../domain/entities/VoteOption.js';
 import { CreateVoteOptionDTO } from '../../../domain/dtos/CreateVoteOptionDTO.js';
@@ -8,11 +9,20 @@ import { PaginatedResultDTO } from '../../../domain/dtos/PaginatedResultDTO.js';
 
 export class PrismaVoteOptionRepository implements IVoteOptionRepository {
   private toEntity(r: any): VoteOption {
-    return new VoteOption(r.id, r.optionText, r.voteId, r.createdAt, r.updatedAt);
+    return new VoteOption(
+      r.id,
+      r.optionText,
+      r.voteId,
+      r.createdAt,
+      r.updatedAt,
+      r.cityId,
+    );
   }
 
   async create(data: CreateVoteOptionDTO): Promise<VoteOption> {
-    const r = await prisma.voteOption.create({ data });
+    const r = await prisma.voteOption.create({
+      data: { ...data, cityId: await getCurrentCityId() },
+    });
     return this.toEntity(r);
   }
 
@@ -38,10 +48,14 @@ export class PrismaVoteOptionRepository implements IVoteOptionRepository {
   async list(
     pagination: PaginationDTO,
     voteId?: string,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<VoteOption>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
-    const where = voteId ? { voteId, deletedAt: null } : { deletedAt: null };
+    const where: any = voteId
+      ? { voteId, deletedAt: null }
+      : { deletedAt: null };
+    if (cityId) where.cityId = cityId;
     const [records, total] = await Promise.all([
       prisma.voteOption.findMany({
         skip,

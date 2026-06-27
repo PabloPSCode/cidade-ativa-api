@@ -6,6 +6,7 @@ type PrismaLog = {
   userName: string;
   email: string;
   activityDescription: string;
+  cityId: string;
   createdAt: Date;
 };
 
@@ -18,6 +19,7 @@ export class PrismaLogMapper {
       raw.email,
       raw.activityDescription,
       raw.createdAt,
+      raw.cityId,
     );
   }
 
@@ -28,6 +30,7 @@ export class PrismaLogMapper {
       userName: log.userName,
       email: log.email,
       activityDescription: log.activityDescription,
+      cityId: log.cityId,
       createdAt: log.createdAt,
     };
   }

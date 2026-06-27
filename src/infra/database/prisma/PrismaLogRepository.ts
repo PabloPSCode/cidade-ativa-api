@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { getCurrentCityId } from './cityContext.js';
 import { ILogRepository } from '../../../domain/repositories/ILogRepository.js';
 import { Log } from '../../../domain/entities/Log.js';
 import { CreateLogDTO } from '../../../domain/dtos/CreateLogDTO.js';
@@ -20,6 +21,7 @@ export class PrismaLogRepository implements ILogRepository {
         userName: data.userName,
         email: data.email,
         activityDescription: data.activityDescription,
+        cityId: await getCurrentCityId(),
       },
     });
 
@@ -41,8 +43,10 @@ export class PrismaLogRepository implements ILogRepository {
   async findAll(
     page: number,
     perPage: number,
+    cityId?: string,
   ): Promise<{ data: Log[]; total: number }> {
-    const where = { deletedAt: null };
+    const where: any = { deletedAt: null };
+    if (cityId) where.cityId = cityId;
     const [logs, total] = await Promise.all([
       this.prisma.log.findMany({
         skip: (page - 1) * perPage,
