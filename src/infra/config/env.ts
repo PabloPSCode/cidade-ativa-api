@@ -7,6 +7,7 @@ export const getEnv = () => ({
   jwtPublicKey: process.env.JWT_PUBLIC_KEY ?? '',
   jwtPrivateKey: process.env.JWT_PRIVATE_KEY ?? '',
   cityName: process.env.CITY_NAME ?? '',
+  cityUf: process.env.CITY_UF ?? 'SP',
   openAiApiKey: process.env.OPEN_AI_API_KEY ?? '',
   openAiModel: process.env.OPEN_AI_MODEL ?? 'gpt-5.5',
 });
