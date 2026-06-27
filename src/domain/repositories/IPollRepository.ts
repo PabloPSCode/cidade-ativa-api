@@ -12,5 +12,6 @@ export interface IPollRepository {
   list(
     pagination: PaginationDTO,
     status?: string,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<Poll>>;
 }

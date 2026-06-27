@@ -12,6 +12,7 @@ export interface ISolicitationRepository {
   list(
     pagination: PaginationDTO,
     filters?: { userId?: string; status?: string },
+    cityId?: string,
   ): Promise<PaginatedResultDTO<Solicitation>>;
   countOpenByUser(userId: string): Promise<number>;
 }

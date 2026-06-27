@@ -12,6 +12,7 @@ export interface IVoteRepository {
   list(
     pagination: PaginationDTO,
     filters?: { pollId?: string; userId?: string },
+    cityId?: string,
   ): Promise<PaginatedResultDTO<Vote>>;
   hasVoteOptions(voteId: string): Promise<boolean>;
 }

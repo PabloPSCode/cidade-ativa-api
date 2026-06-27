@@ -12,5 +12,6 @@ export interface IVoteOptionRepository {
   list(
     pagination: PaginationDTO,
     voteId?: string,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<VoteOption>>;
 }

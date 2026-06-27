@@ -15,6 +15,7 @@ export interface IDoneCoolActionRepository {
   list(
     pagination: PaginationDTO,
     userId?: string,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<DoneCoolAction>>;
-  rankingByPoints(): Promise<UserPointsAggregate[]>;
+  rankingByPoints(cityId?: string): Promise<UserPointsAggregate[]>;
 }

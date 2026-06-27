@@ -10,5 +10,8 @@ export interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
   update(id: string, data: UpdateUserDTO): Promise<User>;
   delete(id: string): Promise<void>;
-  list(pagination: PaginationDTO): Promise<PaginatedResultDTO<User>>;
+  list(
+    pagination: PaginationDTO,
+    cityId?: string,
+  ): Promise<PaginatedResultDTO<User>>;
 }

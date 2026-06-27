@@ -15,6 +15,7 @@ export interface ISolicitationTypeRepository {
   delete(id: string): Promise<void>;
   list(
     pagination: PaginationDTO,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<SolicitationType>>;
   hasLinkedRecords(id: string): Promise<boolean>;
 }

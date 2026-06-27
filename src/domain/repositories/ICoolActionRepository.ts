@@ -9,5 +9,8 @@ export interface ICoolActionRepository {
   findById(id: string): Promise<CoolAction | null>;
   update(id: string, data: UpdateCoolActionDTO): Promise<CoolAction>;
   delete(id: string): Promise<void>;
-  list(pagination: PaginationDTO): Promise<PaginatedResultDTO<CoolAction>>;
+  list(
+    pagination: PaginationDTO,
+    cityId?: string,
+  ): Promise<PaginatedResultDTO<CoolAction>>;
 }

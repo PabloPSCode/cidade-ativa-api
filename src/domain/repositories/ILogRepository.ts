@@ -8,6 +8,7 @@ export interface ILogRepository {
   findAll(
     page: number,
     perPage: number,
+    cityId?: string,
   ): Promise<{ data: Log[]; total: number }>;
   update(id: string, data: UpdateLogDTO): Promise<Log>;
   delete(id: string): Promise<void>;
