@@ -4,6 +4,8 @@ import { logger } from '../../logger/logger.js';
 const OPENAI_CHAT_COMPLETIONS_URL =
   'https://api.openai.com/v1/chat/completions';
 
+const OPENAI_REQUEST_TIMEOUT_MS = 120_000;
+
 interface OpenAiChatResponse {
   choices?: { message?: { content?: string } }[];
 }
@@ -60,6 +62,7 @@ export const listNeighborhoodsByCity = async (
 
   const response = await fetch(OPENAI_CHAT_COMPLETIONS_URL, {
     method: 'POST',
+    signal: AbortSignal.timeout(OPENAI_REQUEST_TIMEOUT_MS),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${openAiApiKey}`,
@@ -89,47 +92,3 @@ export const listNeighborhoodsByCity = async (
 
   return parseNeighborhoods(content);
 };
-
-let cachedNeighborhoods: string[] = [];
-
-/**
- * Loads the neighborhoods for the city configured via the CITY_NAME env var.
- * Intended to be called once during server startup. Caches the result so it
- * can be retrieved later through getCityNeighborhoods().
- */
-export const loadCityNeighborhoods = async (): Promise<string[]> => {
-  const { cityName } = getEnv();
-
-  if (typeof cityName !== 'string' || !cityName.trim()) {
-    logger.warn({
-      module: 'CityNeighborhoods',
-      action: 'loadCityNeighborhoods',
-      message: 'CITY_NAME is not set or empty; skipping neighborhood loading.',
-    });
-    return [];
-  }
-
-  const normalizedCityName = cityName.trim().toLowerCase();
-
-  try {
-    cachedNeighborhoods = await listNeighborhoodsByCity(normalizedCityName);
-    logger.info({
-      module: 'CityNeighborhoods',
-      action: 'loadCityNeighborhoods',
-      message: `Loaded ${cachedNeighborhoods.length} neighborhoods for "${normalizedCityName}".`,
-    });
-  } catch (error) {
-    cachedNeighborhoods = [];
-    logger.error({
-      module: 'CityNeighborhoods',
-      action: 'loadCityNeighborhoods',
-      message: `Failed to load neighborhoods for "${normalizedCityName}": ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-    });
-  }
-
-  return cachedNeighborhoods;
-};
-
-export const getCityNeighborhoods = (): string[] => cachedNeighborhoods;
