@@ -3,6 +3,7 @@ import { PassportModule } from '@nestjs/passport';
 import { CityController } from '../../infra/controllers/CityController.js';
 import { PrismaCityRepository } from '../../infra/database/prisma/PrismaCityRepository.js';
 import { CityNeighborhoodsSeeder } from '../../infra/seeds/CityNeighborhoodsSeeder.js';
+import { CityCatalogSeeder } from '../../infra/seeds/CityCatalogSeeder.js';
 import { CreateCityUseCase } from '../../domain/useCases/City/createCity/CreateCityUseCase.js';
 import { UpdateCityUseCase } from '../../domain/useCases/City/updateCity/UpdateCityUseCase.js';
 import { DeleteCityUseCase } from '../../domain/useCases/City/deleteCity/DeleteCityUseCase.js';
@@ -17,13 +18,15 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
     JwtUserStrategy,
     PrismaCityRepository,
     CityNeighborhoodsSeeder,
+    CityCatalogSeeder,
     {
       provide: CreateCityUseCase,
       useFactory: (
         r: PrismaCityRepository,
-        seeder: CityNeighborhoodsSeeder,
-      ) => new CreateCityUseCase(r, seeder),
-      inject: [PrismaCityRepository, CityNeighborhoodsSeeder],
+        neighborhoodSeeder: CityNeighborhoodsSeeder,
+        catalogSeeder: CityCatalogSeeder,
+      ) => new CreateCityUseCase(r, neighborhoodSeeder, catalogSeeder),
+      inject: [PrismaCityRepository, CityNeighborhoodsSeeder, CityCatalogSeeder],
     },
     {
       provide: UpdateCityUseCase,
