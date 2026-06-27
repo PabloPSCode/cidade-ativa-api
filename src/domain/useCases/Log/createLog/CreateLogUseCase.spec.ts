@@ -15,6 +15,7 @@ class FakeLogRepository implements ILogRepository {
       data.email,
       data.activityDescription,
       new Date(),
+      'default-city',
     );
 
     this.logs.push(log);

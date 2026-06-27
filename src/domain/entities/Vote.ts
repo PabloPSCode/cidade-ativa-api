@@ -7,5 +7,6 @@ export class Vote {
     public userId: string,
     public readonly createdAt: Date,
     public updatedAt: Date | null,
+    public readonly cityId: string,
   ) {}
 }

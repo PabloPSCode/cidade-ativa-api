@@ -11,5 +11,6 @@ export class Poll {
     public status: PollStatus,
     public readonly createdAt: Date,
     public updatedAt: Date | null,
+    public readonly cityId: string,
   ) {}
 }
