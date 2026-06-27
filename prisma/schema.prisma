@@ -81,6 +81,8 @@ model User {
   solicitations   Solicitation[]
   doneCoolActions DoneCoolAction[]
   votes           Vote[]
+  signature       Signature?
+  solicitationSignatures SolicitationSignature[]
 }
 
 model SolicitationType {
@@ -106,6 +108,7 @@ model Solicitation {
   solicitationTypeId String
   cityId             String
   status             SolicitationStatus @default(not_resolved)
+  isCollective       Boolean            @default(false)
   unsolvedImageUrls  Json               @default("[]")
   solvedImageUrls    Json?
   solvedDate         DateTime?
@@ -117,6 +120,34 @@ model Solicitation {
   cityTenant         City               @relation(fields: [cityId], references: [id])
   requestingUser     User               @relation(fields: [requestingUserId], references: [id])
   solicitationType   SolicitationType   @relation(fields: [solicitationTypeId], references: [id])
+  signatures         Signature[]
+  solicitationSignatures SolicitationSignature[]
+}
+
+model Signature {
+  id             String        @id @default(uuid())
+  imageUrl       String
+  userName       String
+  userId         String        @unique
+  solicitationId String?
+  user           User          @relation(fields: [userId], references: [id])
+  solicitation   Solicitation? @relation(fields: [solicitationId], references: [id])
+}
+
+// Liga um usuário (e a imagem da sua assinatura registrada) a uma solicitação
+// que ele assinou. Um usuário pode assinar várias solicitações, mas apenas uma
+// vez cada (unique userId+solicitationId).
+model SolicitationSignature {
+  id             String       @id @default(uuid())
+  imageUrl       String
+  userName       String
+  userId         String
+  solicitationId String
+  createdAt      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id])
+  solicitation   Solicitation @relation(fields: [solicitationId], references: [id])
+
+  @@unique([userId, solicitationId])
 }
 
 model CoolAction {
