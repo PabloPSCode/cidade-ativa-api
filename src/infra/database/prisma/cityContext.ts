@@ -1,4 +1,3 @@
-import { getEnv } from '../../config/env.js';
 import { getRequestCityId } from '../../../middlewares/cityContextStore.js';
 import { prisma } from './prismaClient.js';
 
@@ -10,8 +9,8 @@ let cachedDefaultCityId: string | null = null;
  * It prefers the cityId carried by the current request (set from the JWT by the
  * tenant middleware), so authenticated creates are scoped to the caller's city.
  * When there is no request context — seeding, startup, or unauthenticated
- * onboarding (e.g. user registration) — it falls back to the default City
- * (matched by the CITY_NAME env var, then the first available City).
+ * onboarding (e.g. user registration) — it falls back to the oldest existing
+ * City.
  */
 export async function getCurrentCityId(): Promise<string> {
   const requestCityId = getRequestCityId();
@@ -23,22 +22,17 @@ export async function getCurrentCityId(): Promise<string> {
 async function getDefaultCityId(): Promise<string> {
   if (cachedDefaultCityId) return cachedDefaultCityId;
 
-  const name = getEnv().cityName.trim();
-  const city =
-    (name
-      ? await prisma.city.findFirst({ where: { name, deletedAt: null } })
-      : null) ?? (await prisma.city.findFirst({ where: { deletedAt: null } }));
+  const city = await prisma.city.findFirst({
+    where: { deletedAt: null },
+    orderBy: { createdAt: 'asc' },
+  });
 
   if (!city) {
     throw new Error(
-      'No City tenant is configured. Ensure the City seed has run before persisting records.',
+      'No City tenant exists. Create a city before persisting tenant-scoped records.',
     );
   }
 
   cachedDefaultCityId = city.id;
   return cachedDefaultCityId;
-}
-
-export function resetCityContextCache(): void {
-  cachedDefaultCityId = null;
 }

@@ -24,6 +24,9 @@ export const seedSolicitationTypes: Seed = {
   name: 'Solicitation Types',
 
   async isPending() {
+    // No tenant city yet means nothing to attach reference data to.
+    const cities = await prisma.city.count({ where: { deletedAt: null } });
+    if (cities === 0) return false;
     const count = await prisma.solicitationType.count();
     return count === 0;
   },

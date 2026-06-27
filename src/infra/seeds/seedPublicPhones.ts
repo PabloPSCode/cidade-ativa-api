@@ -11,6 +11,9 @@ export const seedPublicPhones: Seed = {
   name: 'Public Phones',
 
   async isPending() {
+    // No tenant city yet means nothing to attach reference data to.
+    const cities = await prisma.city.count({ where: { deletedAt: null } });
+    if (cities === 0) return false;
     const count = await prisma.publicPhone.count();
     return count === 0;
   },

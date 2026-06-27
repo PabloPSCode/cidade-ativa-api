@@ -40,6 +40,9 @@ export const seedCoolActions: Seed = {
   name: 'Cool Actions',
 
   async isPending() {
+    // No tenant city yet means nothing to attach reference data to.
+    const cities = await prisma.city.count({ where: { deletedAt: null } });
+    if (cities === 0) return false;
     const count = await prisma.coolAction.count();
     return count === 0;
   },
