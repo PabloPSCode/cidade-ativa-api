@@ -2,7 +2,7 @@ import { prisma } from '../database/prisma/prismaClient.js';
 import { getCurrentCityId } from '../database/prisma/cityContext.js';
 import type { Seed } from './SeedRunner.js';
 
-const publicPhones: { institutionName: string; phone: string }[] = [
+export const publicPhones: { institutionName: string; phone: string }[] = [
   { institutionName: 'Polícia Militar', phone: '190' },
   { institutionName: 'Defesa Civil', phone: '199' },
 ];

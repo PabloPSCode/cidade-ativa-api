@@ -3,7 +3,7 @@ import { prisma } from '../database/prisma/prismaClient.js';
 import { getCurrentCityId } from '../database/prisma/cityContext.js';
 import type { Seed } from './SeedRunner.js';
 
-const coolActions: {
+export const coolActions: {
   title: string;
   category: CoolActionCategory;
   points: number;
