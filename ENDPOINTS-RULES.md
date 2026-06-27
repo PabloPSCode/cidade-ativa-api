@@ -1,5 +1,20 @@
 # Endpoints and rules
 
+## Signatures
+- Create siganture. POST /signatures
+- Get siganture by Id. GET /signatures:id
+- Get siganture by User Id. GET /signatures:userId
+- Delete siganture. DELETE /signatures:id
+
+### RF
+- Its not possible registering a new siganture for the same user.
+- Its not possible updating an signature that does not exists.
+- Its not possible deleting an signature that does not exists.
+  
+### RN
+- City registration must follow ICreateSignatureDTO interface.
+- Use UUID V4 to generate signatures ids.
+
 ## Cities
 - Create city. POST /cities
 - List cities. GET /cities?perPage=10&page=1

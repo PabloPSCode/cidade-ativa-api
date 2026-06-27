@@ -381,7 +381,7 @@
       ],
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"title\": \"Buraco na calçada\",\n  \"description\": \"Buraco profundo na calçada da rua principal causando risco de queda.\",\n  \"neighborhood\": \"Centro\",\n  \"street\": \"Rua das Flores, 204\",\n  \"cep\": \"35930-000\",\n  \"requestingUserId\": \"\",\n  \"solicitationTypeId\": \"\",\n  \"unsolvedImageUrls\": []\n}"
+        "text": "{\n  \"title\": \"Buraco na calçada\",\n  \"description\": \"Buraco profundo na calçada da rua principal causando risco de queda.\",\n  \"neighborhood\": \"Centro\",\n  \"street\": \"Rua das Flores, 204\",\n  \"cep\": \"35930-000\",\n  \"requestingUserId\": \"\",\n  \"solicitationTypeId\": \"\",\n  \"isCollective\": false,\n  \"unsolvedImageUrls\": []\n}"
       }
     },
     {
@@ -861,6 +861,59 @@
       "name": "Delete vote option",
       "method": "DELETE",
       "url": "{{ _.base_url }}/vote-options/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+
+    {
+      "_id": "fld_signatures",
+      "_type": "request_group",
+      "parentId": "wrk_cidadeativa",
+      "name": "Signatures"
+    },
+    {
+      "_id": "req_sig_create",
+      "_type": "request",
+      "parentId": "fld_signatures",
+      "name": "Create signature",
+      "method": "POST",
+      "url": "{{ _.base_url }}/signatures",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"imageUrl\": \"data:image/png;base64,REPLACE_WITH_BASE64\",\n  \"userName\": \"Pablo Silva\",\n  \"userId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_sig_get",
+      "_type": "request",
+      "parentId": "fld_signatures",
+      "name": "Get signature by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/signatures/:id",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "id", "value": "" }]
+    },
+    {
+      "_id": "req_sig_get_by_user",
+      "_type": "request",
+      "parentId": "fld_signatures",
+      "name": "Get signature by user ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/signatures/user/:userId",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
+      "parameters": [{ "name": "userId", "value": "" }]
+    },
+    {
+      "_id": "req_sig_delete",
+      "_type": "request",
+      "parentId": "fld_signatures",
+      "name": "Delete signature",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/signatures/:id",
       "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }],
       "parameters": [{ "name": "id", "value": "" }]
     },
