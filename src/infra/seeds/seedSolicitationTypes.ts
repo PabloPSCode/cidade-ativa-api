@@ -1,4 +1,5 @@
 import { prisma } from '../database/prisma/prismaClient.js';
+import { getCurrentCityId } from '../database/prisma/cityContext.js';
 import type { Seed } from './SeedRunner.js';
 
 const solicitationTypes: { description: string }[] = [
@@ -28,11 +29,12 @@ export const seedSolicitationTypes: Seed = {
   },
 
   async run() {
+    const cityId = await getCurrentCityId();
     for (const type of solicitationTypes) {
       await prisma.solicitationType.upsert({
         where: { description: type.description },
         update: {},
-        create: type,
+        create: { ...type, cityId },
       });
     }
   },

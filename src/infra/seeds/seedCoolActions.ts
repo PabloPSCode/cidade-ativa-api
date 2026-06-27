@@ -1,5 +1,6 @@
 import type { CoolActionCategory } from '../../domain/entities/CoolAction.js';
 import { prisma } from '../database/prisma/prismaClient.js';
+import { getCurrentCityId } from '../database/prisma/cityContext.js';
 import type { Seed } from './SeedRunner.js';
 
 const coolActions: {
@@ -44,6 +45,9 @@ export const seedCoolActions: Seed = {
   },
 
   async run() {
-    await prisma.coolAction.createMany({ data: coolActions });
+    const cityId = await getCurrentCityId();
+    await prisma.coolAction.createMany({
+      data: coolActions.map((action) => ({ ...action, cityId })),
+    });
   },
 };
