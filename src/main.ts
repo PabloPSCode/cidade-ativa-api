@@ -6,6 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { env } from './infra/config/env.js';
 import { AppErrorFilter } from './middlewares/appErrorFilter.js';
+import { cityContextMiddleware } from './middlewares/cityContextMiddleware.js';
 import { runSeeds } from './infra/seeds/SeedRunner.js';
 import { seeds } from './infra/seeds/index.js';
 
@@ -14,6 +15,7 @@ async function bootstrap() {
 
   app.use(require('express').json({ limit: '10mb' }));
   app.use(require('express').urlencoded({ extended: true, limit: '10mb' }));
+  app.use(cityContextMiddleware);
 
   app.useGlobalFilters(new AppErrorFilter());
   app.enableCors();
