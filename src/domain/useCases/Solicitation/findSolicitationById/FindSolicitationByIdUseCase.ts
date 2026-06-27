@@ -17,6 +17,7 @@ export class FindSolicitationByIdUseCase {
       city: s.city,
       uf: s.uf,
       street: s.street,
+      cep: s.cep,
       requestingUserId: s.requestingUserId,
       requestingUserName: s.requestingUserName ?? '',
       solicitationTypeId: s.solicitationTypeId,

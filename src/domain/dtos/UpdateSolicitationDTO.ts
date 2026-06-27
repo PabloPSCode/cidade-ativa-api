@@ -10,6 +10,7 @@ export interface UpdateSolicitationDTO {
   description?: string;
   neighborhood?: string;
   street?: string;
+  cep?: string;
   status?: SolicitationStatus;
   solvedImageUrls?: string[];
   solvedDate?: Date;
