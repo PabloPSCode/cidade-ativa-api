@@ -2,9 +2,16 @@ import { AppError } from '../../../errors/AppError.js';
 import { CreateSignatureDTO } from '../../../dtos/CreateSignatureDTO.js';
 import { SignatureResponseDTO } from '../../../dtos/SignatureResponseDTO.js';
 import { ISignatureRepository } from '../../../repositories/ISignatureRepository.js';
+import {
+  IImageStorageService,
+  IMAGE_FOLDERS,
+} from '../../../services/IImageStorageService.js';
 
 export class CreateSignatureUseCase {
-  constructor(private readonly repository: ISignatureRepository) {}
+  constructor(
+    private readonly repository: ISignatureRepository,
+    private readonly imageStorage: IImageStorageService,
+  ) {}
 
   async execute(data: CreateSignatureDTO): Promise<SignatureResponseDTO> {
     const existing = await this.repository.findByUserId(data.userId);
@@ -14,7 +21,11 @@ export class CreateSignatureUseCase {
         409,
       );
 
-    const signature = await this.repository.create(data);
+    const imageUrl = await this.imageStorage.uploadImage(
+      data.imageUrl,
+      IMAGE_FOLDERS.signatures,
+    );
+    const signature = await this.repository.create({ ...data, imageUrl });
     return {
       id: signature.id,
       imageUrl: signature.imageUrl,

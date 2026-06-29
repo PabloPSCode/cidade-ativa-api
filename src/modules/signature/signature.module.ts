@@ -10,6 +10,7 @@ import { FindSignatureByUserIdUseCase } from '../../domain/useCases/Signature/fi
 import { CreateSolicitationSignatureUseCase } from '../../domain/useCases/SolicitationSignature/createSolicitationSignature/CreateSolicitationSignatureUseCase.js';
 import { ListSolicitationSignaturesUseCase } from '../../domain/useCases/SolicitationSignature/listSolicitationSignatures/ListSolicitationSignaturesUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
+import { FirebaseImageStorageService } from '../../infra/integrations/firebase/FirebaseImageStorageService.js';
 
 @Module({
   imports: [PassportModule],
@@ -17,11 +18,14 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
   providers: [
     JwtUserStrategy,
     PrismaSignatureRepository,
+    FirebaseImageStorageService,
     {
       provide: CreateSignatureUseCase,
-      useFactory: (r: PrismaSignatureRepository) =>
-        new CreateSignatureUseCase(r),
-      inject: [PrismaSignatureRepository],
+      useFactory: (
+        r: PrismaSignatureRepository,
+        is: FirebaseImageStorageService,
+      ) => new CreateSignatureUseCase(r, is),
+      inject: [PrismaSignatureRepository, FirebaseImageStorageService],
     },
     {
       provide: DeleteSignatureUseCase,
@@ -48,7 +52,10 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
         r: PrismaSolicitationSignatureRepository,
         s: PrismaSignatureRepository,
       ) => new CreateSolicitationSignatureUseCase(r, s),
-      inject: [PrismaSolicitationSignatureRepository, PrismaSignatureRepository],
+      inject: [
+        PrismaSolicitationSignatureRepository,
+        PrismaSignatureRepository,
+      ],
     },
     {
       provide: ListSolicitationSignaturesUseCase,

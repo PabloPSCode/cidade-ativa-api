@@ -2,9 +2,16 @@ import { AppError } from '../../../errors/AppError.js';
 import { SolveSolicitationDTO } from '../../../dtos/SolveSolicitationDTO.js';
 import { SolicitationResponseDTO } from '../../../dtos/SolicitationResponseDTO.js';
 import { ISolicitationRepository } from '../../../repositories/ISolicitationRepository.js';
+import {
+  IImageStorageService,
+  IMAGE_FOLDERS,
+} from '../../../services/IImageStorageService.js';
 
 export class SolveSolicitationUseCase {
-  constructor(private readonly repository: ISolicitationRepository) {}
+  constructor(
+    private readonly repository: ISolicitationRepository,
+    private readonly imageStorage: IImageStorageService,
+  ) {}
 
   async execute(
     id: string,
@@ -12,10 +19,14 @@ export class SolveSolicitationUseCase {
   ): Promise<SolicitationResponseDTO> {
     const existing = await this.repository.findById(id);
     if (!existing) throw new AppError('Solicitação não encontrada.', 404);
+    const solvedImageUrls = await this.imageStorage.uploadImages(
+      data.solvedImageUrls,
+      IMAGE_FOLDERS.solicitations,
+    );
     const s = await this.repository.update(id, {
       status: 'resolved',
       solvedDate: new Date(),
-      solvedImageUrls: data.solvedImageUrls,
+      solvedImageUrls,
       solvedCommentary: data.solvedCommentary,
       solvedUserId: data.solvedUserId,
     });

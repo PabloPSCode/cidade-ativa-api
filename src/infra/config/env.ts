@@ -8,6 +8,15 @@ export const getEnv = () => ({
   jwtPrivateKey: process.env.JWT_PRIVATE_KEY ?? '',
   openAiApiKey: process.env.OPEN_AI_API_KEY ?? '',
   openAiModel: process.env.OPEN_AI_MODEL ?? 'gpt-5.5',
+  firebaseProjectId: process.env.FIREBASE_PROJECT_ID ?? '',
+  firebaseClientEmail: process.env.FIREBASE_CLIENT_EMAIL ?? '',
+  // Private keys carry literal "\n" sequences when stored in a single-line env
+  // var; normalize them back into real newlines so the SDK can parse the PEM.
+  firebasePrivateKey: (process.env.FIREBASE_PRIVATE_KEY ?? '').replace(
+    /\\n/g,
+    '\n',
+  ),
+  firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? '',
 });
 
 export const env = {
