@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Body,
   Controller,
@@ -23,6 +25,7 @@ import { UpdateUserUseCase } from '../../domain/useCases/User/updateUser/UpdateU
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { AuthThrottle } from '../rateLimit/throttleTiers.js';
 import {
   authenticateUserSchema,
   authenticateWithGoogleSchema,
@@ -44,6 +47,7 @@ export class UserController {
   ) {}
 
   @Post('users')
+  @AuthThrottle()
   @UsePipes(new ZodValidationPipe(createUserSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -211,6 +215,7 @@ export class UserController {
   }
 
   @Post('authenticate-google')
+  @AuthThrottle()
   @UsePipes(new ZodValidationPipe(authenticateWithGoogleSchema))
   async authenticateWithGoogle(@Body() body: any, @Req() req: Request) {
     try {
@@ -239,6 +244,7 @@ export class UserController {
   }
 
   @Post('authenticate')
+  @AuthThrottle()
   @UsePipes(new ZodValidationPipe(authenticateUserSchema))
   async authenticate(@Body() body: any, @Req() req: Request) {
     try {

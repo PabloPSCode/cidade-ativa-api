@@ -18,6 +18,7 @@ import { ListSolicitationSignaturesUseCase } from '../../domain/useCases/Solicit
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { UploadThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createSignatureSchema,
   createSolicitationSignatureSchema,
@@ -38,7 +39,8 @@ export class SignatureController {
   @UsePipes(new ZodValidationPipe(createSolicitationSignatureSchema))
   async signSolicitation(@Body() body: any, @Req() req: Request) {
     try {
-      const result = await this.createSolicitationSignatureUseCase.execute(body);
+      const result =
+        await this.createSolicitationSignatureUseCase.execute(body);
       logger.info({
         module: 'Signatures',
         action: 'signSolicitation',
@@ -90,6 +92,7 @@ export class SignatureController {
   }
 
   @Post()
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(createSignatureSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {

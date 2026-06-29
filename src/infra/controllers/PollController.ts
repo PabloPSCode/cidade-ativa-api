@@ -22,6 +22,7 @@ import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { UploadThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createPollSchema,
   updatePollSchema,
@@ -39,6 +40,7 @@ export class PollController {
 
   @Post()
   @UseGuards(JwtUserGuard)
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(createPollSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -126,6 +128,7 @@ export class PollController {
 
   @Put(':id')
   @UseGuards(JwtUserGuard)
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(updatePollSchema))
   async update(
     @Param('id') id: string,

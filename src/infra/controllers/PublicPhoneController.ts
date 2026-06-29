@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   Body,
   Controller,
@@ -22,6 +24,7 @@ import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { WriteThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createPublicPhoneSchema,
   updatePublicPhoneSchema,
@@ -39,6 +42,7 @@ export class PublicPhoneController {
 
   @Post()
   @UseGuards(JwtUserGuard)
+  @WriteThrottle()
   @UsePipes(new ZodValidationPipe(createPublicPhoneSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -159,6 +163,7 @@ export class PublicPhoneController {
 
   @Delete(':id')
   @UseGuards(JwtUserGuard)
+  @WriteThrottle()
   async remove(@Param('id') id: string, @Req() req: Request) {
     try {
       await this.deleteUseCase.execute(id);

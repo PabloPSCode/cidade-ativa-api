@@ -21,6 +21,7 @@ import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { UploadThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createDoneCoolActionSchema,
   updateDoneCoolActionSchema,
@@ -38,6 +39,7 @@ export class DoneCoolActionController {
   ) {}
 
   @Post()
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(createDoneCoolActionSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -152,6 +154,7 @@ export class DoneCoolActionController {
   }
 
   @Put(':id')
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(updateDoneCoolActionSchema))
   async update(
     @Param('id') id: string,

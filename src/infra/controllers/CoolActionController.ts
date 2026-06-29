@@ -20,6 +20,7 @@ import { UpdateCoolActionUseCase } from '../../domain/useCases/CoolAction/update
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { WriteThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createCoolActionSchema,
   updateCoolActionSchema,
@@ -36,6 +37,7 @@ export class CoolActionController {
   ) {}
 
   @Post()
+  @WriteThrottle()
   @UsePipes(new ZodValidationPipe(createCoolActionSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -153,6 +155,7 @@ export class CoolActionController {
   }
 
   @Delete(':id')
+  @WriteThrottle()
   async remove(@Param('id') id: string, @Req() req: Request) {
     try {
       await this.deleteUseCase.execute(id);

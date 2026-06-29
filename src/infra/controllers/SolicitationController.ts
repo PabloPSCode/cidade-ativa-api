@@ -21,6 +21,7 @@ import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { UploadThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createSolicitationSchema,
   solveSolicitationSchema,
@@ -39,6 +40,7 @@ export class SolicitationController {
   ) {}
 
   @Post()
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(createSolicitationSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -126,12 +128,9 @@ export class SolicitationController {
   }
 
   @Post(':id/solve')
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(solveSolicitationSchema))
-  async solve(
-    @Param('id') id: string,
-    @Body() body: any,
-    @Req() req: Request,
-  ) {
+  async solve(@Param('id') id: string, @Body() body: any, @Req() req: Request) {
     try {
       const result = await this.solveUseCase.execute(id, body);
       logger.info({
@@ -156,6 +155,7 @@ export class SolicitationController {
   }
 
   @Put(':id')
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(updateSolicitationSchema))
   async update(
     @Param('id') id: string,

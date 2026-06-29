@@ -6,6 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { env } from './infra/config/env.js';
 import { AppErrorFilter } from './middlewares/appErrorFilter.js';
+import { RateLimitExceptionFilter } from './middlewares/rateLimitExceptionFilter.js';
 import { cityContextMiddleware } from './middlewares/cityContextMiddleware.js';
 import { runSeeds } from './infra/seeds/SeedRunner.js';
 import { seeds } from './infra/seeds/index.js';
@@ -13,11 +14,18 @@ import { seeds } from './infra/seeds/index.js';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
 
+  // Trust the first proxy hop (load balancer / Next.js reverse proxy) so the
+  // rate-limiter sees the real client IP via X-Forwarded-For instead of the
+  // proxy's address.
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
   app.use(require('express').json({ limit: '10mb' }));
   app.use(require('express').urlencoded({ extended: true, limit: '10mb' }));
   app.use(cityContextMiddleware);
 
-  app.useGlobalFilters(new AppErrorFilter());
+  // AppErrorFilter is the catch-all; RateLimitExceptionFilter is registered
+  // last so its specific @Catch(ThrottlerException) takes precedence for 429s.
+  app.useGlobalFilters(new AppErrorFilter(), new RateLimitExceptionFilter());
 
   // Only the official front-ends may consume this API. Origins can be
   // overridden via the CORS_ORIGINS env var; otherwise these defaults apply.
