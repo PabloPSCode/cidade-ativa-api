@@ -17,6 +17,12 @@ export const getEnv = () => ({
     '\n',
   ),
   firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? '',
+  // Comma-separated list of front-end origins allowed to call this API.
+  // Trailing slashes are stripped so values can be pasted as plain URLs.
+  corsOrigins: (process.env.CORS_ORIGINS ?? '')
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
+    .filter(Boolean),
 });
 
 export const env = {

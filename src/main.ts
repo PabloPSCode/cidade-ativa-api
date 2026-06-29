@@ -18,7 +18,38 @@ async function bootstrap() {
   app.use(cityContextMiddleware);
 
   app.useGlobalFilters(new AppErrorFilter());
-  app.enableCors();
+
+  // Only the official front-ends may consume this API. Origins can be
+  // overridden via the CORS_ORIGINS env var; otherwise these defaults apply.
+  const DEFAULT_ALLOWED_ORIGINS = [
+    'https://cidadeativaplataforma.plssistemas.com.br',
+    'https://cidadeativaadmin.plssistemas.com.br',
+  ];
+  const allowedOrigins = env.corsOrigins.length
+    ? env.corsOrigins
+    : DEFAULT_ALLOWED_ORIGINS;
+  const isLocalhost = (origin: string): boolean =>
+    /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+
+  app.enableCors({
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      // No Origin header: non-browser clients (curl, server-to-server,
+      // health checks, the Next.js reverse proxy) — always allowed.
+      if (!origin) return callback(null, true);
+
+      const normalized = origin.replace(/\/+$/, '');
+      const allowed =
+        allowedOrigins.includes(normalized) ||
+        (env.nodeEnv !== 'production' && isLocalhost(normalized));
+
+      if (allowed) return callback(null, true);
+      return callback(new Error(`Origin not allowed by CORS: ${origin}`));
+    },
+    credentials: true,
+  });
 
   await runSeeds(seeds);
 
