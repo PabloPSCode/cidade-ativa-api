@@ -111,6 +111,7 @@ export class PrismaDoneCoolActionRepository implements IDoneCoolActionRepository
         ${cityFilter}
       GROUP BY u.id, u.name
       ORDER BY "totalPoints" DESC, u.name ASC
+      LIMIT 100
     `;
 
     return rows.map((r) => ({
