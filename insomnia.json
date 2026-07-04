@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2026-06-25T00:00:00.000Z",
+  "__export_date": "2026-07-01T00:00:00.000Z",
   "__export_source": "cidade-ativa-api",
   "resources": [
     {
@@ -886,6 +886,33 @@
         "mimeType": "application/json",
         "text": "{\n  \"imageUrl\": \"data:image/png;base64,REPLACE_WITH_BASE64\",\n  \"userName\": \"Pablo Silva\",\n  \"userId\": \"\"\n}"
       }
+    },
+    {
+      "_id": "req_sig_sign_solicitation",
+      "_type": "request",
+      "parentId": "fld_signatures",
+      "name": "Sign a solicitation",
+      "method": "POST",
+      "url": "{{ _.base_url }}/signatures/solicitation",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": \"\",\n  \"solicitationId\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_sig_list_by_solicitation",
+      "_type": "request",
+      "parentId": "fld_signatures",
+      "name": "List signatures by solicitation",
+      "method": "GET",
+      "url": "{{ _.base_url }}/signatures/solicitation/:solicitationId",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
     },
     {
       "_id": "req_sig_get",
