@@ -19,7 +19,7 @@ export class AuthenticateWithGoogleUseCase {
 
     const privateKey = Buffer.from(this.jwtPrivateKey, 'base64');
     const token = jwt.sign(
-      { sub: user.id, isAdmin: user.isAdmin },
+      { sub: user.id, isAdmin: user.isAdmin, cityId: user.cityId },
       privateKey,
       { algorithm: 'RS256', expiresIn: '7d' },
     );

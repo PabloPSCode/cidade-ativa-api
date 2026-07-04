@@ -12,6 +12,7 @@ export class ListLogsUseCase {
 
   async execute(
     pagination?: Partial<PaginationDTO>,
+    cityId?: string,
   ): Promise<PaginatedResult<Log>> {
     const page = Math.max(pagination?.page ?? DEFAULT_PAGE, 1);
     const perPage = Math.min(
@@ -19,7 +20,11 @@ export class ListLogsUseCase {
       MAX_PER_PAGE,
     );
 
-    const { data, total } = await this.logRepository.findAll(page, perPage);
+    const { data, total } = await this.logRepository.findAll(
+      page,
+      perPage,
+      cityId,
+    );
 
     return {
       data,

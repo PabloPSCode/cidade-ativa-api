@@ -1,4 +1,5 @@
 import { prisma } from './prismaClient.js';
+import { getCurrentCityId } from './cityContext.js';
 import { ISolicitationRepository } from '../../../domain/repositories/ISolicitationRepository.js';
 import {
   Solicitation,
@@ -20,9 +21,11 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
       r.city,
       r.uf,
       r.street,
+      r.cep,
       r.requestingUserId,
       r.solicitationTypeId,
       r.status as SolicitationStatus,
+      r.isCollective,
       Array.isArray(r.unsolvedImageUrls)
         ? r.unsolvedImageUrls
         : JSON.parse(r.unsolvedImageUrls ?? '[]'),
@@ -36,6 +39,7 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
       r.solvedUserId,
       r.createdAt,
       r.updatedAt,
+      r.cityId,
     );
     if (r.requestingUser?.name) {
       entity.requestingUserName = r.requestingUser.name;
@@ -49,6 +53,7 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
         ...data,
         city: '',
         uf: '',
+        cityId: await getCurrentCityId(),
         unsolvedImageUrls: data.unsolvedImageUrls ?? [],
         status: 'waiting_approval',
       },
@@ -82,12 +87,14 @@ export class PrismaSolicitationRepository implements ISolicitationRepository {
   async list(
     pagination: PaginationDTO,
     filters?: { userId?: string; status?: string },
+    cityId?: string,
   ): Promise<PaginatedResultDTO<Solicitation>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
     const where: any = { deletedAt: null };
     if (filters?.userId) where.requestingUserId = filters.userId;
     if (filters?.status) where.status = filters.status;
+    if (cityId) where.cityId = cityId;
     const [records, total] = await Promise.all([
       prisma.solicitation.findMany({
         skip,

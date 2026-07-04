@@ -1,4 +1,5 @@
 import { prisma } from './prismaClient.js';
+import { getCurrentCityId } from './cityContext.js';
 import { IVoteRepository } from '../../../domain/repositories/IVoteRepository.js';
 import { Vote } from '../../../domain/entities/Vote.js';
 import { CreateVoteDTO } from '../../../domain/dtos/CreateVoteDTO.js';
@@ -16,11 +17,14 @@ export class PrismaVoteRepository implements IVoteRepository {
       r.userId,
       r.createdAt,
       r.updatedAt,
+      r.cityId,
     );
   }
 
   async create(data: CreateVoteDTO): Promise<Vote> {
-    const r = await prisma.vote.create({ data });
+    const r = await prisma.vote.create({
+      data: { ...data, cityId: await getCurrentCityId() },
+    });
     return this.toEntity(r);
   }
 
@@ -44,12 +48,14 @@ export class PrismaVoteRepository implements IVoteRepository {
   async list(
     pagination: PaginationDTO,
     filters?: { pollId?: string; userId?: string },
+    cityId?: string,
   ): Promise<PaginatedResultDTO<Vote>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
     const where: any = { deletedAt: null };
     if (filters?.pollId) where.pollId = filters.pollId;
     if (filters?.userId) where.userId = filters.userId;
+    if (cityId) where.cityId = cityId;
     const [records, total] = await Promise.all([
       prisma.vote.findMany({
         skip,

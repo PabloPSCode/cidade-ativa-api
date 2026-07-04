@@ -1,4 +1,5 @@
 import { prisma } from './prismaClient.js';
+import { getCurrentCityId } from './cityContext.js';
 import { ICoolActionRepository } from '../../../domain/repositories/ICoolActionRepository.js';
 import {
   CoolAction,
@@ -17,11 +18,14 @@ export class PrismaCoolActionRepository implements ICoolActionRepository {
       r.category as CoolActionCategory,
       r.points,
       r.createdAt,
+      r.cityId,
     );
   }
 
   async create(data: CreateCoolActionDTO): Promise<CoolAction> {
-    const r = await prisma.coolAction.create({ data });
+    const r = await prisma.coolAction.create({
+      data: { ...data, cityId: await getCurrentCityId() },
+    });
     return this.toEntity(r);
   }
 
@@ -46,10 +50,11 @@ export class PrismaCoolActionRepository implements ICoolActionRepository {
 
   async list(
     pagination: PaginationDTO,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<CoolAction>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
-    const where = { deletedAt: null };
+    const where = { deletedAt: null, ...(cityId ? { cityId } : {}) };
     const [records, total] = await Promise.all([
       prisma.coolAction.findMany({
         skip,

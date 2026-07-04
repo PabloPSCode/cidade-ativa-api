@@ -5,5 +5,6 @@ export class VoteOption {
     public voteId: string,
     public readonly createdAt: Date,
     public updatedAt: Date | null,
+    public readonly cityId: string,
   ) {}
 }

@@ -6,6 +6,7 @@ export class Log {
     public email: string,
     public activityDescription: string,
     public readonly createdAt: Date,
+    public readonly cityId: string,
   ) {}
 
   changeUserId(userId: string): void {

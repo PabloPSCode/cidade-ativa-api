@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   Body,
   Controller,
@@ -15,12 +17,14 @@ import type { Request } from 'express';
 import { DeletePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/deletePublicPhone/DeletePublicPhoneUseCase.js';
 import { FindPublicPhoneByIdUseCase } from '../../domain/useCases/PublicPhone/findPublicPhoneById/FindPublicPhoneByIdUseCase.js';
 import { ListPublicPhonesUseCase } from '../../domain/useCases/PublicPhone/listPublicPhones/ListPublicPhonesUseCase.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { CreatePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/createPublicPhone/CreatePublicPhoneUseCase.js';
 import { UpdatePublicPhoneUseCase } from '../../domain/useCases/PublicPhone/updatePublicPhone/UpdatePublicPhoneUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { WriteThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createPublicPhoneSchema,
   updatePublicPhoneSchema,
@@ -38,6 +42,7 @@ export class PublicPhoneController {
 
   @Post()
   @UseGuards(JwtUserGuard)
+  @WriteThrottle()
   @UsePipes(new ZodValidationPipe(createPublicPhoneSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -67,13 +72,17 @@ export class PublicPhoneController {
   async list(
     @Query('page') page: string,
     @Query('perPage') perPage: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
-      const result = await this.listUseCase.execute({
-        page: Number(page) || 1,
-        perPage: Number(perPage) || 10,
-      });
+      const result = await this.listUseCase.execute(
+        {
+          page: Number(page) || 1,
+          perPage: Number(perPage) || 10,
+        },
+        cityId,
+      );
       logger.info({
         module: 'PublicPhones',
         action: 'listPublicPhones',
@@ -154,6 +163,7 @@ export class PublicPhoneController {
 
   @Delete(':id')
   @UseGuards(JwtUserGuard)
+  @WriteThrottle()
   async remove(@Param('id') id: string, @Req() req: Request) {
     try {
       await this.deleteUseCase.execute(id);

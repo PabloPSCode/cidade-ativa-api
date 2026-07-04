@@ -9,8 +9,9 @@ export class ListPollsUseCase {
   async execute(
     pagination: PaginationDTO,
     status?: string,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<PollResponseDTO>> {
-    const result = await this.repository.list(pagination, status);
+    const result = await this.repository.list(pagination, status, cityId);
     return {
       data: result.data.map((p) => ({
         id: p.id,

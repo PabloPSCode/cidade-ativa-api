@@ -18,6 +18,7 @@ import { DeleteVoteOptionUseCase } from '../../domain/useCases/VoteOption/delete
 import { FindVoteOptionByIdUseCase } from '../../domain/useCases/VoteOption/findVoteOptionById/FindVoteOptionByIdUseCase.js';
 import { ListVoteOptionsUseCase } from '../../domain/useCases/VoteOption/listVoteOptions/ListVoteOptionsUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
@@ -68,12 +69,14 @@ export class VoteOptionController {
     @Query('page') page: string,
     @Query('perPage') perPage: string,
     @Query('voteId') voteId: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
       const result = await this.listUseCase.execute(
         { page: Number(page) || 1, perPage: Number(perPage) || 10 },
         voteId || undefined,
+        cityId,
       );
       logger.info({
         module: 'VoteOptions',

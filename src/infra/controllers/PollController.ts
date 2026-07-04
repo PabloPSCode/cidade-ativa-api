@@ -18,9 +18,11 @@ import { DeletePollUseCase } from '../../domain/useCases/Poll/deletePoll/DeleteP
 import { FindPollByIdUseCase } from '../../domain/useCases/Poll/findPollById/FindPollByIdUseCase.js';
 import { ListPollsUseCase } from '../../domain/useCases/Poll/listPolls/ListPollsUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { JwtUserGuard } from '../auth/guards/JwtUserGuard.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { UploadThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createPollSchema,
   updatePollSchema,
@@ -38,6 +40,7 @@ export class PollController {
 
   @Post()
   @UseGuards(JwtUserGuard)
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(createPollSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -68,12 +71,14 @@ export class PollController {
     @Query('page') page: string,
     @Query('perPage') perPage: string,
     @Query('status') status: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
       const result = await this.listUseCase.execute(
         { page: Number(page) || 1, perPage: Number(perPage) || 10 },
         status || undefined,
+        cityId,
       );
       logger.info({
         module: 'Polls',
@@ -123,6 +128,7 @@ export class PollController {
 
   @Put(':id')
   @UseGuards(JwtUserGuard)
+  @UploadThrottle()
   @UsePipes(new ZodValidationPipe(updatePollSchema))
   async update(
     @Param('id') id: string,

@@ -3,5 +3,6 @@ export class PublicPhone {
     public readonly id: string,
     public institutionName: string,
     public phone: string,
+    public readonly cityId: string,
   ) {}
 }

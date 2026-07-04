@@ -11,5 +11,6 @@ export class User {
     public city: string,
     public uf: string,
     public readonly createdAt: Date,
+    public readonly cityId: string,
   ) {}
 }

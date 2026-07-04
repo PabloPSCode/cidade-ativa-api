@@ -8,4 +8,6 @@ export interface CreateUserDTO {
   neighborhood?: string;
   city?: string;
   uf?: string;
+  /** Tenant (cidade) escolhido no cadastro. Define o `cityId` do usuário. */
+  cityId?: string;
 }

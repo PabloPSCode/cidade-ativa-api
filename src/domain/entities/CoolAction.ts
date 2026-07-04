@@ -14,5 +14,6 @@ export class CoolAction {
     public category: CoolActionCategory,
     public points: number,
     public readonly createdAt: Date,
+    public readonly cityId: string,
   ) {}
 }

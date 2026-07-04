@@ -8,8 +8,12 @@ export const createUserSchema = z.object({
   isAdmin: z.boolean().optional(),
   address: z.string().optional(),
   neighborhood: z.string().optional(),
-  city: z.string().optional(),
-  uf: z.string().min(2).max(2).optional(),
+  // Cidade e UF são obrigatórias no cadastro de um novo usuário.
+  city: z.string().min(1, 'Cidade é obrigatória'),
+  uf: z.string().min(2, 'UF é obrigatória').max(2),
+  // Tenant (cidade) escolhido no cadastro — também obrigatório para vincular o
+  // usuário à cidade correta (do contrário cairia na cidade padrão).
+  cityId: z.string().min(1, 'Cidade é obrigatória'),
 });
 
 export const updateUserSchema = z.object({

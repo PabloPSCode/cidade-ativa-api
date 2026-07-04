@@ -17,6 +17,7 @@ import { FindSolicitationTypeByIdUseCase } from '../../domain/useCases/Solicitat
 import { ListSolicitationTypesUseCase } from '../../domain/useCases/SolicitationType/listSolicitationTypes/ListSolicitationTypesUseCase.js';
 import { UpdateSolicitationTypeUseCase } from '../../domain/useCases/SolicitationType/updateSolicitationType/UpdateSolicitationTypeUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
 import {
@@ -64,13 +65,17 @@ export class SolicitationTypeController {
   async list(
     @Query('page') page: string,
     @Query('perPage') perPage: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
-      const result = await this.listUseCase.execute({
-        page: Number(page) || 1,
-        perPage: Number(perPage) || 10,
-      });
+      const result = await this.listUseCase.execute(
+        {
+          page: Number(page) || 1,
+          perPage: Number(perPage) || 10,
+        },
+        cityId,
+      );
       logger.info({
         module: 'SolicitationTypes',
         action: 'listSolicitationTypes',

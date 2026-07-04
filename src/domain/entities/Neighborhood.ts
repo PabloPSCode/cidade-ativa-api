@@ -3,5 +3,6 @@ export class Neighborhood {
     public readonly id: string,
     public name: string,
     public cityName: string,
+    public readonly cityId: string,
   ) {}
 }

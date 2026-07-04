@@ -1,4 +1,5 @@
 import { prisma } from './prismaClient.js';
+import { getCurrentCityId } from './cityContext.js';
 import { IUserRepository } from '../../../domain/repositories/IUserRepository.js';
 import { User } from '../../../domain/entities/User.js';
 import { CreateUserDTO } from '../../../domain/dtos/CreateUserDTO.js';
@@ -22,11 +23,12 @@ export class PrismaUserRepository implements IUserRepository {
       r.city,
       r.uf,
       r.createdAt,
+      r.cityId,
     );
   }
 
   async create(data: CreateInput): Promise<User> {
-    const { password: _p, ...rest } = data as any;
+    const { password: _p, cityId, ...rest } = data as any;
     const r = await prisma.user.create({
       data: {
         ...rest,
@@ -34,6 +36,9 @@ export class PrismaUserRepository implements IUserRepository {
         neighborhood: rest.neighborhood ?? '',
         city: rest.city ?? '',
         uf: rest.uf ?? '',
+        // Usa a cidade escolhida no cadastro; só recorre à cidade padrão
+        // (request/seed) quando nenhuma foi informada.
+        cityId: cityId || (await getCurrentCityId()),
       },
     });
     return this.toEntity(r);
@@ -61,10 +66,13 @@ export class PrismaUserRepository implements IUserRepository {
     });
   }
 
-  async list(pagination: PaginationDTO): Promise<PaginatedResultDTO<User>> {
+  async list(
+    pagination: PaginationDTO,
+    cityId?: string,
+  ): Promise<PaginatedResultDTO<User>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
-    const where = { deletedAt: null };
+    const where = { deletedAt: null, ...(cityId ? { cityId } : {}) };
     const [records, total] = await Promise.all([
       prisma.user.findMany({
         skip,

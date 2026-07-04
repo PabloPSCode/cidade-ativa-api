@@ -7,6 +7,7 @@ import { env } from '../../config/env.js';
 const AdminPayloadSchema = z.object({
   sub: z.string(),
   isAdmin: z.boolean(),
+  cityId: z.string().optional(),
 });
 
 export type AdminPayload = z.infer<typeof AdminPayloadSchema>;

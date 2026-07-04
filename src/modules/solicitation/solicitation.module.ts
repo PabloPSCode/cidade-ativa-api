@@ -10,6 +10,7 @@ import { ListSolicitationsUseCase } from '../../domain/useCases/Solicitation/lis
 import { SolveSolicitationUseCase } from '../../domain/useCases/Solicitation/solveSolicitation/SolveSolicitationUseCase.js';
 import { UpdateSolicitationUseCase } from '../../domain/useCases/Solicitation/updateSolicitation/UpdateSolicitationUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
+import { FirebaseImageStorageService } from '../../infra/integrations/firebase/FirebaseImageStorageService.js';
 
 @Module({
   imports: [PassportModule],
@@ -18,13 +19,19 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
     JwtUserStrategy,
     PrismaSolicitationRepository,
     PrismaUserRepository,
+    FirebaseImageStorageService,
     {
       provide: CreateSolicitationUseCase,
       useFactory: (
         sr: PrismaSolicitationRepository,
         ur: PrismaUserRepository,
-      ) => new CreateSolicitationUseCase(sr, ur),
-      inject: [PrismaSolicitationRepository, PrismaUserRepository],
+        is: FirebaseImageStorageService,
+      ) => new CreateSolicitationUseCase(sr, ur, is),
+      inject: [
+        PrismaSolicitationRepository,
+        PrismaUserRepository,
+        FirebaseImageStorageService,
+      ],
     },
     {
       provide: DeleteSolicitationUseCase,
@@ -46,15 +53,19 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
     },
     {
       provide: SolveSolicitationUseCase,
-      useFactory: (r: PrismaSolicitationRepository) =>
-        new SolveSolicitationUseCase(r),
-      inject: [PrismaSolicitationRepository],
+      useFactory: (
+        r: PrismaSolicitationRepository,
+        is: FirebaseImageStorageService,
+      ) => new SolveSolicitationUseCase(r, is),
+      inject: [PrismaSolicitationRepository, FirebaseImageStorageService],
     },
     {
       provide: UpdateSolicitationUseCase,
-      useFactory: (r: PrismaSolicitationRepository) =>
-        new UpdateSolicitationUseCase(r),
-      inject: [PrismaSolicitationRepository],
+      useFactory: (
+        r: PrismaSolicitationRepository,
+        is: FirebaseImageStorageService,
+      ) => new UpdateSolicitationUseCase(r, is),
+      inject: [PrismaSolicitationRepository, FirebaseImageStorageService],
     },
   ],
 })

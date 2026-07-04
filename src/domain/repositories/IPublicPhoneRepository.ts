@@ -10,5 +10,8 @@ export interface IPublicPhoneRepository {
   findByPhone(phone: string): Promise<PublicPhone | null>;
   update(id: string, data: UpdatePublicPhoneDTO): Promise<PublicPhone>;
   delete(id: string): Promise<void>;
-  list(pagination: PaginationDTO): Promise<PaginatedResultDTO<PublicPhone>>;
+  list(
+    pagination: PaginationDTO,
+    cityId?: string,
+  ): Promise<PaginatedResultDTO<PublicPhone>>;
 }

@@ -17,9 +17,11 @@ export class Solicitation {
     public city: string,
     public uf: string,
     public street: string,
+    public cep: string,
     public requestingUserId: string,
     public solicitationTypeId: string,
     public status: SolicitationStatus,
+    public isCollective: boolean,
     public unsolvedImageUrls: string[],
     public solvedImageUrls: string[] | null,
     public solvedDate: Date | null,
@@ -27,5 +29,6 @@ export class Solicitation {
     public solvedUserId: string | null,
     public readonly createdAt: Date,
     public updatedAt: Date | null,
+    public readonly cityId: string,
   ) {}
 }

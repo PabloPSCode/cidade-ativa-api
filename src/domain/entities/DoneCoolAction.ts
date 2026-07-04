@@ -8,5 +8,6 @@ export class DoneCoolAction {
     public actionPhotoURL: string,
     public coolActionId: string,
     public readonly createdAt: Date,
+    public readonly cityId: string,
   ) {}
 }

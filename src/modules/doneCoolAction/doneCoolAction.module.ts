@@ -11,6 +11,7 @@ import { FindDoneCoolActionByIdUseCase } from '../../domain/useCases/DoneCoolAct
 import { ListDoneCoolActionsUseCase } from '../../domain/useCases/DoneCoolAction/listDoneCoolActions/ListDoneCoolActionsUseCase.js';
 import { ListDoneCoolActionsRankingUseCase } from '../../domain/useCases/DoneCoolAction/listDoneCoolActionsRanking/ListDoneCoolActionsRankingUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
+import { FirebaseImageStorageService } from '../../infra/integrations/firebase/FirebaseImageStorageService.js';
 
 @Module({
   imports: [PassportModule],
@@ -20,24 +21,29 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
     PrismaDoneCoolActionRepository,
     PrismaUserRepository,
     PrismaCoolActionRepository,
+    FirebaseImageStorageService,
     {
       provide: CreateDoneCoolActionUseCase,
       useFactory: (
         r: PrismaDoneCoolActionRepository,
         u: PrismaUserRepository,
         ca: PrismaCoolActionRepository,
-      ) => new CreateDoneCoolActionUseCase(r, u, ca),
+        is: FirebaseImageStorageService,
+      ) => new CreateDoneCoolActionUseCase(r, u, ca, is),
       inject: [
         PrismaDoneCoolActionRepository,
         PrismaUserRepository,
         PrismaCoolActionRepository,
+        FirebaseImageStorageService,
       ],
     },
     {
       provide: UpdateDoneCoolActionUseCase,
-      useFactory: (r: PrismaDoneCoolActionRepository) =>
-        new UpdateDoneCoolActionUseCase(r),
-      inject: [PrismaDoneCoolActionRepository],
+      useFactory: (
+        r: PrismaDoneCoolActionRepository,
+        is: FirebaseImageStorageService,
+      ) => new UpdateDoneCoolActionUseCase(r, is),
+      inject: [PrismaDoneCoolActionRepository, FirebaseImageStorageService],
     },
     {
       provide: DeleteDoneCoolActionUseCase,

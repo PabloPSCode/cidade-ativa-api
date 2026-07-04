@@ -1,4 +1,5 @@
 import { prisma } from '../database/prisma/prismaClient.js';
+import { getCurrentCityId } from '../database/prisma/cityContext.js';
 import type { Seed } from './SeedRunner.js';
 
 const solicitationTypes: { description: string }[] = [
@@ -23,16 +24,20 @@ export const seedSolicitationTypes: Seed = {
   name: 'Solicitation Types',
 
   async isPending() {
+    // No tenant city yet means nothing to attach reference data to.
+    const cities = await prisma.city.count({ where: { deletedAt: null } });
+    if (cities === 0) return false;
     const count = await prisma.solicitationType.count();
     return count === 0;
   },
 
   async run() {
+    const cityId = await getCurrentCityId();
     for (const type of solicitationTypes) {
       await prisma.solicitationType.upsert({
         where: { description: type.description },
         update: {},
-        create: type,
+        create: { ...type, cityId },
       });
     }
   },

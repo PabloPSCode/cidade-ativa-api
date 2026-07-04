@@ -14,10 +14,12 @@ export interface SolicitationResponseDTO {
   city: string;
   uf: string;
   street: string;
+  cep: string;
   requestingUserId: string;
   requestingUserName: string;
   solicitationTypeId: string;
   status: SolicitationStatus;
+  isCollective: boolean;
   unsolvedImageUrls: string[];
   solvedImageUrls: string[] | null;
   solvedDate: Date | null;

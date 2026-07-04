@@ -1,4 +1,5 @@
 import { prisma } from './prismaClient.js';
+import { getCurrentCityId } from './cityContext.js';
 import { IPollRepository } from '../../../domain/repositories/IPollRepository.js';
 import { Poll, PollStatus } from '../../../domain/entities/Poll.js';
 import { CreatePollDTO } from '../../../domain/dtos/CreatePollDTO.js';
@@ -18,11 +19,14 @@ export class PrismaPollRepository implements IPollRepository {
       r.status as PollStatus,
       r.createdAt,
       r.updatedAt,
+      r.cityId,
     );
   }
 
   async create(data: CreatePollDTO): Promise<Poll> {
-    const r = await prisma.poll.create({ data });
+    const r = await prisma.poll.create({
+      data: { ...data, cityId: await getCurrentCityId() },
+    });
     return this.toEntity(r);
   }
 
@@ -46,11 +50,13 @@ export class PrismaPollRepository implements IPollRepository {
   async list(
     pagination: PaginationDTO,
     status?: string,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<Poll>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
     const where: any = { deletedAt: null };
     if (status) where.status = status;
+    if (cityId) where.cityId = cityId;
     const [records, total] = await Promise.all([
       prisma.poll.findMany({
         skip,

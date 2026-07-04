@@ -1,0 +1,66 @@
+services:
+  db:
+    image: postgres:17
+    container_name: cidade-ativa-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-cidade_ativa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-cidade_ativa_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Private network only — the DB is never exposed to Traefik or the host.
+    networks:
+      - internal
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-cidade_ativa} -d ${POSTGRES_DB:-cidade_ativa_db}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: pscodedesenvolvimento/cidade-ativa-api:latest
+    # For local builds, comment out `image:` above and uncomment this block:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    container_name: cidade-ativa-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    # Loads JWT / Firebase / OpenAI / CORS secrets from your .env file.
+    env_file:
+      - .env
+    # These override whatever is in .env so the API talks to the db container.
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT:-3337}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cidade_ativa}:${POSTGRES_PASSWORD:-change_me}@db:5432/${POSTGRES_DB:-cidade_ativa_db}
+    # No published ports — Traefik handles all inbound traffic and TLS.
+    networks:
+      - internal
+      - traefik
+    labels:
+      - traefik.enable=true
+
+      - traefik.http.routers.cidadeativa.rule=Host(`cidade-ativa-api.plssistemas.com.br`)
+      - traefik.http.routers.cidadeativa.entrypoints=websecure
+      - traefik.http.routers.cidadeativa.tls=true
+      - traefik.http.routers.cidadeativa.tls.certresolver=letsencrypt
+
+      - traefik.http.services.cidadeativa.loadbalancer.server.port=${PORT:-3337}
+
+      - traefik.docker.network=traefik
+
+volumes:
+  postgres_data:
+
+networks:
+  # Shared reverse-proxy network created by the Traefik stack.
+  traefik:
+    external: true
+  # Private bridge for api <-> db traffic.
+  internal:
+    driver: bridge

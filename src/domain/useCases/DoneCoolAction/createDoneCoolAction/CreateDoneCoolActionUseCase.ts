@@ -4,12 +4,17 @@ import { DoneCoolActionResponseDTO } from '../../../dtos/DoneCoolActionResponseD
 import { IDoneCoolActionRepository } from '../../../repositories/IDoneCoolActionRepository.js';
 import { IUserRepository } from '../../../repositories/IUserRepository.js';
 import { ICoolActionRepository } from '../../../repositories/ICoolActionRepository.js';
+import {
+  IImageStorageService,
+  IMAGE_FOLDERS,
+} from '../../../services/IImageStorageService.js';
 
 export class CreateDoneCoolActionUseCase {
   constructor(
     private readonly repository: IDoneCoolActionRepository,
     private readonly userRepository: IUserRepository,
     private readonly coolActionRepository: ICoolActionRepository,
+    private readonly imageStorage: IImageStorageService,
   ) {}
 
   async execute(
@@ -21,7 +26,11 @@ export class CreateDoneCoolActionUseCase {
       data.coolActionId,
     );
     if (!coolAction) throw new AppError('Ação legal não encontrada.', 404);
-    const dca = await this.repository.create(data);
+    const actionPhotoURL = await this.imageStorage.uploadImage(
+      data.actionPhotoURL,
+      IMAGE_FOLDERS.doneCoolActions,
+    );
+    const dca = await this.repository.create({ ...data, actionPhotoURL });
     return {
       id: dca.id,
       userId: dca.userId,

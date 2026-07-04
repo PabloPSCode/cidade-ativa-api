@@ -30,14 +30,36 @@ enum PollStatus {
   finished
 }
 
+model City {
+  id        String    @id @default(uuid())
+  name      String
+  uf        String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  users             User[]
+  logs              Log[]
+  solicitationTypes SolicitationType[]
+  solicitations     Solicitation[]
+  coolActions       CoolAction[]
+  doneCoolActions   DoneCoolAction[]
+  publicPhones      PublicPhone[]
+  neighborhoods     Neighborhood[]
+  polls             Poll[]
+  votes             Vote[]
+  voteOptions       VoteOption[]
+}
+
 model Log {
   id                  String    @id @default(uuid())
   userId              String
   userName            String
   email               String
   activityDescription String
+  cityId              String
   createdAt           DateTime  @default(now())
   deletedAt           DateTime?
+  city                City      @relation(fields: [cityId], references: [id])
 }
 
 model User {
@@ -51,18 +73,24 @@ model User {
   neighborhood    String
   city            String
   uf              String
+  cityId          String
   createdAt       DateTime         @default(now())
   updatedAt       DateTime?        @updatedAt
   deletedAt       DateTime?
+  cityTenant      City             @relation(fields: [cityId], references: [id])
   solicitations   Solicitation[]
   doneCoolActions DoneCoolAction[]
   votes           Vote[]
+  signature       Signature?
+  solicitationSignatures SolicitationSignature[]
 }
 
 model SolicitationType {
   id            String         @id @default(uuid())
   description   String         @unique
+  cityId        String
   deletedAt     DateTime?
+  cityTenant    City           @relation(fields: [cityId], references: [id])
   solicitations Solicitation[]
 }
 
@@ -75,9 +103,12 @@ model Solicitation {
   city               String
   uf                 String
   street             String
+  cep                String
   requestingUserId   String
   solicitationTypeId String
+  cityId             String
   status             SolicitationStatus @default(not_resolved)
+  isCollective       Boolean            @default(false)
   unsolvedImageUrls  Json               @default("[]")
   solvedImageUrls    Json?
   solvedDate         DateTime?
@@ -86,8 +117,37 @@ model Solicitation {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime?          @updatedAt
   deletedAt          DateTime?
+  cityTenant         City               @relation(fields: [cityId], references: [id])
   requestingUser     User               @relation(fields: [requestingUserId], references: [id])
   solicitationType   SolicitationType   @relation(fields: [solicitationTypeId], references: [id])
+  signatures         Signature[]
+  solicitationSignatures SolicitationSignature[]
+}
+
+model Signature {
+  id             String        @id @default(uuid())
+  imageUrl       String
+  userName       String
+  userId         String        @unique
+  solicitationId String?
+  user           User          @relation(fields: [userId], references: [id])
+  solicitation   Solicitation? @relation(fields: [solicitationId], references: [id])
+}
+
+// Liga um usuário (e a imagem da sua assinatura registrada) a uma solicitação
+// que ele assinou. Um usuário pode assinar várias solicitações, mas apenas uma
+// vez cada (unique userId+solicitationId).
+model SolicitationSignature {
+  id             String       @id @default(uuid())
+  imageUrl       String
+  userName       String
+  userId         String
+  solicitationId String
+  createdAt      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id])
+  solicitation   Solicitation @relation(fields: [solicitationId], references: [id])
+
+  @@unique([userId, solicitationId])
 }
 
 model CoolAction {
@@ -95,8 +155,10 @@ model CoolAction {
   title           String
   category        CoolActionCategory
   points          Int
+  cityId          String
   createdAt       DateTime           @default(now())
   deletedAt       DateTime?
+  cityTenant      City               @relation(fields: [cityId], references: [id])
   doneCoolActions DoneCoolAction[]
 }
 
@@ -108,8 +170,10 @@ model DoneCoolAction {
   street         String
   actionPhotoURL String
   coolActionId   String
+  cityId         String
   createdAt      DateTime   @default(now())
   deletedAt      DateTime?
+  cityTenant     City       @relation(fields: [cityId], references: [id])
   user           User       @relation(fields: [userId], references: [id])
   coolAction     CoolAction @relation(fields: [coolActionId], references: [id])
 }
@@ -117,13 +181,19 @@ model DoneCoolAction {
 model PublicPhone {
   id              String @id @default(uuid())
   institutionName String
-  phone           String @unique
+  phone           String
+  cityId          String
+  cityTenant      City   @relation(fields: [cityId], references: [id])
+
+  @@unique([cityId, phone])
 }
 
 model Neighborhood {
-  id       String @id @default(uuid())
-  name     String
-  cityName String
+  id         String @id @default(uuid())
+  name       String
+  cityName   String
+  cityId     String
+  cityTenant City   @relation(fields: [cityId], references: [id], onDelete: Cascade)
 }
 
 model Poll {
@@ -133,10 +203,12 @@ model Poll {
   pollCoverUrl String
   startedAt    DateTime?
   finishedAt   DateTime?
+  cityId       String
   status       PollStatus @default(inactive)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime?  @updatedAt
   deletedAt    DateTime?
+  cityTenant   City       @relation(fields: [cityId], references: [id])
   votes        Vote[]
 }
 
@@ -146,9 +218,11 @@ model Vote {
   description      String
   pollId           String
   userId           String
+  cityId           String
   createdAt        DateTime     @default(now())
   updatedAt        DateTime?    @updatedAt
   deletedAt        DateTime?
+  cityTenant       City         @relation(fields: [cityId], references: [id])
   poll             Poll         @relation(fields: [pollId], references: [id])
   user             User         @relation(fields: [userId], references: [id])
   availableOptions VoteOption[]
@@ -158,9 +232,10 @@ model VoteOption {
   id         String    @id @default(uuid())
   optionText String
   voteId     String
+  cityId     String
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
   deletedAt  DateTime?
+  cityTenant City      @relation(fields: [cityId], references: [id])
   vote       Vote      @relation(fields: [voteId], references: [id])
 }
-

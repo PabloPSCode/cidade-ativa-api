@@ -8,8 +8,9 @@ export class ListUsersUseCase {
 
   async execute(
     pagination: PaginationDTO,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<UserResponseDTO>> {
-    const result = await this.repository.list(pagination);
+    const result = await this.repository.list(pagination, cityId);
     return {
       data: result.data.map((u) => ({
         id: u.id,

@@ -1,8 +1,9 @@
 import type { CoolActionCategory } from '../../domain/entities/CoolAction.js';
 import { prisma } from '../database/prisma/prismaClient.js';
+import { getCurrentCityId } from '../database/prisma/cityContext.js';
 import type { Seed } from './SeedRunner.js';
 
-const coolActions: {
+export const coolActions: {
   title: string;
   category: CoolActionCategory;
   points: number;
@@ -39,11 +40,17 @@ export const seedCoolActions: Seed = {
   name: 'Cool Actions',
 
   async isPending() {
+    // No tenant city yet means nothing to attach reference data to.
+    const cities = await prisma.city.count({ where: { deletedAt: null } });
+    if (cities === 0) return false;
     const count = await prisma.coolAction.count();
     return count === 0;
   },
 
   async run() {
-    await prisma.coolAction.createMany({ data: coolActions });
+    const cityId = await getCurrentCityId();
+    await prisma.coolAction.createMany({
+      data: coolActions.map((action) => ({ ...action, cityId })),
+    });
   },
 };

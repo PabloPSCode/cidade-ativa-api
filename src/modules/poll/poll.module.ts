@@ -8,6 +8,7 @@ import { DeletePollUseCase } from '../../domain/useCases/Poll/deletePoll/DeleteP
 import { FindPollByIdUseCase } from '../../domain/useCases/Poll/findPollById/FindPollByIdUseCase.js';
 import { ListPollsUseCase } from '../../domain/useCases/Poll/listPolls/ListPollsUseCase.js';
 import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js';
+import { FirebaseImageStorageService } from '../../infra/integrations/firebase/FirebaseImageStorageService.js';
 
 @Module({
   imports: [PassportModule],
@@ -15,15 +16,18 @@ import { JwtUserStrategy } from '../../infra/auth/strategies/JwtUserStrategy.js'
   providers: [
     JwtUserStrategy,
     PrismaPollRepository,
+    FirebaseImageStorageService,
     {
       provide: CreatePollUseCase,
-      useFactory: (r: PrismaPollRepository) => new CreatePollUseCase(r),
-      inject: [PrismaPollRepository],
+      useFactory: (r: PrismaPollRepository, is: FirebaseImageStorageService) =>
+        new CreatePollUseCase(r, is),
+      inject: [PrismaPollRepository, FirebaseImageStorageService],
     },
     {
       provide: UpdatePollUseCase,
-      useFactory: (r: PrismaPollRepository) => new UpdatePollUseCase(r),
-      inject: [PrismaPollRepository],
+      useFactory: (r: PrismaPollRepository, is: FirebaseImageStorageService) =>
+        new UpdatePollUseCase(r, is),
+      inject: [PrismaPollRepository, FirebaseImageStorageService],
     },
     {
       provide: DeletePollUseCase,

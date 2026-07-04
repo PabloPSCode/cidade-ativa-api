@@ -1,4 +1,6 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from './prismaClient.js';
+import { getCurrentCityId } from './cityContext.js';
 import {
   IDoneCoolActionRepository,
   UserPointsAggregate,
@@ -20,11 +22,14 @@ export class PrismaDoneCoolActionRepository implements IDoneCoolActionRepository
       r.actionPhotoURL,
       r.coolActionId,
       r.createdAt,
+      r.cityId,
     );
   }
 
   async create(data: CreateDoneCoolActionDTO): Promise<DoneCoolAction> {
-    const r = await prisma.doneCoolAction.create({ data });
+    const r = await prisma.doneCoolAction.create({
+      data: { ...data, cityId: await getCurrentCityId() },
+    });
     return this.toEntity(r);
   }
 
@@ -53,10 +58,16 @@ export class PrismaDoneCoolActionRepository implements IDoneCoolActionRepository
   async list(
     pagination: PaginationDTO,
     userId?: string,
+    cityId?: string,
   ): Promise<PaginatedResultDTO<DoneCoolAction>> {
     const { page = 1, perPage = 10 } = pagination;
     const skip = (page - 1) * perPage;
-    const where = userId ? { userId, deletedAt: null } : { deletedAt: null };
+    const where: {
+      userId?: string;
+      deletedAt: null;
+      cityId?: string;
+    } = userId ? { userId, deletedAt: null } : { deletedAt: null };
+    if (cityId) where.cityId = cityId;
     const [records, total] = await Promise.all([
       prisma.doneCoolAction.findMany({
         skip,
@@ -72,7 +83,13 @@ export class PrismaDoneCoolActionRepository implements IDoneCoolActionRepository
     };
   }
 
-  async rankingByPoints(): Promise<UserPointsAggregate[]> {
+  async rankingByPoints(cityId?: string): Promise<UserPointsAggregate[]> {
+    // Restringe o ranking ao tenant (cidade) quando informado, evitando misturar
+    // usuários de cidades diferentes. Sem cityId, mantém o comportamento amplo.
+    const cityFilter = cityId
+      ? Prisma.sql`AND dca."cityId" = ${cityId}`
+      : Prisma.empty;
+
     const rows = await prisma.$queryRaw<
       {
         userId: string;
@@ -91,6 +108,7 @@ export class PrismaDoneCoolActionRepository implements IDoneCoolActionRepository
       JOIN "User" u
         ON u.id = dca."userId" AND u."deletedAt" IS NULL
       WHERE dca."deletedAt" IS NULL
+        ${cityFilter}
       GROUP BY u.id, u.name
       ORDER BY "totalPoints" DESC, u.name ASC
     `;

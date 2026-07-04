@@ -3,17 +3,21 @@ import { CreateSolicitationDTO } from '../../../dtos/CreateSolicitationDTO.js';
 import { SolicitationResponseDTO } from '../../../dtos/SolicitationResponseDTO.js';
 import { ISolicitationRepository } from '../../../repositories/ISolicitationRepository.js';
 import { IUserRepository } from '../../../repositories/IUserRepository.js';
+import {
+  IImageStorageService,
+  IMAGE_FOLDERS,
+} from '../../../services/IImageStorageService.js';
 
 export class CreateSolicitationUseCase {
   constructor(
     private readonly solicitationRepository: ISolicitationRepository,
     private readonly userRepository: IUserRepository,
+    private readonly imageStorage: IImageStorageService,
   ) {}
 
   async execute(data: CreateSolicitationDTO): Promise<SolicitationResponseDTO> {
     const user = await this.userRepository.findById(data.requestingUserId);
-    if (!user)
-      throw new AppError('Usuário solicitante não encontrado.', 404);
+    if (!user) throw new AppError('Usuário solicitante não encontrado.', 404);
 
     if (!user.isCouncilman && !user.isAdmin) {
       const openCount = await this.solicitationRepository.countOpenByUser(
@@ -26,7 +30,17 @@ export class CreateSolicitationUseCase {
         );
     }
 
-    const s = await this.solicitationRepository.create(data);
+    const unsolvedImageUrls = data.unsolvedImageUrls?.length
+      ? await this.imageStorage.uploadImages(
+          data.unsolvedImageUrls,
+          IMAGE_FOLDERS.solicitations,
+        )
+      : data.unsolvedImageUrls;
+
+    const s = await this.solicitationRepository.create({
+      ...data,
+      unsolvedImageUrls,
+    });
     return this.toDTO(s);
   }
 
@@ -40,10 +54,12 @@ export class CreateSolicitationUseCase {
       city: s.city,
       uf: s.uf,
       street: s.street,
+      cep: s.cep,
       requestingUserId: s.requestingUserId,
       requestingUserName: s.requestingUserName ?? '',
       solicitationTypeId: s.solicitationTypeId,
       status: s.status,
+      isCollective: s.isCollective,
       unsolvedImageUrls: s.unsolvedImageUrls,
       solvedImageUrls: s.solvedImageUrls,
       solvedDate: s.solvedDate,

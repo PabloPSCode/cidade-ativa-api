@@ -15,10 +15,12 @@ import { CreateCoolActionUseCase } from '../../domain/useCases/CoolAction/create
 import { DeleteCoolActionUseCase } from '../../domain/useCases/CoolAction/deleteCoolAction/DeleteCoolActionUseCase.js';
 import { FindCoolActionByIdUseCase } from '../../domain/useCases/CoolAction/findCoolActionById/FindCoolActionByIdUseCase.js';
 import { ListCoolActionsUseCase } from '../../domain/useCases/CoolAction/listCoolActions/ListCoolActionsUseCase.js';
+import { CurrentCityId } from '../auth/decorators/currentCityId.decorator.js';
 import { UpdateCoolActionUseCase } from '../../domain/useCases/CoolAction/updateCoolAction/UpdateCoolActionUseCase.js';
 import { ZodValidationPipe } from '../../middlewares/zodValidationPipe.js';
 import { buildResponse } from '../helpers/apiResponse.js';
 import { logger } from '../logger/logger.js';
+import { WriteThrottle } from '../rateLimit/throttleTiers.js';
 import {
   createCoolActionSchema,
   updateCoolActionSchema,
@@ -35,6 +37,7 @@ export class CoolActionController {
   ) {}
 
   @Post()
+  @WriteThrottle()
   @UsePipes(new ZodValidationPipe(createCoolActionSchema))
   async create(@Body() body: any, @Req() req: Request) {
     try {
@@ -64,13 +67,17 @@ export class CoolActionController {
   async list(
     @Query('page') page: string,
     @Query('perPage') perPage: string,
+    @CurrentCityId() cityId: string | undefined,
     @Req() req: Request,
   ) {
     try {
-      const result = await this.listUseCase.execute({
-        page: Number(page) || 1,
-        perPage: Number(perPage) || 10,
-      });
+      const result = await this.listUseCase.execute(
+        {
+          page: Number(page) || 1,
+          perPage: Number(perPage) || 10,
+        },
+        cityId,
+      );
       logger.info({
         module: 'CoolActions',
         action: 'listCoolActions',
@@ -148,6 +155,7 @@ export class CoolActionController {
   }
 
   @Delete(':id')
+  @WriteThrottle()
   async remove(@Param('id') id: string, @Req() req: Request) {
     try {
       await this.deleteUseCase.execute(id);
